@@ -46,6 +46,10 @@ export function RegisterForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      if (values.password !== values.passwordConfirm) {
+        toast.error("Password dan konfirmasi password tidak sama");
+        return;
+      }
       const response = await axios.post("/api/register", {
         name: values.name,
         email: values.email,

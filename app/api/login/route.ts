@@ -28,10 +28,14 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
-    const role = userDoc.data().role || "user";
 
     // Buat sesi
-    await createSession({ userId: user.uid, role });
+    await createSession({
+      userId: user.uid,
+      nama: userDoc.data().nama,
+      email,
+      role: userDoc.data().role,
+    });
 
     return NextResponse.json(
       { success: true, message: "Berhasil login" },

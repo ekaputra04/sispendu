@@ -9,7 +9,18 @@ import { dataNavbar } from "@/consts/dataNavbar";
 export function SiteHeader() {
   const pathname = usePathname();
 
-  const navItem = dataNavbar.navMain.find((item) => item.url === pathname);
+  let navItem;
+  if (pathname === "/dashboard/penduduk/add") {
+    navItem = {
+      title: "Tambah Data Penduduk",
+    };
+  } else if (pathname === "/dashboard/kartu-keluarga/add") {
+    navItem = {
+      title: "Tambah Data Kartu Keluarga",
+    };
+  } else {
+    navItem = dataNavbar.navMain.find((item) => item.url === pathname);
+  }
 
   return (
     <header className="flex items-center gap-2 border-b h-(--header-height) group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) transition-[width,height] ease-linear shrink-0">

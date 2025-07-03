@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/config/firebase-init";
 import axios from "axios";
 import { addDoc, collection } from "firebase/firestore";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -43,6 +44,9 @@ export default function Home() {
     <div className="">
       <Button onClick={handleClick}>Kirim</Button>
       <Button onClick={handleLogout}>Logout</Button>
+      <Link href={"/dashboard"}>
+        <Button>Dashboard</Button>
+      </Link>
     </div>
   );
 }
