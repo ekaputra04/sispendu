@@ -14,14 +14,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/config/firebase-init";
 import { toast } from "sonner";
 import { useState } from "react";
 import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
-import { createUser } from "@/lib/users";
 import axios from "axios";
+import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
   name: z.string().min(2).max(255),
@@ -32,6 +30,7 @@ const formSchema = z.object({
 
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useUserStore();
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -57,6 +56,7 @@ export function RegisterForm() {
       const data = response.data;
       if (data.success) {
         toast.success(data.message);
+        // setUser({ nama: values.name, email: values.email });
         form.reset();
         router.push("/dashboard");
       } else {

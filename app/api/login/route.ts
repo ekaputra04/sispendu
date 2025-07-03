@@ -1,19 +1,18 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { NextResponse } from "next/server";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { createSession } from "@/lib/session";
-import { auth } from "@/config/firebase-init";
+import { auth, db } from "@/config/firebase-init";
 
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
-
     if (!email || !password) {
       return NextResponse.json(
         { success: false, message: "Email dan password diperlukan" },
         { status: 400 }
       );
     }
-
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
@@ -21,10 +20,18 @@ export async function POST(request: Request) {
     );
     const user = userCredential.user;
 
-    await createSession({
-      userId: user.uid,
-      role: "user",
-    });
+    // Ambil role dari Firestore
+    const userDoc = await getDoc(doc(db, "users", user.uid));
+    if (!userDoc.exists()) {
+      return NextResponse.json(
+        { success: false, message: "Pengguna tidak ditemukan" },
+        { status: 404 }
+      );
+    }
+    const role = userDoc.data().role || "user";
+
+    // Buat sesi
+    await createSession({ userId: user.uid, role });
 
     return NextResponse.json(
       { success: true, message: "Berhasil login" },

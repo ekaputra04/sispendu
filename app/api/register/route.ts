@@ -43,6 +43,8 @@ export async function POST(request: Request) {
 
     await createSession({
       userId: user.uid,
+      nama: name,
+      email: email,
       role: "user",
     });
 

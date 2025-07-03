@@ -23,7 +23,7 @@ export default async function middleware(req: NextRequest) {
 
   // Ambil cookie session dari request
   const cookie = req.cookies.get("session")?.value;
-  let session;
+  let session = null;
 
   try {
     // Dekripsi session
@@ -34,8 +34,10 @@ export default async function middleware(req: NextRequest) {
     session = null;
   }
 
+  console.log("session: ", session);
+
   // Jika pengguna tidak terautentikasi dan mencoba mengakses rute terproteksi
-  if (isProtectedRoute && !session?.userId) {
+  if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
@@ -56,16 +58,6 @@ export default async function middleware(req: NextRequest) {
   // Jika pengguna terautentikasi dan mencoba mengakses rute autentikasi (/login atau /register)
   if (isAuthRoute && session?.userId) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
-  }
-
-  // Jika pengguna terautentikasi dengan role "admin" atau "petugas" dan mencoba mengakses rute publik (kecuali /login dan /register)
-  if (
-    isPublicRoute &&
-    !isAuthRoute &&
-    session?.userId &&
-    authorizedRoles.includes(session?.role as string)
-  ) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 
   // Lanjutkan ke rute berikutnya
