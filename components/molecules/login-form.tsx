@@ -19,6 +19,7 @@ import { useState } from "react";
 import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
   email: z.string().min(2).max(255).email(),
@@ -27,6 +28,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const { setUser } = useUserStore();
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,8 +48,16 @@ export function LoginForm() {
       });
 
       const data = response.data;
+
+      console.log("DATA LOGIN ", data);
+
       if (data.success) {
         toast.success(data.message);
+        setUser({
+          userId: data.data.userId,
+          nama: data.data.nama,
+          email: data.data.email,
+        });
         form.reset();
         router.push("/dashboard");
       } else {

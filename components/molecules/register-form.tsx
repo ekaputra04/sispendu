@@ -60,7 +60,11 @@ export function RegisterForm() {
       const data = response.data;
       if (data.success) {
         toast.success(data.message);
-        // setUser({ nama: values.name, email: values.email });
+        setUser({
+          userId: data.userId,
+          nama: data.nama,
+          email: data.email,
+        });
         form.reset();
         router.push("/dashboard");
       } else {

@@ -14,20 +14,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-export interface IKartuKeluarga {
-  noKK: string;
-  namaKepalaKeluarga: string;
-  alamat: string;
-  rt: string;
-  rw: string;
-  desa: string;
-  kecamatan: string;
-  kabupaten: string;
-  provinsi: string;
-  kodePos: string;
-  tanggalPenerbitan: string;
-}
+import { IKartuKeluarga } from "@/types/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import LoadingIcon from "../atoms/loading-icon";
 
 const formSchema = z.object({
   noKK: z.string().min(2),
@@ -44,7 +36,9 @@ const formSchema = z.object({
 });
 
 export default function AddKKForm() {
-  // 1. Define your form.
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,11 +56,46 @@ export default function AddKKForm() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (data: IKartuKeluarga) => {
+      const response = await axios.post("/api/kartu-keluarga", data);
+      if (!response.data.success) {
+        throw new Error(
+          response.data.message || "Gagal membuat kartu keluarga"
+        );
+      }
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      form.reset();
+
+      queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
+
+      router.push("/dashboard/kartu-keluarga");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Gagal membuat kartu keluarga");
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    const data: IKartuKeluarga = {
+      noKK: values.noKK,
+      namaKepalaKeluarga: values.namaKepalaKeluarga,
+      alamat: values.alamat,
+      rt: values.rt,
+      rw: values.rw,
+      desa: values.desa,
+      kecamatan: values.kecamatan,
+      kabupaten: values.kabupaten,
+      provinsi: values.provinsi,
+      kodePos: values.kodePos,
+      tanggalPenerbitan: values.tanggalPenerbitan,
+    };
+    mutate(data);
   }
 
   return (
@@ -81,7 +110,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Nomor KK</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nomor KK" {...field} />
+                    <Input
+                      placeholder="Nomor KK"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,7 +127,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Nama Kepala Keluarga</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nomor KK" {...field} />
+                    <Input
+                      placeholder="Nomor KK"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -107,7 +144,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Alamat</FormLabel>
                   <FormControl>
-                    <Input placeholder="Alamat" {...field} />
+                    <Input
+                      placeholder="Alamat"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -121,7 +162,7 @@ export default function AddKKForm() {
                   <FormItem>
                     <FormLabel>RT</FormLabel>
                     <FormControl>
-                      <Input placeholder="RT" {...field} />
+                      <Input placeholder="RT" {...field} disabled={isPending} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -134,7 +175,7 @@ export default function AddKKForm() {
                   <FormItem>
                     <FormLabel>RW</FormLabel>
                     <FormControl>
-                      <Input placeholder="RW" {...field} />
+                      <Input placeholder="RW" {...field} disabled={isPending} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,7 +189,7 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Desa</FormLabel>
                   <FormControl>
-                    <Input placeholder="Desa" {...field} />
+                    <Input placeholder="Desa" {...field} disabled={isPending} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -161,7 +202,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Kecamatan</FormLabel>
                   <FormControl>
-                    <Input placeholder="Kecamatan" {...field} />
+                    <Input
+                      placeholder="Kecamatan"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -174,7 +219,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Kabupaten</FormLabel>
                   <FormControl>
-                    <Input placeholder="Kabupaten" {...field} />
+                    <Input
+                      placeholder="Kabupaten"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -187,7 +236,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Provinsi</FormLabel>
                   <FormControl>
-                    <Input placeholder="Provinsi" {...field} />
+                    <Input
+                      placeholder="Provinsi"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -200,7 +253,11 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Kode Pos</FormLabel>
                   <FormControl>
-                    <Input placeholder="Kode Pos" {...field} />
+                    <Input
+                      placeholder="Kode Pos"
+                      {...field}
+                      disabled={isPending}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,7 +270,7 @@ export default function AddKKForm() {
                 <FormItem>
                   <FormLabel>Tanggal Penerbitan</FormLabel>
                   <FormControl>
-                    <Input {...field} type="date" />
+                    <Input {...field} type="date" disabled={isPending} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,8 +278,15 @@ export default function AddKKForm() {
             />
           </div>
 
-          <Button type="submit" className="mt-4 w-full">
-            Simpan
+          <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <LoadingIcon />
+                <p>Proses</p>
+              </div>
+            ) : (
+              <p>Simpan</p>
+            )}
           </Button>
         </form>
       </Form>

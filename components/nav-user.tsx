@@ -27,13 +27,12 @@ import {
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { fetchSession, fetchUserById } from "@/lib/utils";
-import { useEffect } from "react";
+import { useUserStore } from "@/store/useUserStore";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
+  const { user } = useUserStore();
 
   async function handleLogout() {
     try {
@@ -51,48 +50,48 @@ export function NavUser() {
     }
   }
 
-  // Query untuk mengambil userId dari sesi
-  const {
-    data: userId,
-    isLoading: isSessionLoading,
-    error: sessionError,
-  } = useQuery({
-    queryKey: ["session"],
-    queryFn: async () => await fetchSession(),
-    retry: false,
-  });
+  // // Query untuk mengambil userId dari sesi
+  // const {
+  //   data: userId,
+  //   isLoading: isSessionLoading,
+  //   error: sessionError,
+  // } = useQuery({
+  //   queryKey: ["session"],
+  //   queryFn: async () => await fetchSession(),
+  //   retry: false,
+  // });
 
-  // Query untuk mengambil data pengguna berdasarkan userId
-  const {
-    data: user,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useQuery({
-    queryKey: ["user", userId],
-    queryFn: async () => await fetchUserById(userId!),
-    enabled: !!userId, // Hanya jalankan query jika userId tersedia
-    retry: false,
-  });
+  // // Query untuk mengambil data pengguna berdasarkan userId
+  // const {
+  //   data: user,
+  //   isLoading: isUserLoading,
+  //   error: userError,
+  // } = useQuery({
+  //   queryKey: ["user", userId],
+  //   queryFn: async () => await fetchUserById(userId!),
+  //   enabled: !!userId, // Hanya jalankan query jika userId tersedia
+  //   retry: false,
+  // });
 
-  // Tangani error sesi
-  useEffect(() => {
-    if (sessionError) {
-      toast.error(sessionError.message || "Tidak terautentikasi");
-      router.push("/login");
-    }
-  }, [sessionError, router]);
+  // // Tangani error sesi
+  // useEffect(() => {
+  //   if (sessionError) {
+  //     toast.error(sessionError.message || "Tidak terautentikasi");
+  //     router.push("/login");
+  //   }
+  // }, [sessionError, router]);
 
-  // Tangani error pengguna
-  useEffect(() => {
-    if (userError) {
-      toast.error(userError.message || "Gagal memuat data pengguna");
-      router.push("/login");
-    }
-  }, [userError, router]);
+  // // Tangani error pengguna
+  // useEffect(() => {
+  //   if (userError) {
+  //     toast.error(userError.message || "Gagal memuat data pengguna");
+  //     router.push("/login");
+  //   }
+  // }, [userError, router]);
 
-  console.log(user);
+  // console.log(user);
 
-  const isLoading = isSessionLoading || isUserLoading;
+  // const isLoading = isSessionLoading || isUserLoading;
 
   return (
     <div className="">

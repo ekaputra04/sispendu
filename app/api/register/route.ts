@@ -49,7 +49,15 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { success: true, message: "Akun berhasil dibuat" },
+      {
+        success: true,
+        message: "Akun berhasil dibuat",
+        data: {
+          userId: user.uid,
+          nama: name,
+          email: email,
+        },
+      },
       { status: 200 }
     );
   } catch (error: any) {

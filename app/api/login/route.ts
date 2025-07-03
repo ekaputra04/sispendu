@@ -38,7 +38,15 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { success: true, message: "Berhasil login" },
+      {
+        success: true,
+        message: "Berhasil login",
+        data: {
+          userId: user.uid,
+          nama: userDoc.data().nama,
+          email,
+        },
+      },
       { status: 200 }
     );
   } catch (error: any) {

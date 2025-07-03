@@ -3,6 +3,7 @@ import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { columns, Payment } from "./columns";
 import { DataTable } from "@/app/dashboard/kartu-keluarga/data-table";
+import KartuKeluargaPage from "./kartu-keluarga-table";
 
 async function getData(): Promise<Payment[]> {
   // Fetch data from your API here.
@@ -39,6 +40,7 @@ export default async function Page() {
       <div className="mx-auto container">
         <DataTable columns={columns} data={data} />
       </div>
+      <KartuKeluargaPage />
     </div>
   );
 }

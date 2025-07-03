@@ -10,6 +10,11 @@ export async function GET(
   try {
     // Verifikasi sesi untuk memastikan pengguna terautentikasi
     const session = await getSession();
+
+    const userId = await params.userId;
+
+    console.log(params.userId);
+
     if (!session?.userId) {
       return NextResponse.json(
         { success: false, message: "Tidak terautentikasi" },
@@ -18,7 +23,7 @@ export async function GET(
     }
 
     // Pastikan userId dari sesi cocok dengan parameter
-    if (session.userId !== params.userId) {
+    if (session.userId !== userId) {
       return NextResponse.json(
         { success: false, message: "Akses tidak diizinkan" },
         { status: 403 }
@@ -26,7 +31,7 @@ export async function GET(
     }
 
     // Ambil data pengguna dari Firestore
-    const userDoc = await getDoc(doc(db, "users", params.userId));
+    const userDoc = await getDoc(doc(db, "users", userId));
     if (!userDoc.exists()) {
       return NextResponse.json(
         { success: false, message: "Pengguna tidak ditemukan" },

@@ -2,8 +2,8 @@ export interface IKartuKeluarga {
   noKK: string;
   namaKepalaKeluarga: string;
   alamat: string;
-  rt: string;
-  rw: string;
+  rt?: string;
+  rw?: string;
   desa: string;
   kecamatan: string;
   kabupaten: string;
