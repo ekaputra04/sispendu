@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { useState } from "react";
 import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
+import { createUser } from "@/lib/users";
+import axios from "axios";
 
 const formSchema = z.object({
   name: z.string().min(2).max(255),
@@ -42,33 +44,39 @@ export function RegisterForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.password !== values.passwordConfirm) {
-      toast.error("Password dan konfirmasi password tidak cocok");
-      return;
-    }
-
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    createUserWithEmailAndPassword(auth, values.email, values.password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("user created:", user);
-        toast.success("Akun berhasil dibuat");
-        form.reset();
-        router.push("/login");
-      })
-      .catch((error: any) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        if (errorCode == "auth/email-already-in-use") {
-          toast.error("Email sudah terdaftar");
-        } else {
-          toast.error("Gagal membuat akun: " + errorMessage);
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
+    try {
+      const response = await axios.post("/api/register", {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        passwordConfirm: values.passwordConfirm,
       });
+
+      const data = response.data;
+      if (data.success) {
+        toast.success(data.message);
+        form.reset();
+        router.push("/dashboard");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Gagal membuat akun";
+      if (
+        error.response?.status === 400 &&
+        errorMessage.includes("Email sudah terdaftar")
+      ) {
+        toast.error("Email sudah terdaftar");
+      } else {
+        toast.error(errorMessage);
+      }
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (

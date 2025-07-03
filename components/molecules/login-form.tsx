@@ -14,12 +14,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/config/firebase-init";
 import { toast } from "sonner";
 import { useState } from "react";
 import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const formSchema = z.object({
   email: z.string().min(2).max(255).email(),
@@ -38,28 +37,33 @@ export function LoginForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    signInWithEmailAndPassword(auth, values.email, values.password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("user created:", user);
-        toast.success("Berhasil login");
+    try {
+      const response = await axios.post("/api/login", {
+        email: values.email,
+        password: values.password,
+      });
+
+      const data = response.data;
+      if (data.success) {
+        toast.success(data.message);
         form.reset();
         router.push("/dashboard");
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error login user:", errorCode, errorMessage);
-        if (errorCode == "auth/invalid-credential") {
-          toast.error("Email atau password salah");
-        }
-        toast.error("Gagal login");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Gagal login";
+      if (error.response?.status === 401) {
+        toast.error("Invalid kredensial login");
+      } else {
+        toast.error(errorMessage);
+      }
+      console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -111,7 +115,7 @@ export function LoginForm() {
                 <p>Proses</p>
               </div>
             ) : (
-              <p>Daftar</p>
+              <p>Masuk</p>
             )}
           </Button>
         </form>
