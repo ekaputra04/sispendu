@@ -57,11 +57,14 @@ export function RegisterForm() {
         form.reset();
         router.push("/login");
       })
-      .catch((error) => {
+      .catch((error: any) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log("Error creating user:", errorCode, errorMessage);
-        toast.error("Gagal membuat akun: " + errorMessage);
+        if (errorCode == "auth/email-already-in-use") {
+          toast.error("Email sudah terdaftar");
+        } else {
+          toast.error("Gagal membuat akun: " + errorMessage);
+        }
       })
       .finally(() => {
         setIsLoading(false);
