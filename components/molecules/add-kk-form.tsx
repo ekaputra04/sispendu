@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { IKartuKeluarga } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
 import { createKK } from "@/lib/kk";
@@ -73,9 +71,8 @@ export default function AddKKForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     const data: IKartuKeluarga = {
+      id: crypto.randomUUID(),
       noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,

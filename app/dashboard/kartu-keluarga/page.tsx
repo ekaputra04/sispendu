@@ -1,31 +1,54 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { columns, Payment } from "./columns";
 import { DataTable } from "@/app/dashboard/kartu-keluarga/data-table";
-import KartuKeluargaPage from "./kartu-keluarga-table";
+import { useQuery } from "@tanstack/react-query";
+import { getAllKK } from "@/lib/kk";
+import { IKartuKeluarga } from "@/types/types";
+import { columns } from "./columns";
 
-async function getData(): Promise<Payment[]> {
+async function getData(): Promise<IKartuKeluarga[]> {
   // Fetch data from your API here.
   return [
     {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
+      id: "1",
+      rw: "Voluptate sint est ",
+      provinsi: "Quos non veniam con",
+      namaKepalaKeluarga: "Consequatur est ips",
+      rt: "Provident consequat",
+      tanggalPenerbitan: "2017-11-22",
+      desa: "Voluptatem Nam nisi ",
+      noKK: "Sed est ut ut conseq",
+      kecamatan: "Voluptas laudantium",
+      alamat: "Officia qui dolore r",
+      kodePos: "Voluptatem maxime t",
+      kabupaten: "Id dolor sunt itaqu",
     },
     {
-      id: "728ed522",
-      amount: 12,
-      status: "pending",
-      email: "asik@example.com",
+      id: "2",
+      noKK: "Eos possimus dolore",
+      kabupaten: "Reprehenderit occae",
+      provinsi: "Error exercitationem",
+      namaKepalaKeluarga: "Ut amet eum odio eu",
+      rw: "Ex rerum vero occaec",
+      rt: "Facilis omnis conseq",
+      alamat: "Amet nihil officia ",
+      kodePos: "Autem qui cumque Nam",
+      kecamatan: "Obcaecati corrupti ",
+      tanggalPenerbitan: "2017-11-22",
+      desa: "In ipsum quisquam a",
     },
-    // ...
   ];
 }
 
-export default async function Page() {
-  const data = await getData();
+export default function Page() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["kartu-keluarga"],
+    queryFn: getAllKK,
+    retry: false,
+  });
 
   return (
     <div className="">
@@ -38,9 +61,12 @@ export default async function Page() {
         </Link>
       </div>
       <div className="mx-auto container">
-        <DataTable columns={columns} data={data} />
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <DataTable columns={columns} data={data || []} />
+        )}
       </div>
-      <KartuKeluargaPage />
     </div>
   );
 }

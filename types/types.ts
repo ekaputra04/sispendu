@@ -1,4 +1,5 @@
 export interface IKartuKeluarga {
+  id?: string;
   noKK: string;
   namaKepalaKeluarga: string;
   alamat: string;

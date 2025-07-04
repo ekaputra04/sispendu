@@ -70,24 +70,30 @@ export function DataTable<TData, TValue>({
     <div className="">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter kartu keluarga..."
+          value={
+            (table
+              .getColumn("namaKepalaKeluarga")
+              ?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table
+              .getColumn("namaKepalaKeluarga")
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns
+              Kolom
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
+              .map((column: any) => {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}

@@ -2,7 +2,6 @@
 
 import { getAllKK } from "@/lib/kk";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { toast } from "sonner";
 
 export default function KartuKeluargaPage() {
