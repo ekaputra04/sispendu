@@ -75,17 +75,13 @@ export function LoginForm() {
       setSession(encryptedSession);
       setUser({ userId: user.uid, nama: userDoc?.nama, email: userDoc?.email });
 
-      const response = await axios.post("/api/login", {
+      await axios.post("/api/auth/session", {
         session: encryptedSession,
       });
 
-      if (response.data.success) {
-        form.reset();
-        toast.success("Berhasil login");
-        router.push("/dashboard");
-      } else {
-        toast.error("Gagal Login");
-      }
+      form.reset();
+      toast.success("Berhasil login");
+      router.push("/dashboard");
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Gagal login";
       if (error.response?.status === 401) {

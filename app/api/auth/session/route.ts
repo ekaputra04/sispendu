@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     );
   } catch (error: any) {
     return NextResponse.json(
-      { success: false, message: error.message || "Gagal membuat sesilogin" },
+      { success: false, message: error.message || "Gagal membuat sesi login" },
       { status: 401 }
     );
   }

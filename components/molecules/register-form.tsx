@@ -20,6 +20,12 @@ import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { useUserStore } from "@/store/useUserStore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "@/config/firebase-init";
+import { doc, setDoc } from "firebase/firestore";
+import { SessionPayload } from "@/lib/definitions";
+import { encrypt } from "@/lib/utils";
+import { useSessionStore } from "@/store/useSession";
 
 const formSchema = z.object({
   name: z.string().min(2).max(255),
@@ -31,6 +37,7 @@ const formSchema = z.object({
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { setUser } = useUserStore();
+  const { setSession } = useSessionStore();
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,26 +57,44 @@ export function RegisterForm() {
         toast.error("Password dan konfirmasi password tidak sama");
         return;
       }
-      const response = await axios.post("/api/register", {
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        passwordConfirm: values.passwordConfirm,
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        userId: user.uid,
+        nama: values.name,
+        email: values.password,
+        role: "user",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
-      const data = response.data;
-      if (data.success) {
-        toast.success(data.message);
-        setUser({
-          userId: data.userId,
-          nama: data.nama,
-          email: data.email,
-        });
-        form.reset();
-        router.push("/dashboard");
-      } else {
-        toast.error(data.message);
-      }
+      const session: SessionPayload = {
+        userId: user.uid,
+        nama: values.name,
+        email: values.email,
+        role: "user",
+        expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      };
+
+      const encryptedSession = await encrypt(session);
+      setSession(encryptedSession);
+      setUser({ userId: user.uid, nama: values.name, email: values.email });
+
+      console.log("encryptedSession", encryptedSession);
+
+      await axios.post("/api/auth/session", {
+        session: encryptedSession,
+      });
+
+      form.reset();
+      toast.success("Berhasil login");
+      router.push("/dashboard");
     } catch (error: any) {
       const errorMessage =
         error.response?.data?.message || "Gagal membuat akun";

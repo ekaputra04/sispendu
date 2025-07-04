@@ -28,6 +28,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import axios from "axios";
 import { useUserStore } from "@/store/useUserStore";
+import { signOut } from "firebase/auth";
+import { auth } from "@/config/firebase-init";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -36,7 +38,9 @@ export function NavUser() {
 
   async function handleLogout() {
     try {
-      const response = await axios.post("/api/logout", {});
+      await signOut(auth);
+
+      const response = await axios.post("/api/logout");
 
       if (response.status === 200) {
         toast.success("Berhasil logout");
@@ -49,49 +53,6 @@ export function NavUser() {
       console.error("Error:", error);
     }
   }
-
-  // // Query untuk mengambil userId dari sesi
-  // const {
-  //   data: userId,
-  //   isLoading: isSessionLoading,
-  //   error: sessionError,
-  // } = useQuery({
-  //   queryKey: ["session"],
-  //   queryFn: async () => await fetchSession(),
-  //   retry: false,
-  // });
-
-  // // Query untuk mengambil data pengguna berdasarkan userId
-  // const {
-  //   data: user,
-  //   isLoading: isUserLoading,
-  //   error: userError,
-  // } = useQuery({
-  //   queryKey: ["user", userId],
-  //   queryFn: async () => await fetchUserById(userId!),
-  //   enabled: !!userId, // Hanya jalankan query jika userId tersedia
-  //   retry: false,
-  // });
-
-  // // Tangani error sesi
-  // useEffect(() => {
-  //   if (sessionError) {
-  //     toast.error(sessionError.message || "Tidak terautentikasi");
-  //     router.push("/login");
-  //   }
-  // }, [sessionError, router]);
-
-  // // Tangani error pengguna
-  // useEffect(() => {
-  //   if (userError) {
-  //     toast.error(userError.message || "Gagal memuat data pengguna");
-  //     router.push("/login");
-  //   }
-  // }, [userError, router]);
-
-  // console.log(user);
-
-  // const isLoading = isSessionLoading || isUserLoading;
 
   return (
     <div className="">
