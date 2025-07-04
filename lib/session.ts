@@ -14,7 +14,13 @@ export async function createServerSession({
   role: string;
 }) {
   const expiresAt = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
-  const session = await encrypt({ userId, nama, email, role, expiresAt });
+  const session = await encrypt({
+    userId,
+    nama,
+    email,
+    role,
+    expiresAt,
+  });
   const cookieStore = await cookies();
 
   cookieStore.set("session", session, {

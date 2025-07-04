@@ -1,5 +1,6 @@
 "use client";
 
+import { getAllKK } from "@/lib/kk";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
@@ -7,13 +8,7 @@ import { toast } from "sonner";
 export default function KartuKeluargaPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["kartu-keluarga"],
-    queryFn: async () => {
-      const response = await axios.get("/api/kartu-keluarga");
-      if (!response.data.success) {
-        throw new Error(response.data.message);
-      }
-      return response.data.data;
-    },
+    queryFn: getAllKK,
     retry: false,
   });
 

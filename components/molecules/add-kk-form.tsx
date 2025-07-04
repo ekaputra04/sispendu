@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
+import { createKK } from "@/lib/kk";
 
 const formSchema = z.object({
   noKK: z.string().min(2),
@@ -57,17 +58,9 @@ export default function AddKKForm() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: IKartuKeluarga) => {
-      const response = await axios.post("/api/kartu-keluarga", data);
-      if (!response.data.success) {
-        throw new Error(
-          response.data.message || "Gagal membuat kartu keluarga"
-        );
-      }
-      return response.data;
-    },
-    onSuccess: (data) => {
-      toast.success(data.message);
+    mutationFn: async (data: IKartuKeluarga) => createKK({ kk: data }),
+    onSuccess: () => {
+      toast.success("Berhasil membuat kartu keluarga");
       form.reset();
 
       queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
