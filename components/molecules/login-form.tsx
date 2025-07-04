@@ -19,6 +19,12 @@ import { useState } from "react";
 import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/config/firebase-init";
+import { getUserById } from "@/lib/users";
+import { useSessionStore } from "@/store/useSession";
+import { SessionPayload } from "@/lib/definitions";
+import { encrypt } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
@@ -28,6 +34,7 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const { setSession } = useSessionStore();
   const { setUser } = useUserStore();
 
   const router = useRouter();
@@ -42,26 +49,42 @@ export function LoginForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      const user = userCredential.user;
+
+      const userDoc = await getUserById(user.uid);
+
+      if (!userDoc) {
+        toast.error("Pengguna tidak ditemukan");
+        throw new Error("Pengguna tidak ditemukan");
+      }
+
+      const session: SessionPayload = {
+        userId: user.uid,
+        nama: userDoc?.nama,
+        email: userDoc?.email,
+        role: userDoc?.role,
+        expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+      };
+
+      const encryptedSession = await encrypt(session);
+      setSession(encryptedSession);
+      setUser({ userId: user.uid, nama: userDoc?.nama, email: userDoc?.email });
+
       const response = await axios.post("/api/login", {
-        email: values.email,
-        password: values.password,
+        session: encryptedSession,
       });
 
-      const data = response.data;
-
-      console.log("DATA LOGIN ", data);
-
-      if (data.success) {
-        toast.success(data.message);
-        setUser({
-          userId: data.data.userId,
-          nama: data.data.nama,
-          email: data.data.email,
-        });
+      if (response.data.success) {
         form.reset();
+        toast.success("Berhasil login");
         router.push("/dashboard");
       } else {
-        toast.error(data.message);
+        toast.error("Gagal Login");
       }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Gagal login";

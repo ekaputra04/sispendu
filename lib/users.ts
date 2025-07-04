@@ -1,5 +1,11 @@
 import { db } from "@/config/firebase-init";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+
+export async function getUserById(userId: string) {
+  const docRef = doc(db, "users", userId);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
+}
 
 export async function createUser({
   userId,

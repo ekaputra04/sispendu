@@ -1,58 +1,36 @@
 import { NextResponse } from "next/server";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { createSession } from "@/lib/session";
-import { auth, db } from "@/config/firebase-init";
+import { createServerSession } from "@/lib/session";
+import { decrypt } from "@/lib/utils";
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
-    if (!email || !password) {
+    const { session } = await request.json();
+    if (!session) {
       return NextResponse.json(
-        { success: false, message: "Email dan password diperlukan" },
+        { success: false, message: "Session diperlukan" },
         { status: 400 }
       );
     }
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
 
-    // Ambil role dari Firestore
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (!userDoc.exists()) {
-      return NextResponse.json(
-        { success: false, message: "Pengguna tidak ditemukan" },
-        { status: 404 }
-      );
-    }
+    const decryptedSession = await decrypt(session);
 
-    // Buat sesi
-    await createSession({
-      userId: user.uid,
-      nama: userDoc.data().nama,
-      email,
-      role: userDoc.data().role,
+    await createServerSession({
+      userId: decryptedSession?.userId as string,
+      nama: decryptedSession?.nama as string,
+      email: decryptedSession?.email as string,
+      role: decryptedSession?.role as string,
     });
 
     return NextResponse.json(
       {
         success: true,
-        message: "Berhasil login",
-        data: {
-          userId: user.uid,
-          nama: userDoc.data().nama,
-          email,
-        },
+        message: "Berhasil membuat sesi login",
       },
       { status: 200 }
     );
   } catch (error: any) {
-    console.error("Gagal login:", error);
     return NextResponse.json(
-      { success: false, message: error.message || "Gagal login" },
+      { success: false, message: error.message || "Gagal membuat sesilogin" },
       { status: 401 }
     );
   }
