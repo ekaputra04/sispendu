@@ -1,22 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { getAllKK } from "@/lib/kk";
 import { useQuery } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
+import { getAllPenduduk } from "@/lib/penduduk";
+import LoadingView from "@/components/atoms/loading-view";
+import { IDataPenduduk } from "@/types/types";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["penduduk"],
-    queryFn: getAllKK,
+    queryFn: getAllPenduduk,
     retry: false,
   });
 
   return (
     <div className="">
+      {isLoading && <LoadingView />}
       <div className="">
         <Link href={"/dashboard/penduduk/add"}>
           <Button>
@@ -25,11 +28,12 @@ export default function Page() {
           </Button>
         </Link>
       </div>
-      <div className="mx-auto container">
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <DataTable columns={columns} data={[]} />
+      <div className="relative w-full">
+        {!isLoading && (
+          <DataTable
+            columns={columns}
+            data={(data?.data as IDataPenduduk[]) || []}
+          />
         )}
       </div>
     </div>

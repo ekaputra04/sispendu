@@ -35,8 +35,8 @@ export interface IDataPenduduk {
     | "Cucu"
     | "Pembantu"
     | "Famili Lain";
-  kewarganegaraan?: "WNI" | "WNA";
-  golonganDarah?:
+  kewarganegaraan: "WNI" | "WNA";
+  golonganDarah:
     | "A"
     | "B"
     | "AB"
@@ -49,7 +49,7 @@ export interface IDataPenduduk {
     | "AB-"
     | "O+"
     | "O-";
-  penyandangCacat?:
+  penyandangCacat:
     | "Tidak Cacat"
     | "Cacat Fisik"
     | "Cacat Netra / Buta"
@@ -59,9 +59,9 @@ export interface IDataPenduduk {
     | "Cacat Lainnya";
   nomorPaspor?: string;
   nomorKitas?: string;
-  namaAyah?: string;
-  namaIbu?: string;
-  kartuKeluargaRef?: string;
-  ayahRef?: string;
-  ibuRef?: string;
+  namaAyah: string;
+  namaIbu: string;
+  // kartuKeluargaRef?: string;
+  // ayahRef?: string;
+  // ibuRef?: string;
 }

@@ -13,12 +13,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { IDataPenduduk, IKartuKeluarga } from "@/types/types";
+import { IDataPenduduk } from "@/types/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
-import { createKK } from "@/lib/kk";
 import { createPenduduk } from "@/lib/penduduk";
 import {
   Select,
@@ -32,6 +31,7 @@ const formSchema = z.object({
   nama: z.string().min(2),
   nik: z.string().min(5),
   jenisKelamin: z.enum(["Laki-laki", "Perempuan"]),
+
   tempatLahir: z.string().min(2),
   tanggalLahir: z.string().min(2),
   agama: z.string().min(2),
@@ -52,16 +52,38 @@ const formSchema = z.object({
     "Mertua",
     "Menantu",
     "Cucu",
+    "Pembantu",
     "Famili Lain",
   ]),
   kewarganegaraan: z.enum(["WNI", "WNA"]),
+  golonganDarah: z.enum([
+    "A",
+    "B",
+    "AB",
+    "O",
+    "A+",
+    "A-",
+    "B+",
+    "B-",
+    "AB+",
+    "AB-",
+    "O+",
+    "O-",
+  ]),
+  penyandangCacat: z.enum([
+    "Tidak Cacat",
+    "Cacat Fisik",
+    "Cacat Netra / Buta",
+    "Cacat Rungu / Wicara",
+    "Cacat Mental / Jiwa",
+    "Cacat Fisik dan Mental",
+    "Cacat Lainnya",
+  ]),
+
   nomorPaspor: z.string().min(2).optional(),
   nomorKitas: z.string().min(2).optional(),
-  namaAyah: z.string().min(2).optional(),
-  namaIbu: z.string().min(2).optional(),
-  kartuKeluargaRef: z.string().min(2).optional(),
-  ayahRef: z.string().min(2).optional(),
-  ibuRef: z.string().min(2).optional(),
+  namaAyah: z.string().min(2),
+  namaIbu: z.string().min(2),
 });
 
 export default function AddPendudukForm() {
@@ -82,9 +104,6 @@ export default function AddPendudukForm() {
       nomorKitas: "",
       namaAyah: "",
       namaIbu: "",
-      kartuKeluargaRef: "",
-      ayahRef: "",
-      ibuRef: "",
     },
   });
 
@@ -92,43 +111,42 @@ export default function AddPendudukForm() {
     mutationFn: async (data: IDataPenduduk) =>
       createPenduduk({ penduduk: data }),
     onSuccess: () => {
-      toast.success("Berhasil membuat kartu keluarga");
       form.reset();
 
-      queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
+      queryClient.invalidateQueries({ queryKey: ["penduduk"] });
 
-      router.push("/dashboard/kartu-keluarga");
+      router.push("/dashboard/penduduk");
+      toast.success("Berhasil menambah data penduduk");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Gagal membuat kartu keluarga");
+      toast.error(error.message || "Gagal menambah data penduduk");
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    toast.success("Berhasil membuat penduduk");
 
-    // const data: IDataPenduduk = {
-    //   id: crypto.randomUUID(),
-    //   nama: values.nama,
-    //   nik: values.nik,
-    //   jenisKelamin: values.jenisKelamin,
-    //   tempatLahir: values.tempatLahir,
-    //   tanggalLahir: values.tanggalLahir,
-    //   agama: values.agama,
-    //   pendidikan: values.pendidikan,
-    //   jenisPekerjaan: values.jenisPekerjaan,
-    //   statusPerkawinan: values.statusPerkawinan,
-    //   statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
-    //   nomorPaspor: values.nomorPaspor,
-    //   nomorKitas: values.nomorKitas,
-    //   namaAyah: values.namaAyah,
-    //   namaIbu: values.namaIbu,
-    //   kartuKeluargaRef: values.kartuKeluargaRef,
-    //   ayahRef: values.ayahRef,
-    //   ibuRef: values.ibuRef,
-    // };
-    // mutate(data);
+    const data: IDataPenduduk = {
+      id: crypto.randomUUID(),
+      nama: values.nama,
+      nik: values.nik,
+      jenisKelamin: values.jenisKelamin,
+      tempatLahir: values.tempatLahir,
+      tanggalLahir: values.tanggalLahir,
+      agama: values.agama,
+      pendidikan: values.pendidikan,
+      jenisPekerjaan: values.jenisPekerjaan,
+      statusPerkawinan: values.statusPerkawinan,
+      statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
+      kewarganegaraan: values.kewarganegaraan,
+      golonganDarah: values.golonganDarah,
+      penyandangCacat: values.penyandangCacat,
+      nomorPaspor: values.nomorPaspor,
+      nomorKitas: values.nomorKitas,
+      namaAyah: values.namaAyah,
+      namaIbu: values.namaIbu,
+    };
+    mutate(data);
   }
 
   return (
@@ -145,8 +163,8 @@ export default function AddPendudukForm() {
                   <FormControl>
                     <Input
                       placeholder="Nama Lengkap"
-                      {...field}
                       disabled={isPending}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -189,7 +207,7 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            <div className="md:gap-4 grid grid-cols-1 md:grid-cols-2">
+            <div className="md:gap-4 space-y-4 md:space-y-0 grid grid-cols-1 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="tempatLahir"
@@ -369,13 +387,13 @@ export default function AddPendudukForm() {
               name="statusPerkawinan"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jenis Pekerjaan</FormLabel>
+                  <FormLabel>Status Perkawinan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Jenis Pekerjaan" />
+                        <SelectValue placeholder="Status Perkawinan" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -394,13 +412,13 @@ export default function AddPendudukForm() {
               name="statusHubunganDalamKeluarga"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Jenis Pekerjaan</FormLabel>
+                  <FormLabel>Status Hubungan dalam Keluarga</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Jenis Pekerjaan" />
+                        <SelectValue placeholder="Status Hubungan dalam Keluarga" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -439,6 +457,77 @@ export default function AddPendudukForm() {
                     <SelectContent>
                       <SelectItem value="WNI">WNI</SelectItem>
                       <SelectItem value="WNA">WNA</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="golonganDarah"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Golongan Darah</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Golongan Darah" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="A">A</SelectItem>
+                      <SelectItem value="B">B</SelectItem>
+                      <SelectItem value="AB">AB</SelectItem>
+                      <SelectItem value="O">O</SelectItem>
+                      <SelectItem value="A+">A+</SelectItem>
+                      <SelectItem value="A-">A-</SelectItem>
+                      <SelectItem value="AB+">AB+</SelectItem>
+                      <SelectItem value="AB-">AB-</SelectItem>
+                      <SelectItem value="B+">B+</SelectItem>
+                      <SelectItem value="B-">B-</SelectItem>
+                      <SelectItem value="O+">O+</SelectItem>
+                      <SelectItem value="O-">O-</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="penyandangCacat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Penyandang Cacat</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Penyandang Cacat" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Tidak Cacat">Tidak Cacat</SelectItem>
+                      <SelectItem value="Cacat Fisik">Cacat Fisik</SelectItem>
+                      <SelectItem value="Cacat Netra / Buta">
+                        Cacat Netra / Buta
+                      </SelectItem>
+                      <SelectItem value="Cacat Rungu / Wicara">
+                        Cacat Rungu / Wicara
+                      </SelectItem>
+                      <SelectItem value="Cacat Mental / Jiwa">
+                        Cacat Mental / Jiwa
+                      </SelectItem>
+                      <SelectItem value="Cacat Fisik dan Mental">
+                        Cacat Fisik dan Mental
+                      </SelectItem>
+                      <SelectItem value="Cacat Lainnya">
+                        Cacat Lainnya
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

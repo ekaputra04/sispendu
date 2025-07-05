@@ -10,29 +10,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { checkAuth } from "./auth";
 
-// Validasi autentikasi pengguna
-async function checkAuth() {
-  const user = auth.currentUser;
-  if (!user) {
-    throw new Error("Pengguna tidak terautentikasi");
-  }
-  // Opsional: Verifikasi role dari dokumen users
-  const userDoc = await getDoc(doc(db, "users", user.uid));
-  if (
-    !userDoc.exists() ||
-    !["admin", "petugas"].includes(userDoc.data().role)
-  ) {
-    throw new Error("Akses tidak diizinkan");
-  }
-  return user;
-}
-
-// Mengambil semua penduduk
 export async function getAllPenduduk() {
   try {
-    await checkAuth();
+    // await checkAuth();
 
     console.log("Mengambil data dari koleksi penduduk...");
     const querySnapshot = await getDocs(collection(db, "penduduk"));
@@ -58,7 +40,6 @@ export async function getAllPenduduk() {
   }
 }
 
-// Mengambil penduduk berdasarkan ID (UUID)
 export async function getPendudukById(id: string) {
   try {
     await checkAuth();
@@ -67,7 +48,6 @@ export async function getPendudukById(id: string) {
       throw new Error("ID diperlukan");
     }
 
-    // Validasi format UUID
     if (
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
         id
@@ -99,7 +79,6 @@ export async function getPendudukById(id: string) {
   }
 }
 
-// Mengambil penduduk berdasarkan NIK
 export async function getPendudukByNik(nik: string) {
   try {
     await checkAuth();
@@ -136,7 +115,6 @@ export async function getPendudukByNik(nik: string) {
   }
 }
 
-// Mencari penduduk berdasarkan nama
 export async function getPendudukByName(nama: string) {
   try {
     await checkAuth();
@@ -146,7 +124,7 @@ export async function getPendudukByName(nama: string) {
     }
 
     console.log(`Mencari penduduk dengan nama: ${nama}`);
-    // Simulasi pencarian case-insensitive dengan batasan
+
     const q = query(
       collection(db, "penduduk"),
       where("namaLowerCase", ">=", nama.toLowerCase()),
@@ -175,7 +153,6 @@ export async function getPendudukByName(nama: string) {
   }
 }
 
-// Membuat penduduk baru
 export async function createPenduduk({
   penduduk,
 }: {
@@ -184,8 +161,8 @@ export async function createPenduduk({
   try {
     await checkAuth();
 
-    // Validasi input
     if (
+      !penduduk.id ||
       !penduduk.nik ||
       !penduduk.nama ||
       !penduduk.jenisKelamin ||
@@ -201,7 +178,6 @@ export async function createPenduduk({
       throw new Error("Semua field wajib diisi");
     }
 
-    // Validasi NIK unik
     console.log(`Memeriksa keunikan NIK: ${penduduk.nik}`);
     const nikQuery = query(
       collection(db, "penduduk"),
@@ -212,18 +188,16 @@ export async function createPenduduk({
       throw new Error("NIK sudah terdaftar");
     }
 
-    // Generate UUID untuk ID dokumen
     const id = crypto.randomUUID();
     const docRef = doc(db, "penduduk", id);
 
-    // Simpan dokumen
     await setDoc(docRef, {
       nik: penduduk.nik,
       nama: penduduk.nama,
-      namaLowerCase: penduduk.nama.toLowerCase(), // Untuk pencarian case-insensitive
+      namaLowerCase: penduduk.nama.toLowerCase(),
       jenisKelamin: penduduk.jenisKelamin,
       tempatLahir: penduduk.tempatLahir,
-      tanggalLahir: new Date(penduduk.tanggalLahir),
+      tanggalLahir: penduduk.tanggalLahir,
       agama: penduduk.agama,
       pendidikan: penduduk.pendidikan,
       jenisPekerjaan: penduduk.jenisPekerjaan,
@@ -253,7 +227,6 @@ export async function createPenduduk({
   }
 }
 
-// Memperbarui penduduk
 export async function updatePenduduk({
   id,
   penduduk,
@@ -268,7 +241,6 @@ export async function updatePenduduk({
       throw new Error("ID diperlukan");
     }
 
-    // Validasi format UUID
     if (
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
         id
@@ -277,14 +249,12 @@ export async function updatePenduduk({
       throw new Error("ID tidak valid");
     }
 
-    // Periksa apakah dokumen ada
     const docRef = doc(db, "penduduk", id);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       throw new Error("Penduduk tidak ditemukan");
     }
 
-    // Validasi NIK unik jika diubah
     if (penduduk.nik && penduduk.nik !== docSnap.data().nik) {
       const nikQuery = query(
         collection(db, "penduduk"),
@@ -296,7 +266,6 @@ export async function updatePenduduk({
       }
     }
 
-    // Perbarui dokumen
     await setDoc(
       docRef,
       {
@@ -325,7 +294,6 @@ export async function updatePenduduk({
   }
 }
 
-// Menghapus penduduk
 export async function deletePenduduk(id: string) {
   try {
     await checkAuth();
@@ -334,7 +302,6 @@ export async function deletePenduduk(id: string) {
       throw new Error("ID diperlukan");
     }
 
-    // Validasi format UUID
     if (
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
         id
@@ -343,14 +310,12 @@ export async function deletePenduduk(id: string) {
       throw new Error("ID tidak valid");
     }
 
-    // Periksa apakah dokumen ada
     const docRef = doc(db, "penduduk", id);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
       throw new Error("Penduduk tidak ditemukan");
     }
 
-    // Hapus dokumen
     await deleteDoc(docRef);
 
     return {

@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,42 +11,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Checkbox } from "@/components/ui/checkbox";
-import { IKartuKeluarga } from "@/types/types";
+import { IDataPenduduk } from "@/types/types";
 import Link from "next/link";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-
-export const columns: ColumnDef<IKartuKeluarga>[] = [
+export const columns: ColumnDef<IDataPenduduk>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "no",
+    header: "No",
+    cell: ({ row }) => {
+      return <p>{row.index + 1}</p>;
+    },
   },
   {
-    accessorKey: "NIK",
+    accessorKey: "nik",
     header: "NIK",
   },
   {
-    accessorKey: "Nama",
+    accessorKey: "nama",
     header: ({ column }) => {
       return (
         <Button
@@ -60,23 +40,23 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
     },
   },
   {
-    accessorKey: "Tempat Lahir",
+    accessorKey: "tempatLahir",
     header: "Tempat Lahir",
   },
   {
-    accessorKey: "Tanggal Lahir",
+    accessorKey: "tanggalLahir",
     header: "Tanggal Lahir",
   },
   {
-    accessorKey: "Agama",
+    accessorKey: "agama",
     header: "Agama",
   },
   {
-    accessorKey: "Status Perkawinan",
+    accessorKey: "statusPerkawinan",
     header: "Status Perkawinan",
   },
   {
-    accessorKey: "Pekerjaan",
+    accessorKey: "jenisPekerjaan",
     header: "Pekerjaan",
   },
   {
@@ -95,20 +75,20 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-            <Link href={`/dashboard/kartu-keluarga/detail/${kartuKeluarga.id}`}>
+            <Link href={`/dashboard/penduduk/detail/${kartuKeluarga.id}`}>
               <DropdownMenuItem
                 onClick={() => console.log("Tombol di klik", kartuKeluarga)}>
                 <Eye />
-                Lihat Detail KK
+                Lihat Detail Penduduk
               </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Pencil /> Update Data KK
+              <Pencil /> Update Data Penduduk
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Trash />
-              Hapus Data KK
+              Hapus Data Penduduk
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
