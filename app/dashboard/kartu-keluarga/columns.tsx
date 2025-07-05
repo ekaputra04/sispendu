@@ -83,7 +83,7 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-            <Link href={`/dashboard/kartu-keluarga/${kartuKeluarga.id}`}>
+            <Link href={`/dashboard/kartu-keluarga/detail/${kartuKeluarga.id}`}>
               <DropdownMenuItem
                 onClick={() => console.log("Tombol di klik", kartuKeluarga)}>
                 <Eye />
