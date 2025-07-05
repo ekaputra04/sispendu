@@ -29,7 +29,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5">
               <Link href="/">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="font-semibold text-base">Sispendu</span>
+                <span className="font-semibold text-base">
+                  SISPENDU BEBALANG
+                </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

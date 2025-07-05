@@ -24,10 +24,44 @@ export interface IDataPenduduk {
   pendidikan: string;
   jenisPekerjaan: string;
   statusPerkawinan: "Kawin" | "Belum Kawin" | "Cerai Hidup" | "Cerai Mati";
-  statusHubunganDalamKeluarga: string;
-  kewarganegaraan: string;
+  statusHubunganDalamKeluarga:
+    | "Kepala Keluarga"
+    | "Suami"
+    | "Istri"
+    | "Anak"
+    | "Orang Tua"
+    | "Mertua"
+    | "Menantu"
+    | "Cucu"
+    | "Pembantu"
+    | "Famili Lain";
+  kewarganegaraan?: "WNI" | "WNA";
+  golonganDarah?:
+    | "A"
+    | "B"
+    | "AB"
+    | "O"
+    | "A+"
+    | "A-"
+    | "B+"
+    | "B-"
+    | "AB+"
+    | "AB-"
+    | "O+"
+    | "O-";
+  penyandangCacat?:
+    | "Tidak Cacat"
+    | "Cacat Fisik"
+    | "Cacat Netra / Buta"
+    | "Cacat Rungu / Wicara"
+    | "Cacat Mental / Jiwa"
+    | "Cacat Fisik dan Mental"
+    | "Cacat Lainnya";
   nomorPaspor?: string;
   nomorKitas?: string;
   namaAyah?: string;
   namaIbu?: string;
+  kartuKeluargaRef?: string;
+  ayahRef?: string;
+  ibuRef?: string;
 }

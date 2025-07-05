@@ -86,7 +86,7 @@ export default function DetailKartuKeluargaPage({
               <TableCell>Nama</TableCell>
               <TableCell>Laki-laki</TableCell>
               <TableCell>Kepala Keluarga</TableCell>
-              <TableCell>
+              <TableCell className="flex gap-2">
                 <Link href={"/"}>
                   <Button variant={"outline"}>
                     <Pencil />

@@ -1,7 +1,5 @@
+import AddPendudukForm from "@/components/molecules/add-penduduk-form";
+
 export default function Page() {
-  return (
-    <div className="">
-      <div className="">Tambah penduduk</div>
-    </div>
-  );
+  return <AddPendudukForm />;
 }

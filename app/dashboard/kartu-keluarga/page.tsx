@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllKK } from "@/lib/kk";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import LoadingView from "@/components/atoms/loading-view";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
@@ -17,6 +18,7 @@ export default function Page() {
 
   return (
     <div className="">
+      {isLoading && <LoadingView />}
       <div className="">
         <Link href={"/dashboard/kartu-keluarga/add"}>
           <Button>
@@ -26,11 +28,7 @@ export default function Page() {
         </Link>
       </div>
       <div className="mx-auto container">
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          <DataTable columns={columns} data={data || []} />
-        )}
+        {!isLoading && <DataTable columns={columns} data={data || []} />}
       </div>
     </div>
   );

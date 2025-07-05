@@ -10,7 +10,7 @@ import { columns } from "./columns";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["kartu-keluarga"],
+    queryKey: ["penduduk"],
     queryFn: getAllKK,
     retry: false,
   });
@@ -18,7 +18,7 @@ export default function Page() {
   return (
     <div className="">
       <div className="">
-        <Link href={"/dashboard/kartu-keluarga/add"}>
+        <Link href={"/dashboard/penduduk/add"}>
           <Button>
             <PlusCircle />
             Tambah Data Penduduk
