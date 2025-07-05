@@ -1,5 +1,5 @@
 export interface IKartuKeluarga {
-  id?: string;
+  id: string;
   noKK: string;
   namaKepalaKeluarga: string;
   alamat: string;
@@ -14,6 +14,7 @@ export interface IKartuKeluarga {
 }
 
 export interface IDataPenduduk {
+  id: string;
   nama: string;
   nik: string;
   jenisKelamin: "Laki-laki" | "Perempuan";

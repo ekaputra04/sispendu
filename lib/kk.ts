@@ -1,7 +1,6 @@
 import { db } from "@/config/firebase-init";
 import { IKartuKeluarga } from "@/types/types";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -31,7 +30,6 @@ export async function createKK({ kk }: { kk: IKartuKeluarga }) {
   //   ...kk,
   // });
   const docRef = await setDoc(doc(db, "kartu-keluarga", kk.id as string), {
-    id: kk.id,
     ...kk,
   });
   return docRef;

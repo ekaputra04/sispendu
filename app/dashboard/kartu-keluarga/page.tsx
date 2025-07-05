@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "@/app/dashboard/kartu-keluarga/data-table";
 import { useQuery } from "@tanstack/react-query";
 import { getAllKK } from "@/lib/kk";
 import { columns } from "./columns";
+import { DataTable } from "./data-table";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
