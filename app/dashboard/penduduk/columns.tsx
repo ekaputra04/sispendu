@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IDataPenduduk } from "@/types/types";
 import Link from "next/link";
+import { ButtonOutlineGreen } from "@/consts/buttonCss";
+import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
 
 export const columns: ColumnDef<IDataPenduduk>[] = [
   {
@@ -40,10 +42,6 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
     },
   },
   {
-    accessorKey: "tempatLahir",
-    header: "Tempat Lahir",
-  },
-  {
     accessorKey: "tanggalLahir",
     header: "Tanggal Lahir",
   },
@@ -63,35 +61,36 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
     id: "Aksi",
     header: "Aksi",
     cell: ({ row }) => {
-      const kartuKeluarga = row.original;
+      const penduduk: IDataPenduduk = row.original;
+      const { setPenduduk, setIsOpen } = usePendudukSelectedForDelete();
+
+      async function handleOpenDialog() {
+        setPenduduk(penduduk);
+        setIsOpen(true);
+      }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="p-0 w-8 h-8">
-              <span className="sr-only">Buka Menu</span>
-              <MoreHorizontal className="w-4 h-4" />
+        <div className="flex gap-2">
+          <Link href={`/dashboard/penduduk/detail/${penduduk.id}`}>
+            <Button size={"sm"} variant={"outline"}>
+              <Eye />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-            <Link href={`/dashboard/penduduk/detail/${kartuKeluarga.id}`}>
-              <DropdownMenuItem
-                onClick={() => console.log("Tombol di klik", kartuKeluarga)}>
-                <Eye />
-                Lihat Detail Penduduk
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Pencil /> Update Data Penduduk
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Trash />
-              Hapus Data Penduduk
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </Link>
+          <Link href={`/dashboard/penduduk/edit/${penduduk.id}`}>
+            <Button
+              size={"sm"}
+              variant={"outline"}
+              className={ButtonOutlineGreen}>
+              <Pencil />
+            </Button>
+          </Link>
+          <Button
+            size={"sm"}
+            variant={"destructive"}
+            onClick={handleOpenDialog}>
+            <Trash />
+          </Button>
+        </div>
       );
     },
   },

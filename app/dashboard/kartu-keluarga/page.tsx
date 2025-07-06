@@ -14,7 +14,6 @@ export default function Page() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["kartu-keluarga"],
     queryFn: getAllKK,
-    retry: false,
   });
 
   return (

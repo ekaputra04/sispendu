@@ -9,12 +9,12 @@ import { columns } from "./columns";
 import { getAllPenduduk } from "@/lib/penduduk";
 import LoadingView from "@/components/atoms/loading-view";
 import { IDataPenduduk } from "@/types/types";
+import DialogDeletePenduduk from "./dialog-delete-penduduk";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["penduduk"],
     queryFn: getAllPenduduk,
-    retry: false,
   });
 
   return (
@@ -36,6 +36,7 @@ export default function Page() {
           />
         )}
       </div>
+      <DialogDeletePenduduk />
     </div>
   );
 }

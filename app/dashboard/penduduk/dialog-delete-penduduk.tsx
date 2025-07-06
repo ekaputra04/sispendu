@@ -11,38 +11,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteKK } from "@/lib/kk";
-import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
+import { deletePenduduk } from "@/lib/penduduk";
+import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export default function DialogDeleteKK() {
+export default function DialogDeletePenduduk() {
   const queryClient = useQueryClient();
-  const { kartuKeluarga, isOpen, clearKartuKeluarga, setIsOpen } =
-    useKKSelectedForDelete();
+  const { penduduk, isOpen, clearPenduduk, setIsOpen } =
+    usePendudukSelectedForDelete();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (id: string) => deleteKK(id),
+    mutationFn: async (id: string) => deletePenduduk(id),
     onSuccess: () => {
-      toast.success("Berhasil menghapus data kartu keluarga");
-      queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
-      setIsOpen(false);
+      toast.success("Berhasil menghapus data penduduk");
+      queryClient.invalidateQueries({ queryKey: ["penduduk"] });
+      handleCancel();
     },
 
     onError: (error: any) => {
-      toast.error(error.message || "Gagal menghapus data kartu keluarga");
-      setIsOpen(false);
+      toast.error(error.message || "Gagal menghapus data penduduk");
+      handleCancel();
     },
   });
 
-  async function handleDeleteKK() {
-    if (kartuKeluarga) {
-      mutate(kartuKeluarga.id);
+  async function handleDelete() {
+    if (penduduk) {
+      mutate(penduduk.id);
     }
   }
 
   async function handleCancel() {
-    clearKartuKeluarga();
+    clearPenduduk();
     setIsOpen(false);
   }
 
@@ -52,15 +52,15 @@ export default function DialogDeleteKK() {
         <AlertDialogHeader>
           <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
           <AlertDialogDescription>
-            Aksi ini akan menghapus data kartu keluarga dengan nomor{" "}
-            <span className="font-bold"> {kartuKeluarga?.noKK}</span>.
+            Aksi ini akan menghapus data penduduk dengan nama{" "}
+            <span className="font-bold"> {penduduk?.nama}</span>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={isPending}>
             Batal
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteKK} disabled={isPending}>
+          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
             {isPending ? (
               <>
                 <LoadingIcon />
