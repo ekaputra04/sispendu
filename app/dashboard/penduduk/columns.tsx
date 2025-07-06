@@ -30,17 +30,21 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
   },
   {
     accessorKey: "nama",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Nama Lengkap
-          <ArrowUpDown className="ml-2 w-4 h-4" />
-        </Button>
-      );
-    },
+    header: "Nama Lengkap",
   },
+  // {
+  //   accessorKey: "nama",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+  //         Nama Lengkap
+  //         <ArrowUpDown className="ml-2 w-4 h-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "tanggalLahir",
     header: "Tanggal Lahir",

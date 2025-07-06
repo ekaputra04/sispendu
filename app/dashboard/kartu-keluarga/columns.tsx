@@ -1,11 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { ArrowUpDown, Eye, Pencil, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IKartuKeluarga } from "@/types/types";
 import Link from "next/link";
-import DialogDeleteKK from "./dialog-delete-kk";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
 
@@ -23,17 +22,21 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
   },
   {
     accessorKey: "namaKepalaKeluarga",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-          Nama Kepala KK
-          <ArrowUpDown className="ml-2 w-4 h-4" />
-        </Button>
-      );
-    },
+    header: "Nama Kepala Keluarga",
   },
+  // {
+  //   accessorKey: "namaKepalaKeluarga",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+  //         Nama Kepala KK
+  //         <ArrowUpDown className="ml-2 w-4 h-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "alamat",
     header: "Alamat",

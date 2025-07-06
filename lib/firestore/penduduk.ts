@@ -1,5 +1,5 @@
 import { auth, db } from "@/config/firebase-init";
-import { IDataPenduduk } from "@/types/types";
+import { FirestoreResponse, IDataPenduduk } from "@/types/types";
 import {
   collection,
   doc,
@@ -12,23 +12,22 @@ import {
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
 
-export async function getAllPenduduk() {
+export async function getAllPenduduk(): Promise<
+  FirestoreResponse<IDataPenduduk[] | null>
+> {
   try {
-    // await checkAuth();
+    await checkAuth();
 
     console.log("Mengambil data dari koleksi penduduk...");
     const querySnapshot = await getDocs(collection(db, "penduduk"));
-    const pendudukList = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
+    const data: IDataPenduduk[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() } as IDataPenduduk);
+    });
     return {
       success: true,
-      data: pendudukList,
-      message: pendudukList.length
-        ? "Berhasil mengambil data penduduk"
-        : "Tidak ada data penduduk",
+      message: "Berhasil mengambil data kartu keluarga",
+      data,
     };
   } catch (error: any) {
     console.error("Gagal mengambil data penduduk:", error);
@@ -40,10 +39,10 @@ export async function getAllPenduduk() {
   }
 }
 
-export async function getPendudukById(id: string) {
+export async function getPendudukById(
+  id: string
+): Promise<FirestoreResponse<IDataPenduduk | null>> {
   try {
-    await checkAuth();
-
     if (!id) {
       throw new Error("ID diperlukan");
     }
@@ -56,18 +55,22 @@ export async function getPendudukById(id: string) {
       throw new Error("ID tidak valid");
     }
 
-    console.log(`Mengambil dokumen penduduk dengan ID: ${id}`);
+    await checkAuth();
     const docRef = doc(db, "penduduk", id);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Penduduk tidak ditemukan");
+      return {
+        success: false,
+        message: `Penduduk dengan ID ${id} tidak ditemukan`,
+        data: null,
+      };
     }
 
     return {
       success: true,
-      data: { id: docSnap.id, ...docSnap.data() },
       message: "Berhasil mengambil data penduduk",
+      data: { id: docSnap.id, ...docSnap.data() } as IDataPenduduk,
     };
   } catch (error: any) {
     console.error("Gagal mengambil data penduduk:", error);
@@ -79,20 +82,25 @@ export async function getPendudukById(id: string) {
   }
 }
 
-export async function getPendudukByNik(nik: string) {
+export async function getPendudukByNik(
+  nik: string
+): Promise<FirestoreResponse<IDataPenduduk | null>> {
   try {
-    await checkAuth();
-
     if (!nik) {
       throw new Error("NIK diperlukan");
     }
 
-    console.log(`Mencari penduduk dengan NIK: ${nik}`);
+    await checkAuth();
+
     const q = query(collection(db, "penduduk"), where("nik", "==", nik));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
-      throw new Error("Penduduk tidak ditemukan");
+      return {
+        success: false,
+        message: `Penduduk dengan NIK ${nik} tidak ditemukan`,
+        data: null,
+      };
     }
 
     const penduduk = querySnapshot.docs.map((doc) => ({
@@ -102,7 +110,7 @@ export async function getPendudukByNik(nik: string) {
 
     return {
       success: true,
-      data: penduduk,
+      data: penduduk as IDataPenduduk,
       message: "Berhasil mengambil data penduduk",
     };
   } catch (error: any) {
@@ -115,13 +123,15 @@ export async function getPendudukByNik(nik: string) {
   }
 }
 
-export async function getPendudukByName(nama: string) {
+export async function getPendudukByName(
+  nama: string
+): Promise<FirestoreResponse<IDataPenduduk[] | null>> {
   try {
-    await checkAuth();
-
     if (!nama) {
       throw new Error("Nama diperlukan");
     }
+
+    await checkAuth();
 
     console.log(`Mencari penduduk dengan nama: ${nama}`);
 
@@ -138,7 +148,7 @@ export async function getPendudukByName(nama: string) {
 
     return {
       success: true,
-      data: pendudukList,
+      data: pendudukList as IDataPenduduk[],
       message: pendudukList.length
         ? "Berhasil menemukan penduduk"
         : "Tidak ada penduduk ditemukan",

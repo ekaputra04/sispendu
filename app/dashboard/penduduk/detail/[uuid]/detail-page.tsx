@@ -1,5 +1,7 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
+import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -15,9 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Pencil, PlusCircle } from "lucide-react";
-import DialogDeleteUserFromKK from "./dialog-delete-user-from-kk";
 import { handleCopy } from "@/lib/utils";
-import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 
 interface DetailKartuKeluargaPageProps {
@@ -34,16 +34,16 @@ export default function DetailKartuKeluargaPage({
   });
 
   return (
-    <div className="">
+    <div>
       {isLoading && <LoadingView />}
       {data?.data ? (
-        <div className="">
+        <div>
           <div className="flex justify-between items-center">
-            <Heading1 text="Detail Data Penduduk" />
-            <Link href={"/dashboard/penduduk/edit/" + uuid}>
+            <Heading1 text="Detail Kartu Keluarga" />
+            <Link href={"/dashboard/kartu-keluarga/edit/" + uuid}>
               <Button variant={"outline"} className={ButtonOutlineGreen}>
                 <Pencil />
-                Edit Data Penduduk
+                Edit Kartu Keluarga
               </Button>
             </Link>
           </div>
@@ -117,52 +117,10 @@ export default function DetailKartuKeluargaPage({
               </TableRow>
             </TableBody>
           </Table>
-
-          <hr className="my-4" />
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <Heading2 text="Daftar Anggota Keluarga" />
-              <Button>
-                <PlusCircle />
-                Tambah Anggota Keluarga
-              </Button>
-            </div>
-            <Table>
-              <TableCaption>Daftar Anggota Keluarga</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>No</TableHead>
-                  <TableHead>NIK</TableHead>
-                  <TableHead>Nama</TableHead>
-                  <TableHead>Jenis Kelamin</TableHead>
-                  <TableHead>Hubungan Keluarga</TableHead>
-                  <TableHead>Aksi</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">1</TableCell>
-                  <TableCell>Nik</TableCell>
-                  <TableCell>Nama</TableCell>
-                  <TableCell>Laki-laki</TableCell>
-                  <TableCell>Kepala Keluarga</TableCell>
-                  <TableCell className="flex gap-2">
-                    <Link href={"/"}>
-                      <Button variant={"outline"}>
-                        <Pencil />
-                        Edit
-                      </Button>
-                    </Link>
-                    <DialogDeleteUserFromKK />
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
         </div>
       ) : (
         <div className="">
-          <Heading1 text="Data Detail Kartu Keluarga Tidak Ditemukan" />
+          <Heading1 text="Data Detail Penduduk Tidak Ditemukan" />
         </div>
       )}
     </div>

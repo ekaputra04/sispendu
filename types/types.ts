@@ -65,3 +65,10 @@ export interface IDataPenduduk {
   // ayahRef?: string;
   // ibuRef?: string;
 }
+
+export interface FirestoreResponse<T = any> {
+  success: boolean;
+  message: string;
+  data?: T;
+  errorCode?: string;
+}

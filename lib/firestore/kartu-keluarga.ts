@@ -1,5 +1,5 @@
 import { db } from "@/config/firebase-init";
-import { IKartuKeluarga } from "@/types/types";
+import { FirestoreResponse, IKartuKeluarga } from "@/types/types";
 import {
   collection,
   deleteDoc,
@@ -10,14 +10,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
-
-// Tipe respons standar untuk semua fungsi
-interface FirestoreResponse<T = any> {
-  success: boolean;
-  message: string;
-  data?: T;
-  errorCode?: string;
-}
 
 // Mendapatkan semua kartu keluarga
 export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
@@ -51,6 +43,15 @@ export async function getKKById(
     if (!kkId) {
       throw new Error("ID kartu keluarga diperlukan");
     }
+
+    if (
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        kkId
+      )
+    ) {
+      throw new Error("ID tidak valid");
+    }
+
     await checkAuth(); // Memeriksa autentikasi
     const docRef = doc(db, "kartu-keluarga", kkId);
     const docSnap = await getDoc(docRef);
