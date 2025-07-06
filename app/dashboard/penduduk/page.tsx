@@ -6,7 +6,7 @@ import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
-import { getAllPenduduk } from "@/lib/penduduk";
+import { getAllPenduduk } from "@/lib/firestore/penduduk";
 import LoadingView from "@/components/atoms/loading-view";
 import { IDataPenduduk } from "@/types/types";
 import DialogDeletePenduduk from "./dialog-delete-penduduk";

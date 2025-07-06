@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deletePenduduk } from "@/lib/penduduk";
+import { deletePenduduk } from "@/lib/firestore/penduduk";
 import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";

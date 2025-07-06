@@ -14,11 +14,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IKartuKeluarga } from "@/types/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
-import { createKK } from "@/lib/firestore/kartu-keluarga";
+import { getKKById, updateKK } from "@/lib/firestore/kartu-keluarga";
+import { useEffect } from "react";
+import LoadingView from "../atoms/loading-view";
 
 const formSchema = z.object({
   noKK: z.string().min(2),
@@ -34,9 +36,36 @@ const formSchema = z.object({
   tanggalPenerbitan: z.string().min(2),
 });
 
-export default function AddKKForm() {
+interface AddEditFormProps {
+  uuid: string;
+}
+
+export default function EditKKForm({ uuid }: AddEditFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["kartu-keluarga", uuid],
+    queryFn: () => getKKById(uuid),
+    retry: false,
+  });
+
+  useEffect(() => {
+    console.log(data);
+
+    const dataResult = data?.data;
+    form.setValue("noKK", dataResult?.noKK || "");
+    form.setValue("namaKepalaKeluarga", dataResult?.namaKepalaKeluarga || "");
+    form.setValue("alamat", dataResult?.alamat || "");
+    form.setValue("rt", dataResult?.rt || "");
+    form.setValue("rw", dataResult?.rw || "");
+    form.setValue("desa", dataResult?.desa || "");
+    form.setValue("kecamatan", dataResult?.kecamatan || "");
+    form.setValue("kabupaten", dataResult?.kabupaten || "");
+    form.setValue("provinsi", dataResult?.provinsi || "");
+    form.setValue("kodePos", dataResult?.kodePos || "");
+    form.setValue("tanggalPenerbitan", dataResult?.tanggalPenerbitan || "");
+  }, [data]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,7 +86,7 @@ export default function AddKKForm() {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: IKartuKeluarga) => createKK({ kk: data }),
+    mutationFn: async (data: IKartuKeluarga) => updateKK(uuid, data),
     onSuccess: () => {
       toast.success("Berhasil menambahkan data kartu keluarga");
       form.reset();
@@ -72,7 +101,7 @@ export default function AddKKForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const data: IKartuKeluarga = {
-      id: crypto.randomUUID(),
+      id: uuid,
       noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
@@ -90,6 +119,7 @@ export default function AddKKForm() {
 
   return (
     <div className="">
+      {isLoading && <LoadingView />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">

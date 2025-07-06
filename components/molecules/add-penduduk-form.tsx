@@ -18,7 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
-import { createPenduduk } from "@/lib/penduduk";
+import { createPenduduk } from "@/lib/firestore/penduduk";
 import {
   Select,
   SelectContent,

@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { getKKById } from "@/lib/kk";
+import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -47,48 +47,52 @@ export default function DetailKartuKeluargaPage({
         <TableBody>
           <TableRow>
             <TableCell className="font-medium">Nomor Kartu Keluarga</TableCell>
-            <TableCell>{data?.noKK}</TableCell>
+            <TableCell>{data?.data?.noKK}</TableCell>
             <TableCell>
               <Button
                 size={"sm"}
                 variant={"ghost"}
-                onClick={() => handleCopy(data?.noKK as string)}>
+                onClick={() => handleCopy(data?.data?.noKK as string)}>
                 <Copy />
               </Button>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Nama Kepala Keluarga</TableCell>
-            <TableCell>{data?.namaKepalaKeluarga}</TableCell>
+            <TableCell>{data?.data?.namaKepalaKeluarga}</TableCell>
             <TableCell>
               <Button
                 size={"sm"}
                 variant={"ghost"}
-                onClick={() => handleCopy(data?.namaKepalaKeluarga as string)}>
+                onClick={() =>
+                  handleCopy(data?.data?.namaKepalaKeluarga as string)
+                }>
                 <Copy />
               </Button>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Alamat</TableCell>
-            <TableCell>{data?.alamat}</TableCell>
+            <TableCell>{data?.data?.alamat}</TableCell>
             <TableCell>
               <Button
                 size={"sm"}
                 variant={"ghost"}
-                onClick={() => handleCopy(data?.alamat as string)}>
+                onClick={() => handleCopy(data?.data?.alamat as string)}>
                 <Copy />
               </Button>
             </TableCell>
           </TableRow>
           <TableRow>
             <TableCell className="font-medium">Tanggal Penerbitan</TableCell>
-            <TableCell>{data?.tanggalPenerbitan}</TableCell>
+            <TableCell>{data?.data?.tanggalPenerbitan}</TableCell>
             <TableCell>
               <Button
                 size={"sm"}
                 variant={"ghost"}
-                onClick={() => handleCopy(data?.tanggalPenerbitan as string)}>
+                onClick={() =>
+                  handleCopy(data?.data?.tanggalPenerbitan as string)
+                }>
                 <Copy />
               </Button>
             </TableCell>

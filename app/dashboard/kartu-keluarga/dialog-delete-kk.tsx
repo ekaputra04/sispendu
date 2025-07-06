@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { deleteKK } from "@/lib/kk";
+import { deleteKK } from "@/lib/firestore/kartu-keluarga";
 import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";

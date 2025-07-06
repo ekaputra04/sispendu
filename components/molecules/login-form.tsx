@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebase-init";
-import { getUserById } from "@/lib/users";
+import { getUserById } from "@/lib/firestore/users";
 import { useSessionStore } from "@/store/useSession";
 import { SessionPayload } from "@/lib/definitions";
 import { encrypt } from "@/lib/utils";

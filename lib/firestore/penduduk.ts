@@ -10,7 +10,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { checkAuth } from "./auth";
+import { checkAuth } from "../auth";
 
 export async function getAllPenduduk() {
   try {

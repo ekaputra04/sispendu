@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getAllKK } from "@/lib/kk";
+import { getAllKK } from "@/lib/firestore/kartu-keluarga";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import LoadingView from "@/components/atoms/loading-view";
@@ -28,7 +28,7 @@ export default function Page() {
         </Link>
       </div>
       <div className="mx-auto container">
-        {!isLoading && <DataTable columns={columns} data={data || []} />}
+        {!isLoading && <DataTable columns={columns} data={data?.data || []} />}
       </div>
       <DialogDeleteKK />
     </div>
