@@ -3,16 +3,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { IKartuKeluarga } from "@/types/types";
 import Link from "next/link";
+import DialogDeleteKK from "./dialog-delete-kk";
+import { ButtonOutlineGreen } from "@/consts/buttonCss";
+import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
 
 export const columns: ColumnDef<IKartuKeluarga>[] = [
   {
@@ -51,35 +46,36 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
     id: "actions",
     header: "Aksi",
     cell: ({ row }) => {
-      const kartuKeluarga = row.original;
+      const kartuKeluarga: IKartuKeluarga = row.original;
+      const { setKartuKeluarga, setIsOpen } = useKKSelectedForDelete();
+
+      async function handleOpenDialog() {
+        setKartuKeluarga(kartuKeluarga);
+        setIsOpen(true);
+      }
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="p-0 w-8 h-8">
-              <span className="sr-only">Buka Menu</span>
-              <MoreHorizontal className="w-4 h-4" />
+        <div className="flex gap-2">
+          <Link href={`/dashboard/kartu-keluarga/detail/${kartuKeluarga.id}`}>
+            <Button size={"sm"} variant={"outline"}>
+              <Eye />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-            <Link href={`/dashboard/kartu-keluarga/detail/${kartuKeluarga.id}`}>
-              <DropdownMenuItem
-                onClick={() => console.log("Tombol di klik", kartuKeluarga)}>
-                <Eye />
-                Lihat Detail KK
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Pencil /> Update Data KK
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Trash />
-              Hapus Data KK
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </Link>
+          <Link href={`/dashboard/kartu-keluarga/edit/${kartuKeluarga.id}`}>
+            <Button
+              size={"sm"}
+              variant={"outline"}
+              className={ButtonOutlineGreen}>
+              <Pencil />
+            </Button>
+          </Link>
+          <Button
+            size={"sm"}
+            variant={"destructive"}
+            onClick={handleOpenDialog}>
+            <Trash />
+          </Button>
+        </div>
       );
     },
   },

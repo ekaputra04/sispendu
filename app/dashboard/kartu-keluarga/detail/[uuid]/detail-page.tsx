@@ -16,8 +16,9 @@ import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
-import { Pencil } from "lucide-react";
+import { Copy, Pencil, PlusCircle } from "lucide-react";
 import DialogDeleteUserFromKK from "./dialog-delete-user-from-kk";
+import { handleCopy } from "@/lib/utils";
 
 interface DetailKartuKeluargaPageProps {
   uuid: string;
@@ -35,37 +36,74 @@ export default function DetailKartuKeluargaPage({
   return (
     <div className="">
       {isLoading && <LoadingView />}
-      <div className="space-y-2">
-        <div className="grid grid-cols-3">
-          <p>No Kartu Keluarga</p>
-          <Input
-            disabled
-            value={data?.noKK || ""}
-            className="col-span-2 w-full"
-          />
-        </div>
-        <div className="grid grid-cols-3">
-          <p>Kepala Keluarga</p>
-          <Input
-            disabled
-            value={data?.namaKepalaKeluarga || ""}
-            className="col-span-2 w-full"
-          />
-        </div>
-        <div className="grid grid-cols-3">
-          <p>Alamat</p>
-          <Input
-            disabled
-            value={data?.alamat || ""}
-            className="col-span-2 w-full"
-          />
-        </div>
-      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Atribut</TableHead>
+            <TableHead>Nilai</TableHead>
+            <TableHead>Aksi</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">Nomor Kartu Keluarga</TableCell>
+            <TableCell>{data?.noKK}</TableCell>
+            <TableCell>
+              <Button
+                size={"sm"}
+                variant={"ghost"}
+                onClick={() => handleCopy(data?.noKK as string)}>
+                <Copy />
+              </Button>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Nama Kepala Keluarga</TableCell>
+            <TableCell>{data?.namaKepalaKeluarga}</TableCell>
+            <TableCell>
+              <Button
+                size={"sm"}
+                variant={"ghost"}
+                onClick={() => handleCopy(data?.namaKepalaKeluarga as string)}>
+                <Copy />
+              </Button>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Alamat</TableCell>
+            <TableCell>{data?.alamat}</TableCell>
+            <TableCell>
+              <Button
+                size={"sm"}
+                variant={"ghost"}
+                onClick={() => handleCopy(data?.alamat as string)}>
+                <Copy />
+              </Button>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Tanggal Penerbitan</TableCell>
+            <TableCell>{data?.tanggalPenerbitan}</TableCell>
+            <TableCell>
+              <Button
+                size={"sm"}
+                variant={"ghost"}
+                onClick={() => handleCopy(data?.tanggalPenerbitan as string)}>
+                <Copy />
+              </Button>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+
       <hr className="my-4" />
       <div className="space-y-2">
         <div className="flex justify-between items-center">
           <Heading2 text="Daftar Anggota Keluarga" />
-          <Button>Tambah Anggota Keluarga</Button>
+          <Button>
+            <PlusCircle />
+            Tambah Anggota Keluarga
+          </Button>
         </div>
         <Table>
           <TableCaption>Daftar Anggota Keluarga</TableCaption>

@@ -58,15 +58,14 @@ export default function AddKKForm() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: IKartuKeluarga) => createKK({ kk: data }),
     onSuccess: () => {
-      toast.success("Berhasil membuat kartu keluarga");
+      toast.success("Berhasil menambahkan data kartu keluarga");
       form.reset();
 
       queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
-
       router.push("/dashboard/kartu-keluarga");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Gagal membuat kartu keluarga");
+      toast.error(error.message || "Gagal menambahkan data kartu keluarga");
     },
   });
 

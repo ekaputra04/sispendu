@@ -3,6 +3,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { SessionPayload } from "./definitions";
 import { jwtVerify, SignJWT } from "jose";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,5 +28,19 @@ export async function decrypt(session: string | undefined = "") {
     return payload;
   } catch (error) {
     console.log("Failed to verify session");
+  }
+}
+
+export async function handleCopy(text: string) {
+  try {
+    if (!text) {
+      toast.error("Tidak ada teks untuk disalin");
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    toast.success("Teks berhasil disalin ke clipboard");
+  } catch (error: any) {
+    console.error("Gagal menyalin teks:", error);
+    toast.error("Gagal menyalin teks");
   }
 }
