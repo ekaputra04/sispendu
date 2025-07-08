@@ -39,11 +39,11 @@ export default function DetailKartuKeluargaPage({
       {data?.data ? (
         <div className="">
           <div className="flex justify-between items-center">
-            <Heading1 text="Detail Data Penduduk" />
-            <Link href={"/dashboard/penduduk/edit/" + uuid}>
+            <Heading1 text="Detail Data Kartu Keluarga" />
+            <Link href={"/dashboard/kartu-keluarga/edit/" + uuid}>
               <Button variant={"outline"} className={ButtonOutlineGreen}>
                 <Pencil />
-                Edit Data Penduduk
+                Edit Data Kartu Keluarga
               </Button>
             </Link>
           </div>

@@ -1,4 +1,4 @@
-import DetailPendudukPage from "./detail-page";
+import EditPendudukPage from "./edit-page";
 
 export default async function Page({
   params,
@@ -6,5 +6,5 @@ export default async function Page({
   params: Promise<{ uuid: string }>;
 }) {
   const { uuid } = await params;
-  return <DetailPendudukPage uuid={uuid} />;
+  return <EditPendudukPage uuid={uuid} />;
 }

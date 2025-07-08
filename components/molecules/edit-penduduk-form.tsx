@@ -18,7 +18,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
-import { createPenduduk } from "@/lib/firestore/penduduk";
+import { updatePenduduk } from "@/lib/firestore/penduduk";
 import {
   Select,
   SelectContent,
@@ -98,52 +98,64 @@ const formSchema = z.object({
     "Cacat Fisik dan Mental",
     "Cacat Lainnya",
   ]),
-
   nomorPaspor: z.string().min(2).optional(),
   nomorKitas: z.string().min(2).optional(),
   namaAyah: z.string().min(2),
   namaIbu: z.string().min(2),
 });
 
-export default function AddPendudukForm() {
+interface EditPendudukFormProps {
+  data: IDataPenduduk | null | undefined;
+}
+
+export default function EditPendudukForm({ data }: EditPendudukFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nama: "",
-      nik: "",
-      tempatLahir: "",
-      tanggalLahir: "",
-      pendidikan: "",
-      jenisPekerjaan: "",
-      nomorPaspor: "",
-      nomorKitas: "",
-      namaAyah: "",
-      namaIbu: "",
+      nama: data?.nama,
+      nik: data?.nik,
+      jenisKelamin: data?.jenisKelamin,
+      tempatLahir: data?.tempatLahir,
+      tanggalLahir: data?.tanggalLahir,
+      agama: data?.agama,
+      pendidikan: data?.pendidikan,
+      jenisPekerjaan: data?.jenisPekerjaan,
+      statusPerkawinan: data?.statusPerkawinan,
+      statusHubunganDalamKeluarga: data?.statusHubunganDalamKeluarga,
+      kewarganegaraan: data?.kewarganegaraan,
+      golonganDarah: data?.golonganDarah,
+      penyandangCacat: data?.penyandangCacat,
+      nomorPaspor: data?.nomorPaspor,
+      nomorKitas: data?.nomorKitas,
+      namaAyah: data?.namaAyah,
+      namaIbu: data?.namaIbu,
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: IDataPenduduk) =>
-      createPenduduk({ penduduk: data }),
+      updatePenduduk({ id: data.id, penduduk: data }),
     onSuccess: () => {
       form.reset();
 
       queryClient.invalidateQueries({ queryKey: ["penduduk"] });
 
       router.push("/dashboard/penduduk");
-      toast.success("Berhasil menambah data penduduk");
+      toast.success("Berhasil mengedit data penduduk");
     },
     onError: (error: any) => {
-      toast.error(error.message || "Gagal menambah data penduduk");
+      toast.error(error.message || "Gagal mengedit data penduduk");
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const data: IDataPenduduk = {
-      id: crypto.randomUUID(),
+    console.log(values);
+
+    const dataSubmit: IDataPenduduk = {
+      id: data?.id as string,
       nama: values.nama,
       nik: values.nik,
       jenisKelamin: values.jenisKelamin,
@@ -162,9 +174,7 @@ export default function AddPendudukForm() {
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
     };
-    console.log(data);
-
-    mutate(data);
+    mutate(dataSubmit);
   }
 
   return (
@@ -210,7 +220,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Jenis Kelamin</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Jenis Kelamin" />
@@ -273,7 +284,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Agama</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Agama" />
@@ -299,7 +311,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Pendidikan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pendidikan" />
@@ -325,7 +338,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Jenis Pekerjaan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Jenis Pekerjaan" />
@@ -351,7 +365,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Status Perkawinan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Status Perkawinan" />
@@ -377,7 +392,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Status Hubungan dalam Keluarga</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Status Hubungan dalam Keluarga" />
@@ -403,7 +419,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Kewarganegaraan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Kewarganegaraan" />
@@ -429,7 +446,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Golongan Darah</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Golongan Darah" />
@@ -455,7 +473,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Penyandang Cacat</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Penyandang Cacat" />

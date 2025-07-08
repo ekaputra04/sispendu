@@ -198,33 +198,18 @@ export async function createPenduduk({
       throw new Error("NIK sudah terdaftar");
     }
 
-    const id = crypto.randomUUID();
-    const docRef = doc(db, "penduduk", id);
+    const docRef = doc(db, "penduduk", penduduk.id);
 
     await setDoc(docRef, {
-      nik: penduduk.nik,
-      nama: penduduk.nama,
+      ...penduduk,
       namaLowerCase: penduduk.nama.toLowerCase(),
-      jenisKelamin: penduduk.jenisKelamin,
-      tempatLahir: penduduk.tempatLahir,
-      tanggalLahir: penduduk.tanggalLahir,
-      agama: penduduk.agama,
-      pendidikan: penduduk.pendidikan,
-      jenisPekerjaan: penduduk.jenisPekerjaan,
-      statusPerkawinan: penduduk.statusPerkawinan,
-      statusHubunganDalamKeluarga: penduduk.statusHubunganDalamKeluarga,
-      kewarganegaraan: penduduk.kewarganegaraan,
-      nomorPaspor: penduduk.nomorPaspor,
-      nomorKitas: penduduk.nomorKitas,
-      namaAyah: penduduk.namaAyah,
-      namaIbu: penduduk.namaIbu,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
     return {
       success: true,
-      data: { id },
+      data: { penduduk },
       message: "Penduduk berhasil ditambahkan",
     };
   } catch (error: any) {
@@ -281,9 +266,6 @@ export async function updatePenduduk({
       {
         ...penduduk,
         namaLowerCase: penduduk.nama ? penduduk.nama.toLowerCase() : undefined,
-        tanggalLahir: penduduk.tanggalLahir
-          ? new Date(penduduk.tanggalLahir)
-          : undefined,
         updatedAt: new Date(),
       },
       { merge: true }
