@@ -1,5 +1,6 @@
 import {
   TAgama,
+  TBanjar,
   TGolonganDarah,
   TJenisKelamin,
   TJenisPekerjaan,
@@ -99,4 +100,13 @@ export const PenyandangCacat: TPenyandangCacat[] = [
   "Cacat Mental / Jiwa",
   "Cacat Fisik dan Mental",
   "Cacat Lainnya",
+];
+
+export const Banjar: TBanjar[] = [
+  "Bebalang",
+  "Tegal",
+  "Sedit",
+  "Gancan",
+  "Sembung",
+  "Petak",
 ];

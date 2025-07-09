@@ -285,6 +285,18 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                   </Button>
                 </TableCell>
               </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Banjar</TableCell>
+                <TableCell>{data?.data?.banjar}</TableCell>
+                <TableCell>
+                  <Button
+                    size={"sm"}
+                    variant={"ghost"}
+                    onClick={() => handleCopy(data?.data?.banjar as string)}>
+                    <Copy />
+                  </Button>
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </div>

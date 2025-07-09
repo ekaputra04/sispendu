@@ -28,6 +28,7 @@ import {
 } from "../ui/select";
 import {
   Agama,
+  Banjar,
   GolonganDarah,
   JenisKelamin,
   JenisPekerjaan,
@@ -42,7 +43,6 @@ const formSchema = z.object({
   nama: z.string().min(2),
   nik: z.string().min(5),
   jenisKelamin: z.enum(["Laki-laki", "Perempuan"]),
-
   tempatLahir: z.string().min(2),
   tanggalLahir: z.string().min(2),
   agama: z.enum([
@@ -98,7 +98,7 @@ const formSchema = z.object({
     "Cacat Fisik dan Mental",
     "Cacat Lainnya",
   ]),
-
+  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
   nomorPaspor: z.string().min(2).optional(),
   nomorKitas: z.string().min(2).optional(),
   namaAyah: z.string().min(2),
@@ -161,6 +161,7 @@ export default function AddPendudukForm() {
       nomorKitas: values.nomorKitas,
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
+      banjar: values.banjar,
     };
     console.log(data);
 
@@ -196,7 +197,12 @@ export default function AddPendudukForm() {
                 <FormItem>
                   <FormLabel>NIK</FormLabel>
                   <FormControl>
-                    <Input placeholder="NIK" {...field} disabled={isPending} />
+                    <Input
+                      placeholder="NIK"
+                      {...field}
+                      disabled={isPending}
+                      type="number"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -210,7 +216,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Jenis Kelamin</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Jenis Kelamin" />
@@ -273,7 +280,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Agama</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Agama" />
@@ -299,7 +307,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Pendidikan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Pendidikan" />
@@ -325,7 +334,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Jenis Pekerjaan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Jenis Pekerjaan" />
@@ -351,7 +361,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Status Perkawinan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Status Perkawinan" />
@@ -377,7 +388,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Status Hubungan dalam Keluarga</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Status Hubungan dalam Keluarga" />
@@ -403,7 +415,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Kewarganegaraan</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Kewarganegaraan" />
@@ -429,7 +442,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Golongan Darah</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Golongan Darah" />
@@ -455,7 +469,8 @@ export default function AddPendudukForm() {
                   <FormLabel>Penyandang Cacat</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}>
+                    defaultValue={field.value}
+                    disabled={isPending}>
                     <FormControl>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Penyandang Cacat" />
@@ -538,6 +553,33 @@ export default function AddPendudukForm() {
                       disabled={isPending}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="banjar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Banjar</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Banjar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Banjar.map((item) => (
+                        <SelectItem value={item} key={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

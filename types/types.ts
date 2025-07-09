@@ -73,6 +73,13 @@ export type TJenisPekerjaan =
   | "Petani / Pekebun"
   | "Wiraswasta"
   | "Lainnya";
+export type TBanjar =
+  | "Bebalang"
+  | "Tegal"
+  | "Sedit"
+  | "Gancan"
+  | "Sembung"
+  | "Petak";
 
 export interface IKartuKeluarga {
   id: string;
@@ -108,6 +115,7 @@ export interface IDataPenduduk {
   nomorKitas?: string;
   namaAyah: string;
   namaIbu: string;
+  banjar: TBanjar;
   // kartuKeluargaRef?: string;
   // ayahRef?: string;
   // ibuRef?: string;

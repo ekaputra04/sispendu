@@ -28,6 +28,7 @@ import {
 } from "../ui/select";
 import {
   Agama,
+  Banjar,
   GolonganDarah,
   JenisKelamin,
   JenisPekerjaan,
@@ -98,6 +99,7 @@ const formSchema = z.object({
     "Cacat Fisik dan Mental",
     "Cacat Lainnya",
   ]),
+  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
   nomorPaspor: z.string().min(2).optional(),
   nomorKitas: z.string().min(2).optional(),
   namaAyah: z.string().min(2),
@@ -132,6 +134,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
       nomorKitas: data?.nomorKitas,
       namaAyah: data?.namaAyah,
       namaIbu: data?.namaIbu,
+      banjar: data?.banjar,
     },
   });
 
@@ -173,6 +176,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
       nomorKitas: values.nomorKitas,
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
+      banjar: values.banjar,
     };
     mutate(dataSubmit);
   }
@@ -206,7 +210,12 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                 <FormItem>
                   <FormLabel>NIK</FormLabel>
                   <FormControl>
-                    <Input placeholder="NIK" {...field} disabled={isPending} />
+                    <Input
+                      placeholder="NIK"
+                      {...field}
+                      disabled={isPending}
+                      type="number"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -557,6 +566,33 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                       disabled={isPending}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="banjar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Banjar</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Banjar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Banjar.map((item) => (
+                        <SelectItem value={item} key={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

@@ -104,6 +104,7 @@ export default function AddKKForm() {
                       placeholder="Nomor KK"
                       {...field}
                       disabled={isPending}
+                      type="number"
                     />
                   </FormControl>
                   <FormMessage />
@@ -118,7 +119,7 @@ export default function AddKKForm() {
                   <FormLabel>Nama Kepala Keluarga</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Nomor KK"
+                      placeholder="Nama Kepala Keluarga"
                       {...field}
                       disabled={isPending}
                     />
