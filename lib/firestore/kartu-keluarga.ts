@@ -1,5 +1,9 @@
 import { db } from "@/config/firebase-init";
-import { FirestoreResponse, IKartuKeluarga } from "@/types/types";
+import {
+  FirestoreResponse,
+  IKartuKeluarga,
+  TStatusHubunganDalamKeluarga,
+} from "@/types/types";
 import {
   collection,
   deleteDoc,
@@ -10,11 +14,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
+import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
 
-// Mendapatkan semua kartu keluarga
 export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
   try {
-    await checkAuth(); // Memeriksa autentikasi
+    await checkAuth();
     const querySnapshot = await getDocs(collection(db, "kartu-keluarga"));
     const data: IKartuKeluarga[] = [];
     querySnapshot.forEach((doc) => {
@@ -35,7 +39,6 @@ export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
   }
 }
 
-// Mendapatkan kartu keluarga berdasarkan ID
 export async function getKKById(
   kkId: string
 ): Promise<FirestoreResponse<IKartuKeluarga | null>> {
@@ -52,7 +55,7 @@ export async function getKKById(
       throw new Error("ID tidak valid");
     }
 
-    await checkAuth(); // Memeriksa autentikasi
+    await checkAuth();
     const docRef = doc(db, "kartu-keluarga", kkId);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists()) {
@@ -78,7 +81,6 @@ export async function getKKById(
   }
 }
 
-// Membuat kartu keluarga baru
 export async function createKK({
   kk,
 }: {
@@ -88,7 +90,7 @@ export async function createKK({
     if (!kk.id) {
       throw new Error("ID kartu keluarga diperlukan");
     }
-    await checkAuth(); // Memeriksa autentikasi
+    await checkAuth();
     await setDoc(doc(db, "kartu-keluarga", kk.id), kk);
     return {
       success: true,
@@ -104,7 +106,6 @@ export async function createKK({
   }
 }
 
-// Memperbarui kartu keluarga
 export async function updateKK(
   kkId: string,
   kk: IKartuKeluarga
@@ -113,7 +114,7 @@ export async function updateKK(
     if (!kkId) {
       throw new Error("ID kartu keluarga diperlukan");
     }
-    await checkAuth(); // Memeriksa autentikasi
+    await checkAuth();
     const docRef = doc(db, "kartu-keluarga", kkId);
     await updateDoc(docRef, { ...kk });
     return {
@@ -130,13 +131,12 @@ export async function updateKK(
   }
 }
 
-// Menghapus kartu keluarga
 export async function deleteKK(kkId: string): Promise<FirestoreResponse<void>> {
   try {
     if (!kkId) {
       throw new Error("ID kartu keluarga diperlukan");
     }
-    await checkAuth(); // Memeriksa autentikasi
+    await checkAuth();
     const docRef = doc(db, "kartu-keluarga", kkId);
     await deleteDoc(docRef);
     return {
@@ -148,6 +148,72 @@ export async function deleteKK(kkId: string): Promise<FirestoreResponse<void>> {
     return {
       success: false,
       message: error.message || "Gagal menghapus kartu keluarga",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
+export async function addAnggotaToKK({
+  kkId,
+  pendudukId,
+  statusHubunganDalamKeluarga,
+}: {
+  kkId: string;
+  pendudukId: string;
+  statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
+}): Promise<FirestoreResponse<void>> {
+  try {
+    if (!kkId) {
+      throw new Error("ID kartu keluarga diperlukan");
+    }
+    if (!pendudukId) {
+      throw new Error("ID penduduk diperlukan");
+    }
+    if (!statusHubunganDalamKeluarga) {
+      throw new Error("Status hubungan dalam keluarga diperlukan");
+    }
+
+    await checkAuth();
+
+    const kkDocRef = doc(db, "kartu-keluarga", kkId);
+    const kkDocSnap = await getDoc(kkDocRef);
+    if (!kkDocSnap.exists()) {
+      throw new Error(`Kartu keluarga dengan ID ${kkId} tidak ditemukan`);
+    }
+
+    const pendudukDocRef = doc(db, "penduduk", pendudukId);
+    const pendudukDocSnap = await getDoc(pendudukDocRef);
+    if (!pendudukDocSnap.exists()) {
+      throw new Error(`Penduduk dengan ID ${pendudukId} tidak ditemukan`);
+    }
+
+    const validStatuses: TStatusHubunganDalamKeluarga[] =
+      StatusHubunganDalamKeluarga;
+    if (!validStatuses.includes(statusHubunganDalamKeluarga)) {
+      throw new Error("Status hubungan dalam keluarga tidak valid");
+    }
+
+    const anggotaDocRef = doc(
+      db,
+      "kartu-keluarga",
+      kkId,
+      "anggota",
+      pendudukId
+    );
+    await setDoc(anggotaDocRef, {
+      pendudukId,
+      statusHubunganDalamKeluarga,
+    });
+
+    return {
+      success: true,
+      message: "Anggota berhasil ditambahkan ke kartu keluarga",
+    };
+  } catch (error: any) {
+    console.error("Gagal menambahkan anggota ke kartu keluarga:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal menambahkan anggota ke kartu keluarga",
       errorCode: error.code || "unknown",
     };
   }

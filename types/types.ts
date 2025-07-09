@@ -107,7 +107,7 @@ export interface IDataPenduduk {
   pendidikan: string;
   jenisPekerjaan: string;
   statusPerkawinan: TStatusPerkawinan;
-  statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
+  // statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
   kewarganegaraan: TKewarganegaraan;
   golonganDarah: TGolonganDarah;
   penyandangCacat: TPenyandangCacat;
@@ -119,6 +119,11 @@ export interface IDataPenduduk {
   // kartuKeluargaRef?: string;
   // ayahRef?: string;
   // ibuRef?: string;
+}
+
+export interface IAnggotaKeluarga {
+  pendudukId: string;
+  statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
 }
 
 export interface FirestoreResponse<T = any> {

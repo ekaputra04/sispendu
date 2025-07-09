@@ -63,18 +63,18 @@ const formSchema = z.object({
     "Cerai Hidup",
     "Cerai Mati",
   ]),
-  statusHubunganDalamKeluarga: z.enum([
-    "Kepala Keluarga",
-    "Istri",
-    "Suami",
-    "Anak",
-    "Orang Tua",
-    "Mertua",
-    "Menantu",
-    "Cucu",
-    "Pembantu",
-    "Famili Lain",
-  ]),
+  // statusHubunganDalamKeluarga: z.enum([
+  //   "Kepala Keluarga",
+  //   "Istri",
+  //   "Suami",
+  //   "Anak",
+  //   "Orang Tua",
+  //   "Mertua",
+  //   "Menantu",
+  //   "Cucu",
+  //   "Pembantu",
+  //   "Famili Lain",
+  // ]),
   kewarganegaraan: z.enum(["WNI", "WNA"]),
   golonganDarah: z.enum([
     "A",
@@ -126,7 +126,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
       pendidikan: data?.pendidikan,
       jenisPekerjaan: data?.jenisPekerjaan,
       statusPerkawinan: data?.statusPerkawinan,
-      statusHubunganDalamKeluarga: data?.statusHubunganDalamKeluarga,
+      // statusHubunganDalamKeluarga: data?.statusHubunganDalamKeluarga,
       kewarganegaraan: data?.kewarganegaraan,
       golonganDarah: data?.golonganDarah,
       penyandangCacat: data?.penyandangCacat,
@@ -168,7 +168,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
       pendidikan: values.pendidikan,
       jenisPekerjaan: values.jenisPekerjaan,
       statusPerkawinan: values.statusPerkawinan,
-      statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
+      // statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
       kewarganegaraan: values.kewarganegaraan,
       golonganDarah: values.golonganDarah,
       penyandangCacat: values.penyandangCacat,
@@ -393,7 +393,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="statusHubunganDalamKeluarga"
               render={({ field }) => (
@@ -419,7 +419,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="kewarganegaraan"

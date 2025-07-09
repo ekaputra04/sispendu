@@ -175,7 +175,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                   </Button>
                 </TableCell>
               </TableRow>
-              <TableRow>
+              {/* <TableRow>
                 <TableCell className="font-medium">Status Hubungan</TableCell>
                 <TableCell>{data?.data?.statusHubunganDalamKeluarga}</TableCell>
                 <TableCell>
@@ -190,7 +190,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                     <Copy />
                   </Button>
                 </TableCell>
-              </TableRow>
+              </TableRow> */}
               <TableRow>
                 <TableCell className="font-medium">Kewarganegaraan</TableCell>
                 <TableCell>{data?.data?.kewarganegaraan}</TableCell>

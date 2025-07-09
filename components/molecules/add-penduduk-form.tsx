@@ -62,18 +62,18 @@ const formSchema = z.object({
     "Cerai Hidup",
     "Cerai Mati",
   ]),
-  statusHubunganDalamKeluarga: z.enum([
-    "Kepala Keluarga",
-    "Istri",
-    "Suami",
-    "Anak",
-    "Orang Tua",
-    "Mertua",
-    "Menantu",
-    "Cucu",
-    "Pembantu",
-    "Famili Lain",
-  ]),
+  // statusHubunganDalamKeluarga: z.enum([
+  //   "Kepala Keluarga",
+  //   "Istri",
+  //   "Suami",
+  //   "Anak",
+  //   "Orang Tua",
+  //   "Mertua",
+  //   "Menantu",
+  //   "Cucu",
+  //   "Pembantu",
+  //   "Famili Lain",
+  // ]),
   kewarganegaraan: z.enum(["WNI", "WNA"]),
   golonganDarah: z.enum([
     "A",
@@ -153,7 +153,7 @@ export default function AddPendudukForm() {
       pendidikan: values.pendidikan,
       jenisPekerjaan: values.jenisPekerjaan,
       statusPerkawinan: values.statusPerkawinan,
-      statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
+      // statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
       kewarganegaraan: values.kewarganegaraan,
       golonganDarah: values.golonganDarah,
       penyandangCacat: values.penyandangCacat,
@@ -380,7 +380,7 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="statusHubunganDalamKeluarga"
               render={({ field }) => (
@@ -406,7 +406,7 @@ export default function AddPendudukForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="kewarganegaraan"

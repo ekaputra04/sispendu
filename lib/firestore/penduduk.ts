@@ -1,4 +1,4 @@
-import { auth, db } from "@/config/firebase-init";
+import { db } from "@/config/firebase-init";
 import { FirestoreResponse, IDataPenduduk } from "@/types/types";
 import {
   collection,
@@ -182,7 +182,6 @@ export async function createPenduduk({
       !penduduk.pendidikan ||
       !penduduk.jenisPekerjaan ||
       !penduduk.statusPerkawinan ||
-      !penduduk.statusHubunganDalamKeluarga ||
       !penduduk.kewarganegaraan
     ) {
       throw new Error("Semua field wajib diisi");
