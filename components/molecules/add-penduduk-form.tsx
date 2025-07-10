@@ -41,7 +41,7 @@ import {
 
 const formSchema = z.object({
   nama: z.string().min(2),
-  nik: z.string().min(5),
+  // nik: z.string().min(5),
   jenisKelamin: z.enum(["Laki-laki", "Perempuan"]),
   tempatLahir: z.string().min(2),
   tanggalLahir: z.string().min(2),
@@ -99,8 +99,8 @@ const formSchema = z.object({
     "Cacat Lainnya",
   ]),
   banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
-  nomorPaspor: z.string().min(2).optional(),
-  nomorKitas: z.string().min(2).optional(),
+  // nomorPaspor: z.string().min(2).optional(),
+  // nomorKitas: z.string().min(2).optional(),
   namaAyah: z.string().min(2),
   namaIbu: z.string().min(2),
 });
@@ -113,13 +113,13 @@ export default function AddPendudukForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nama: "",
-      nik: "",
+      // nik: "",
       tempatLahir: "",
       tanggalLahir: "",
       pendidikan: "",
       jenisPekerjaan: "",
-      nomorPaspor: "",
-      nomorKitas: "",
+      // nomorPaspor: "",
+      // nomorKitas: "",
       namaAyah: "",
       namaIbu: "",
     },
@@ -145,7 +145,7 @@ export default function AddPendudukForm() {
     const data: IDataPenduduk = {
       id: crypto.randomUUID(),
       nama: values.nama,
-      nik: values.nik,
+      // nik: values.nik,
       jenisKelamin: values.jenisKelamin,
       tempatLahir: values.tempatLahir,
       tanggalLahir: values.tanggalLahir,
@@ -157,8 +157,8 @@ export default function AddPendudukForm() {
       kewarganegaraan: values.kewarganegaraan,
       golonganDarah: values.golonganDarah,
       penyandangCacat: values.penyandangCacat,
-      nomorPaspor: values.nomorPaspor,
-      nomorKitas: values.nomorKitas,
+      // nomorPaspor: values.nomorPaspor,
+      // nomorKitas: values.nomorKitas,
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
       banjar: values.banjar,
@@ -190,7 +190,7 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="nik"
               render={({ field }) => (
@@ -207,7 +207,7 @@ export default function AddPendudukForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="jenisKelamin"
@@ -488,7 +488,7 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="nomorPaspor"
               render={({ field }) => (
@@ -522,7 +522,7 @@ export default function AddPendudukForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="namaAyah"

@@ -1,16 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { Eye, Pencil, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { IDataPenduduk } from "@/types/types";
 import Link from "next/link";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
@@ -24,27 +16,12 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
       return <p>{row.index + 1}</p>;
     },
   },
-  {
-    accessorKey: "nik",
-    header: "NIK",
-  },
+
   {
     accessorKey: "nama",
     header: "Nama Lengkap",
   },
-  // {
-  //   accessorKey: "nama",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-  //         Nama Lengkap
-  //         <ArrowUpDown className="ml-2 w-4 h-4" />
-  //       </Button>
-  //     );
-  //   },
-  // },
+
   {
     accessorKey: "tanggalLahir",
     header: "Tanggal Lahir",

@@ -99,7 +99,7 @@ export interface IKartuKeluarga {
 export interface IDataPenduduk {
   id: string;
   nama: string;
-  nik: string;
+  // nik: string;
   jenisKelamin: TJenisKelamin;
   tempatLahir: string;
   tanggalLahir: string;
@@ -111,8 +111,8 @@ export interface IDataPenduduk {
   kewarganegaraan: TKewarganegaraan;
   golonganDarah: TGolonganDarah;
   penyandangCacat: TPenyandangCacat;
-  nomorPaspor?: string;
-  nomorKitas?: string;
+  // nomorPaspor?: string;
+  // nomorKitas?: string;
   namaAyah: string;
   namaIbu: string;
   banjar: TBanjar;

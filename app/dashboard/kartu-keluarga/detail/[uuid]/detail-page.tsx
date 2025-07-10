@@ -15,10 +15,11 @@ import { Button } from "@/components/ui/button";
 import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Pencil, PlusCircle } from "lucide-react";
-import DialogDeleteUserFromKK from "./dialog-delete-user-from-kk";
+import DialogDeleteUserFromKK from "../../../../../components/molecules/dialog-delete-user-from-kk";
 import { handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
+import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
 
 interface DetailKartuKeluargaPageProps {
   uuid: string;
@@ -122,10 +123,7 @@ export default function DetailKartuKeluargaPage({
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <Heading2 text="Daftar Anggota Keluarga" />
-              <Button>
-                <PlusCircle />
-                Tambah Anggota Keluarga
-              </Button>
+              <SheetAddPendudukToKK kkId={uuid} />
             </div>
             <Table>
               <TableCaption>Daftar Anggota Keluarga</TableCaption>

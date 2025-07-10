@@ -173,7 +173,7 @@ export async function createPenduduk({
 
     if (
       !penduduk.id ||
-      !penduduk.nik ||
+      // !penduduk.nik ||
       !penduduk.nama ||
       !penduduk.jenisKelamin ||
       !penduduk.tempatLahir ||
@@ -187,15 +187,15 @@ export async function createPenduduk({
       throw new Error("Semua field wajib diisi");
     }
 
-    console.log(`Memeriksa keunikan NIK: ${penduduk.nik}`);
-    const nikQuery = query(
-      collection(db, "penduduk"),
-      where("nik", "==", penduduk.nik)
-    );
-    const nikSnapshot = await getDocs(nikQuery);
-    if (!nikSnapshot.empty) {
-      throw new Error("NIK sudah terdaftar");
-    }
+    // console.log(`Memeriksa keunikan NIK: ${penduduk.nik}`);
+    // const nikQuery = query(
+    //   collection(db, "penduduk"),
+    //   where("nik", "==", penduduk.nik)
+    // );
+    // const nikSnapshot = await getDocs(nikQuery);
+    // if (!nikSnapshot.empty) {
+    //   throw new Error("NIK sudah terdaftar");
+    // }
 
     const docRef = doc(db, "penduduk", penduduk.id);
 
@@ -249,16 +249,16 @@ export async function updatePenduduk({
       throw new Error("Penduduk tidak ditemukan");
     }
 
-    if (penduduk.nik && penduduk.nik !== docSnap.data().nik) {
-      const nikQuery = query(
-        collection(db, "penduduk"),
-        where("nik", "==", penduduk.nik)
-      );
-      const nikSnapshot = await getDocs(nikQuery);
-      if (!nikSnapshot.empty) {
-        throw new Error("NIK sudah terdaftar");
-      }
-    }
+    // if (penduduk.nik && penduduk.nik !== docSnap.data().nik) {
+    //   const nikQuery = query(
+    //     collection(db, "penduduk"),
+    //     where("nik", "==", penduduk.nik)
+    //   );
+    //   const nikSnapshot = await getDocs(nikQuery);
+    //   if (!nikSnapshot.empty) {
+    //     throw new Error("NIK sudah terdaftar");
+    //   }
+    // }
 
     await setDoc(
       docRef,

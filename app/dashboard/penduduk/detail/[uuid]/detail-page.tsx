@@ -56,18 +56,6 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
             </TableHeader>
             <TableBody>
               <TableRow>
-                <TableCell className="font-medium">NIK</TableCell>
-                <TableCell>{data?.data?.nik}</TableCell>
-                <TableCell>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.nik as string)}>
-                    <Copy />
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
                 <TableCell className="font-medium">Nama Lengkap</TableCell>
                 <TableCell>{data?.data?.nama}</TableCell>
                 <TableCell>
@@ -257,7 +245,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                   </Button>
                 </TableCell>
               </TableRow>
-              <TableRow>
+              {/* <TableRow>
                 <TableCell className="font-medium">Nomor Paspor</TableCell>
                 <TableCell>{data?.data?.nomorPaspor}</TableCell>
                 <TableCell>
@@ -284,7 +272,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                     <Copy />
                   </Button>
                 </TableCell>
-              </TableRow>
+              </TableRow> */}
               <TableRow>
                 <TableCell className="font-medium">Banjar</TableCell>
                 <TableCell>{data?.data?.banjar}</TableCell>

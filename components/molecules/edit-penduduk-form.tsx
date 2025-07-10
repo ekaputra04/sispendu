@@ -41,7 +41,7 @@ import {
 
 const formSchema = z.object({
   nama: z.string().min(2),
-  nik: z.string().min(5),
+  // nik: z.string().min(5),
   jenisKelamin: z.enum(["Laki-laki", "Perempuan"]),
 
   tempatLahir: z.string().min(2),
@@ -100,8 +100,8 @@ const formSchema = z.object({
     "Cacat Lainnya",
   ]),
   banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
-  nomorPaspor: z.string().min(2).optional(),
-  nomorKitas: z.string().min(2).optional(),
+  // nomorPaspor: z.string().min(2).optional(),
+  // nomorKitas: z.string().min(2).optional(),
   namaAyah: z.string().min(2),
   namaIbu: z.string().min(2),
 });
@@ -118,7 +118,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       nama: data?.nama,
-      nik: data?.nik,
+      // nik: data?.nik,
       jenisKelamin: data?.jenisKelamin,
       tempatLahir: data?.tempatLahir,
       tanggalLahir: data?.tanggalLahir,
@@ -130,8 +130,8 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
       kewarganegaraan: data?.kewarganegaraan,
       golonganDarah: data?.golonganDarah,
       penyandangCacat: data?.penyandangCacat,
-      nomorPaspor: data?.nomorPaspor,
-      nomorKitas: data?.nomorKitas,
+      // nomorPaspor: data?.nomorPaspor,
+      // nomorKitas: data?.nomorKitas,
       namaAyah: data?.namaAyah,
       namaIbu: data?.namaIbu,
       banjar: data?.banjar,
@@ -160,7 +160,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
     const dataSubmit: IDataPenduduk = {
       id: data?.id as string,
       nama: values.nama,
-      nik: values.nik,
+      // nik: values.nik,
       jenisKelamin: values.jenisKelamin,
       tempatLahir: values.tempatLahir,
       tanggalLahir: values.tanggalLahir,
@@ -172,8 +172,8 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
       kewarganegaraan: values.kewarganegaraan,
       golonganDarah: values.golonganDarah,
       penyandangCacat: values.penyandangCacat,
-      nomorPaspor: values.nomorPaspor,
-      nomorKitas: values.nomorKitas,
+      // nomorPaspor: values.nomorPaspor,
+      // nomorKitas: values.nomorKitas,
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
       banjar: values.banjar,
@@ -203,7 +203,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="nik"
               render={({ field }) => (
@@ -220,7 +220,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="jenisKelamin"
@@ -501,7 +501,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="nomorPaspor"
               render={({ field }) => (
@@ -535,7 +535,7 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="namaAyah"
