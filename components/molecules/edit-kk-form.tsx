@@ -23,7 +23,7 @@ import { useEffect } from "react";
 import LoadingView from "../atoms/loading-view";
 
 const formSchema = z.object({
-  noKK: z.string().min(2),
+  // noKK: z.string().min(2),
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
   rt: z.string().optional(),
@@ -36,57 +36,57 @@ const formSchema = z.object({
   tanggalPenerbitan: z.string().min(2),
 });
 
-interface AddEditFormProps {
-  uuid: string;
+interface EditKKFormProps {
+  data: IKartuKeluarga | null | undefined;
 }
 
-export default function EditKKForm({ uuid }: AddEditFormProps) {
+export default function EditKKForm({ data }: EditKKFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["kartu-keluarga", uuid],
-    queryFn: () => getKKById(uuid),
-    retry: false,
-  });
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ["kartu-keluarga", uuid],
+  //   queryFn: () => getKKById(uuid),
+  //   retry: false,
+  // });
 
-  useEffect(() => {
-    console.log(data);
+  // useEffect(() => {
+  //   console.log(data);
 
-    const dataResult = data?.data;
-    form.setValue("noKK", dataResult?.noKK || "");
-    form.setValue("namaKepalaKeluarga", dataResult?.namaKepalaKeluarga || "");
-    form.setValue("alamat", dataResult?.alamat || "");
-    form.setValue("rt", dataResult?.rt || "");
-    form.setValue("rw", dataResult?.rw || "");
-    form.setValue("desa", dataResult?.desa || "");
-    form.setValue("kecamatan", dataResult?.kecamatan || "");
-    form.setValue("kabupaten", dataResult?.kabupaten || "");
-    form.setValue("provinsi", dataResult?.provinsi || "");
-    form.setValue("kodePos", dataResult?.kodePos || "");
-    form.setValue("tanggalPenerbitan", dataResult?.tanggalPenerbitan || "");
-  }, [data]);
+  //   const dataResult = data?.data;
+  //   // form.setValue("noKK", dataResult?.noKK || "");
+  //   form.setValue("namaKepalaKeluarga", dataResult?.namaKepalaKeluarga || "");
+  //   form.setValue("alamat", dataResult?.alamat || "");
+  //   form.setValue("rt", dataResult?.rt || "");
+  //   form.setValue("rw", dataResult?.rw || "");
+  //   form.setValue("desa", dataResult?.desa || "");
+  //   form.setValue("kecamatan", dataResult?.kecamatan || "");
+  //   form.setValue("kabupaten", dataResult?.kabupaten || "");
+  //   form.setValue("provinsi", dataResult?.provinsi || "");
+  //   form.setValue("kodePos", dataResult?.kodePos || "");
+  //   form.setValue("tanggalPenerbitan", dataResult?.tanggalPenerbitan || "");
+  // }, [data]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
 
     defaultValues: {
-      noKK: "",
-      namaKepalaKeluarga: "",
-      alamat: "",
-      rt: "",
-      rw: "",
-      desa: "",
-      kecamatan: "",
-      kabupaten: "",
-      provinsi: "",
-      kodePos: "",
-      tanggalPenerbitan: "",
+      // noKK: "",
+      namaKepalaKeluarga: data?.namaKepalaKeluarga,
+      alamat: data?.alamat,
+      rt: data?.rt,
+      rw: data?.rw,
+      desa: data?.desa,
+      kecamatan: data?.kecamatan,
+      kabupaten: data?.kabupaten,
+      provinsi: data?.provinsi,
+      kodePos: data?.kodePos,
+      tanggalPenerbitan: data?.tanggalPenerbitan,
     },
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async (data: IKartuKeluarga) => updateKK(uuid, data),
+    mutationFn: async (data: IKartuKeluarga) => updateKK(data.id, data),
     onSuccess: () => {
       toast.success("Berhasil menambahkan data kartu keluarga");
       form.reset();
@@ -100,9 +100,9 @@ export default function EditKKForm({ uuid }: AddEditFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const data: IKartuKeluarga = {
-      id: uuid,
-      noKK: values.noKK,
+    const dataSubmit: IKartuKeluarga = {
+      id: data?.id as string,
+      // noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
       rt: values.rt,
@@ -114,32 +114,14 @@ export default function EditKKForm({ uuid }: AddEditFormProps) {
       kodePos: values.kodePos,
       tanggalPenerbitan: values.tanggalPenerbitan,
     };
-    mutate(data);
+    mutate(dataSubmit);
   }
 
   return (
     <div className="">
-      {isLoading && <LoadingView />}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="noKK"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nomor KK</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nomor KK"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="namaKepalaKeluarga"

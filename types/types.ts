@@ -83,7 +83,7 @@ export type TBanjar =
 
 export interface IKartuKeluarga {
   id: string;
-  noKK: string;
+  // noKK: string;
   namaKepalaKeluarga: string;
   alamat: string;
   rt?: string;

@@ -60,20 +60,6 @@ export default function DetailKartuKeluargaPage({
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">
-                  Nomor Kartu Keluarga
-                </TableCell>
-                <TableCell>{data?.data?.noKK}</TableCell>
-                <TableCell>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.noKK as string)}>
-                    <Copy />
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">
                   Nama Kepala Keluarga
                 </TableCell>
                 <TableCell>{data?.data?.namaKepalaKeluarga}</TableCell>

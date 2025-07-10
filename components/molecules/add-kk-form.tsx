@@ -21,7 +21,7 @@ import LoadingIcon from "../atoms/loading-icon";
 import { createKK } from "@/lib/firestore/kartu-keluarga";
 
 const formSchema = z.object({
-  noKK: z.string().min(2),
+  // noKK: z.string().min(2),
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
   rt: z.string().optional(),
@@ -42,7 +42,7 @@ export default function AddKKForm() {
     resolver: zodResolver(formSchema),
 
     defaultValues: {
-      noKK: "",
+      // noKK: "",
       namaKepalaKeluarga: "",
       alamat: "",
       rt: "",
@@ -73,7 +73,7 @@ export default function AddKKForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const data: IKartuKeluarga = {
       id: crypto.randomUUID(),
-      noKK: values.noKK,
+      // noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
       rt: values.rt,
@@ -93,7 +93,7 @@ export default function AddKKForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-            <FormField
+            {/* <FormField
               control={form.control}
               name="noKK"
               render={({ field }) => (
@@ -110,7 +110,7 @@ export default function AddKKForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="namaKepalaKeluarga"

@@ -16,10 +16,10 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
       return <p>{row.index + 1}</p>;
     },
   },
-  {
-    accessorKey: "noKK",
-    header: "No Kartu Keluarga",
-  },
+  // {
+  //   accessorKey: "noKK",
+  //   header: "No Kartu Keluarga",
+  // },
   {
     accessorKey: "namaKepalaKeluarga",
     header: "Nama Kepala Keluarga",
