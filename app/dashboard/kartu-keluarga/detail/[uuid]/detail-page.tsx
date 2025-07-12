@@ -36,6 +36,7 @@ export default function DetailKartuKeluargaPage({
 
   return (
     <div className="">
+      {JSON.stringify(data)}
       {isLoading && <LoadingView />}
       {data?.data ? (
         <div className="">

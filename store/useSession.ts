@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 interface SessionState {
   session: string;
   setSession: (session: string) => void;
-  clearUser: () => void;
+  clearSession: () => void;
 }
 
 export const useSessionStore = create<SessionState>()(
@@ -12,7 +12,7 @@ export const useSessionStore = create<SessionState>()(
     (set) => ({
       session: "",
       setSession: (session: string) => set({ session }),
-      clearUser: () => set({ session: "" }),
+      clearSession: () => set({ session: "" }),
     }),
     {
       name: "session-storage",

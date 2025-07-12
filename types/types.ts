@@ -94,7 +94,10 @@ export interface IKartuKeluarga {
   provinsi: string;
   kodePos: string;
   tanggalPenerbitan: string;
+  anggota?: IAnggotaKeluarga[];
 }
+
+// export interface IKartuKeluargaWithAnggota extends IKartuKeluarga {}
 
 export interface IDataPenduduk {
   id: string;
@@ -124,6 +127,7 @@ export interface IDataPenduduk {
 export interface IAnggotaKeluarga {
   pendudukId: string;
   statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
+  detail?: IDataPenduduk;
 }
 
 export interface FirestoreResponse<T = any> {
@@ -131,4 +135,14 @@ export interface FirestoreResponse<T = any> {
   message: string;
   data?: T;
   errorCode?: string;
+}
+
+export interface IDecryptedSession {
+  email: string;
+  exp: number;
+  expiresAt: string;
+  iat: number;
+  nama: string;
+  role: string;
+  userId: string;
 }

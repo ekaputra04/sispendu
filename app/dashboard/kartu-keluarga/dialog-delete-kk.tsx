@@ -52,8 +52,12 @@ export default function DialogDeleteKK() {
         <AlertDialogHeader>
           <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
           <AlertDialogDescription>
-            Aksi ini akan menghapus data kartu keluarga dengan nomor{" "}
-            <span className="font-bold"> {kartuKeluarga?.noKK}</span>.
+            Aksi ini akan menghapus data kartu keluarga dengan nama kepala
+            keluarga{" "}
+            <span className="font-bold">
+              {kartuKeluarga?.namaKepalaKeluarga}
+            </span>
+            .
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

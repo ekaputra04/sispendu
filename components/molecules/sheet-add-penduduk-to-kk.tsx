@@ -165,9 +165,14 @@ export default function SheetAddPendudukToKK({
           </Form>
         </div>
         <div className="px-4 overflow-y-auto">
-          {isLoading && <p>Loading...</p>}
+          {isLoading && (
+            <div className="flex items-center gap-2">
+              <LoadingIcon />
+              <p className="text-sm">Loading...</p>
+            </div>
+          )}
           {error && <p>Error: {error.message}</p>}
-          {data?.success && data?.data && (
+          {data?.success && data?.data && data?.data.length > 0 ? (
             <div className="space-y-2">
               <hr />
               <p className="font-semibold text-sm">Hasil pencarian</p>
@@ -193,16 +198,21 @@ export default function SheetAddPendudukToKK({
                 disabled={isLoadingSave}
                 onClick={onSave}>
                 {isLoadingSave ? (
-                  <>
-                    <LoadingIcon /> Loading
-                  </>
+                  <div className="flex items-center gap-2">
+                    <LoadingIcon /> <p>Loading</p>
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex items-center gap-2">
                     <Save />
-                    Simpan
-                  </>
+                    <p>Simpan</p>
+                  </div>
                 )}
               </Button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <hr />
+              <p className="text-sm">Penduduk tidak ditemukan</p>
             </div>
           )}
         </div>

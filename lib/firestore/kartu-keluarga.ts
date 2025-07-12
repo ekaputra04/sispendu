@@ -1,6 +1,8 @@
 import { db } from "@/config/firebase-init";
 import {
   FirestoreResponse,
+  IAnggotaKeluarga,
+  IDataPenduduk,
   IKartuKeluarga,
   TStatusHubunganDalamKeluarga,
 } from "@/types/types";
@@ -65,10 +67,36 @@ export async function getKKById(
         data: null,
       };
     }
+
+    // Ambil subkoleksi anggota
+    const anggotaSnapshot = await getDocs(
+      collection(db, "kartu-keluarga", kkId, "anggota")
+    );
+    const anggota: IAnggotaKeluarga[] = [];
+
+    // Lakukan join dengan koleksi penduduk
+    for (const anggotaDoc of anggotaSnapshot.docs) {
+      const anggotaData = anggotaDoc.data();
+      const pendudukDocRef = doc(db, "penduduk", anggotaData.idPenduduk);
+      const pendudukDocSnap = await getDoc(pendudukDocRef);
+
+      if (pendudukDocSnap.exists()) {
+        anggota.push({
+          pendudukId: anggotaData.pendudukId,
+          statusHubunganDalamKeluarga: anggotaData.statusHubunganDalamKeluarga,
+          detail: pendudukDocSnap.data() as IDataPenduduk,
+        });
+      }
+    }
+
     return {
       success: true,
       message: "Berhasil mengambil data kartu keluarga",
-      data: { id: docSnap.id, ...docSnap.data() } as IKartuKeluarga,
+      data: {
+        id: docSnap.id,
+        ...docSnap.data(),
+        anggota,
+      } as IKartuKeluarga,
     };
   } catch (error: any) {
     console.error("Gagal mengambil kartu keluarga:", error);
