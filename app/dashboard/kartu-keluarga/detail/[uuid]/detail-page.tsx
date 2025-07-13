@@ -20,6 +20,7 @@ import { handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
+import { IDataPenduduk } from "@/types/types";
 
 interface DetailKartuKeluargaPageProps {
   uuid: string;
@@ -36,7 +37,6 @@ export default function DetailKartuKeluargaPage({
 
   return (
     <div className="">
-      {JSON.stringify(data)}
       {isLoading && <LoadingView />}
       {data?.data ? (
         <div className="">
@@ -88,6 +88,18 @@ export default function DetailKartuKeluargaPage({
                 </TableCell>
               </TableRow>
               <TableRow>
+                <TableCell className="font-medium">Banjar</TableCell>
+                <TableCell>{data?.data?.banjar}</TableCell>
+                <TableCell>
+                  <Button
+                    size={"sm"}
+                    variant={"ghost"}
+                    onClick={() => handleCopy(data?.data?.banjar as string)}>
+                    <Copy />
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
                 <TableCell className="font-medium">
                   Tanggal Penerbitan
                 </TableCell>
@@ -117,30 +129,37 @@ export default function DetailKartuKeluargaPage({
               <TableHeader>
                 <TableRow>
                   <TableHead>No</TableHead>
-                  <TableHead>NIK</TableHead>
+                  <TableHead>Status Hubungan Keluarga</TableHead>
                   <TableHead>Nama</TableHead>
                   <TableHead>Jenis Kelamin</TableHead>
-                  <TableHead>Hubungan Keluarga</TableHead>
                   <TableHead>Aksi</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">1</TableCell>
-                  <TableCell>Nik</TableCell>
-                  <TableCell>Nama</TableCell>
-                  <TableCell>Laki-laki</TableCell>
-                  <TableCell>Kepala Keluarga</TableCell>
-                  <TableCell className="flex gap-2">
-                    <Link href={"/"}>
-                      <Button variant={"outline"}>
-                        <Pencil />
-                        Edit
-                      </Button>
-                    </Link>
-                    <DialogDeleteUserFromKK />
-                  </TableCell>
-                </TableRow>
+                {data?.data?.anggota?.map((penduduk: any, index: number) => {
+                  const pendudukDetail: IDataPenduduk = penduduk.detail;
+                  console.log(pendudukDetail);
+
+                  return (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">{index + 1}</TableCell>
+                      <TableCell>
+                        {penduduk.statusHubunganDalamKeluarga}
+                      </TableCell>
+                      <TableCell>{pendudukDetail.nama}</TableCell>
+                      <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
+                      <TableCell className="flex gap-2">
+                        <Link href={"/"}>
+                          <Button variant={"outline"}>
+                            <Pencil />
+                            Edit
+                          </Button>
+                        </Link>
+                        <DialogDeleteUserFromKK />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </div>

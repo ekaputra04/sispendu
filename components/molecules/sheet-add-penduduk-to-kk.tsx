@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { getPendudukByName } from "@/lib/firestore/penduduk";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   Select,
@@ -39,6 +39,7 @@ import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
 import { addAnggotaToKK } from "@/lib/firestore/kartu-keluarga";
 import { toast } from "sonner";
 import LoadingIcon from "../atoms/loading-icon";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -56,7 +57,10 @@ export default function SheetAddPendudukToKK({
   const [statusHubungan, setStatusHubungan] =
     useState<TStatusHubunganDalamKeluarga>();
 
-  const [isLoadingSave, setIsLoadingSave] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  // const [isLoadingSave, setIsLoadingSave] = useState<boolean>(false);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -74,7 +78,7 @@ export default function SheetAddPendudukToKK({
     setSearchQuery(values.name);
   }
 
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["pendudukByName", searchQuery],
     queryFn: () => getPendudukByName(searchQuery),
     enabled: !!searchQuery, // Hanya jalankan query jika searchNama tidak kosong
@@ -85,30 +89,42 @@ export default function SheetAddPendudukToKK({
     setPendudukId(pendudukId);
   }
 
-  async function onSave() {
-    if (!pendudukId || !statusHubungan) {
-      toast.error("Silahkan pilih penduduk dan status hubungan");
-      return;
-    }
-    setIsLoadingSave(true);
-
-    try {
-      const result = await addAnggotaToKK({
-        kkId: kkId,
-        pendudukId: pendudukId,
-        statusHubunganDalamKeluarga: statusHubungan,
-      });
-
-      console.log(result);
-
-      if (result.success) {
-        toast.success("Berhasil menambahkan anggota keluarga");
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      if (!pendudukId || !statusHubungan) {
+        toast.error("Silahkan pilih penduduk dan status hubungan");
+        return;
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoadingSave(false);
-    }
+
+      try {
+        const result = await addAnggotaToKK({
+          kkId: kkId,
+          pendudukId: pendudukId,
+          statusHubunganDalamKeluarga: statusHubungan,
+        });
+
+        console.log(result);
+
+        if (result.success) {
+          toast.success("Berhasil menambahkan anggota keluarga");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Berhasil menambahkan data anggota keluarga");
+      form.reset();
+
+      queryClient.invalidateQueries({ queryKey: ["kartu-keluarga", kkId] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Gagal menambahkan data anggota keluarga");
+    },
+  });
+
+  async function onSave() {
+    mutate();
   }
 
   return (
@@ -195,9 +211,9 @@ export default function SheetAddPendudukToKK({
               ))}
               <Button
                 className="mt-4 w-full"
-                disabled={isLoadingSave}
+                disabled={isPending}
                 onClick={onSave}>
-                {isLoadingSave ? (
+                {isPending ? (
                   <div className="flex items-center gap-2">
                     <LoadingIcon /> <p>Loading</p>
                   </div>
