@@ -19,18 +19,27 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
 import { createKK } from "@/lib/firestore/kartu-keluarga";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Banjar } from "@/consts/dataDefinitions";
 
 const formSchema = z.object({
   // noKK: z.string().min(2),
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
-  rt: z.string().optional(),
-  rw: z.string().optional(),
-  desa: z.string().min(2),
-  kecamatan: z.string().min(2),
-  kabupaten: z.string().min(2),
-  provinsi: z.string().min(2),
-  kodePos: z.string().min(2),
+  // rt: z.string().optional(),
+  // rw: z.string().optional(),
+  // desa: z.string().min(2),
+  // kecamatan: z.string().min(2),
+  // kabupaten: z.string().min(2),
+  // provinsi: z.string().min(2),
+  // kodePos: z.string().min(2),
+  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
   tanggalPenerbitan: z.string().min(2),
 });
 
@@ -45,13 +54,13 @@ export default function AddKKForm() {
       // noKK: "",
       namaKepalaKeluarga: "",
       alamat: "",
-      rt: "",
-      rw: "",
-      desa: "",
-      kecamatan: "",
-      kabupaten: "",
-      provinsi: "",
-      kodePos: "",
+      // rt: "",
+      // rw: "",
+      // desa: "",
+      // kecamatan: "",
+      // kabupaten: "",
+      // provinsi: "",
+      // kodePos: "",
       tanggalPenerbitan: "",
     },
   });
@@ -76,13 +85,14 @@ export default function AddKKForm() {
       // noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
-      rt: values.rt,
-      rw: values.rw,
-      desa: values.desa,
-      kecamatan: values.kecamatan,
-      kabupaten: values.kabupaten,
-      provinsi: values.provinsi,
-      kodePos: values.kodePos,
+      // rt: values.rt,
+      // rw: values.rw,
+      // desa: values.desa,
+      // kecamatan: values.kecamatan,
+      // kabupaten: values.kabupaten,
+      // provinsi: values.provinsi,
+      // kodePos: values.kodePos,
+      banjar: values.banjar,
       tanggalPenerbitan: values.tanggalPenerbitan,
     };
     mutate(data);
@@ -145,7 +155,7 @@ export default function AddKKForm() {
                 </FormItem>
               )}
             />
-            <div className="gap-4 grid grid-cols-2">
+            {/* <div className="gap-4 grid grid-cols-2">
               <FormField
                 control={form.control}
                 name="rt"
@@ -172,8 +182,8 @@ export default function AddKKForm() {
                   </FormItem>
                 )}
               />
-            </div>
-            <FormField
+            </div> */}
+            {/* <FormField
               control={form.control}
               name="desa"
               render={({ field }) => (
@@ -253,7 +263,7 @@ export default function AddKKForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <FormField
               control={form.control}
               name="tanggalPenerbitan"
@@ -263,6 +273,33 @@ export default function AddKKForm() {
                   <FormControl>
                     <Input {...field} type="date" disabled={isPending} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="banjar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Banjar</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Banjar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Banjar.map((item) => (
+                        <SelectItem value={item} key={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

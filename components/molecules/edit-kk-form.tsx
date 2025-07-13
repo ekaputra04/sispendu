@@ -21,18 +21,20 @@ import LoadingIcon from "../atoms/loading-icon";
 import { getKKById, updateKK } from "@/lib/firestore/kartu-keluarga";
 import { useEffect } from "react";
 import LoadingView from "../atoms/loading-view";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Banjar } from "@/consts/dataDefinitions";
 
 const formSchema = z.object({
   // noKK: z.string().min(2),
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
-  rt: z.string().optional(),
-  rw: z.string().optional(),
-  desa: z.string().min(2),
-  kecamatan: z.string().min(2),
-  kabupaten: z.string().min(2),
-  provinsi: z.string().min(2),
-  kodePos: z.string().min(2),
+  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
   tanggalPenerbitan: z.string().min(2),
 });
 
@@ -74,13 +76,7 @@ export default function EditKKForm({ data }: EditKKFormProps) {
       // noKK: "",
       namaKepalaKeluarga: data?.namaKepalaKeluarga,
       alamat: data?.alamat,
-      rt: data?.rt,
-      rw: data?.rw,
-      desa: data?.desa,
-      kecamatan: data?.kecamatan,
-      kabupaten: data?.kabupaten,
-      provinsi: data?.provinsi,
-      kodePos: data?.kodePos,
+      banjar: data?.banjar,
       tanggalPenerbitan: data?.tanggalPenerbitan,
     },
   });
@@ -105,13 +101,14 @@ export default function EditKKForm({ data }: EditKKFormProps) {
       // noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
-      rt: values.rt,
-      rw: values.rw,
-      desa: values.desa,
-      kecamatan: values.kecamatan,
-      kabupaten: values.kabupaten,
-      provinsi: values.provinsi,
-      kodePos: values.kodePos,
+      // rt: values.rt,
+      // rw: values.rw,
+      // desa: values.desa,
+      // kecamatan: values.kecamatan,
+      // kabupaten: values.kabupaten,
+      // provinsi: values.provinsi,
+      // kodePos: values.kodePos,
+      banjar: values.banjar,
       tanggalPenerbitan: values.tanggalPenerbitan,
     };
     mutate(dataSubmit);
@@ -156,115 +153,7 @@ export default function EditKKForm({ data }: EditKKFormProps) {
                 </FormItem>
               )}
             />
-            <div className="gap-4 grid grid-cols-2">
-              <FormField
-                control={form.control}
-                name="rt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>RT</FormLabel>
-                    <FormControl>
-                      <Input placeholder="RT" {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="rw"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>RW</FormLabel>
-                    <FormControl>
-                      <Input placeholder="RW" {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="desa"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Desa</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Desa" {...field} disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kecamatan"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kecamatan</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Kecamatan"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kabupaten"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kabupaten</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Kabupaten"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="provinsi"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Provinsi</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Provinsi"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kodePos"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kode Pos</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Kode Pos"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="tanggalPenerbitan"
@@ -274,6 +163,33 @@ export default function EditKKForm({ data }: EditKKFormProps) {
                   <FormControl>
                     <Input {...field} type="date" disabled={isPending} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="banjar"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Banjar</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isPending}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Banjar" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Banjar.map((item) => (
+                        <SelectItem value={item} key={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

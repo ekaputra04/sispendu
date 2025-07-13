@@ -72,12 +72,15 @@ export async function getKKById(
     const anggotaSnapshot = await getDocs(
       collection(db, "kartu-keluarga", kkId, "anggota")
     );
+
     const anggota: IAnggotaKeluarga[] = [];
 
     // Lakukan join dengan koleksi penduduk
     for (const anggotaDoc of anggotaSnapshot.docs) {
       const anggotaData = anggotaDoc.data();
-      const pendudukDocRef = doc(db, "penduduk", anggotaData.idPenduduk);
+      console.log(anggotaData);
+
+      const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
       const pendudukDocSnap = await getDoc(pendudukDocRef);
 
       if (pendudukDocSnap.exists()) {

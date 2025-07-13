@@ -86,14 +86,15 @@ export interface IKartuKeluarga {
   // noKK: string;
   namaKepalaKeluarga: string;
   alamat: string;
-  rt?: string;
-  rw?: string;
-  desa: string;
-  kecamatan: string;
-  kabupaten: string;
-  provinsi: string;
-  kodePos: string;
+  // rt?: string;
+  // rw?: string;
+  // desa: string;
+  // kecamatan: string;
+  // kabupaten: string;
+  // provinsi: string;
+  // kodePos: string;
   tanggalPenerbitan: string;
+  banjar: TBanjar;
   anggota?: IAnggotaKeluarga[];
 }
 
