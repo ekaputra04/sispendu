@@ -16,9 +16,10 @@ import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Pencil } from "lucide-react";
-import { handleCopy } from "@/lib/utils";
+import { calculateAge, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { getPendudukById } from "@/lib/firestore/penduduk";
+import { useEffect, useState } from "react";
 
 interface DetailPendudukPageProps {
   uuid: string;
@@ -30,6 +31,17 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
     queryFn: () => getPendudukById(uuid),
     retry: false,
   });
+
+  const [age, setAge] = useState("");
+
+  useEffect(() => {
+    if (data?.data) {
+      const age = calculateAge(data?.data?.tanggalLahir as string);
+      setAge(
+        age.years + " tahun " + age.months + " bulan" + " " + age.days + " hari"
+      );
+    }
+  }, [data]);
 
   return (
     <div>
@@ -110,6 +122,18 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                 </TableCell>
               </TableRow>
               <TableRow>
+                <TableCell className="font-medium">Usia</TableCell>
+                <TableCell>{age}</TableCell>
+                <TableCell>
+                  <Button
+                    size={"sm"}
+                    variant={"ghost"}
+                    onClick={() => handleCopy(age)}>
+                    <Copy />
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
                 <TableCell className="font-medium">Agama</TableCell>
                 <TableCell>{data?.data?.agama}</TableCell>
                 <TableCell>
@@ -163,22 +187,6 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                   </Button>
                 </TableCell>
               </TableRow>
-              {/* <TableRow>
-                <TableCell className="font-medium">Status Hubungan</TableCell>
-                <TableCell>{data?.data?.statusHubunganDalamKeluarga}</TableCell>
-                <TableCell>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() =>
-                      handleCopy(
-                        data?.data?.statusHubunganDalamKeluarga as string
-                      )
-                    }>
-                    <Copy />
-                  </Button>
-                </TableCell>
-              </TableRow> */}
               <TableRow>
                 <TableCell className="font-medium">Kewarganegaraan</TableCell>
                 <TableCell>{data?.data?.kewarganegaraan}</TableCell>
@@ -245,34 +253,6 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                   </Button>
                 </TableCell>
               </TableRow>
-              {/* <TableRow>
-                <TableCell className="font-medium">Nomor Paspor</TableCell>
-                <TableCell>{data?.data?.nomorPaspor}</TableCell>
-                <TableCell>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() =>
-                      handleCopy(data?.data?.nomorPaspor as string)
-                    }>
-                    <Copy />
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">Nomor Kitas</TableCell>
-                <TableCell>{data?.data?.nomorKitas}</TableCell>
-                <TableCell>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() =>
-                      handleCopy(data?.data?.nomorKitas as string)
-                    }>
-                    <Copy />
-                  </Button>
-                </TableCell>
-              </TableRow> */}
               <TableRow>
                 <TableCell className="font-medium">Banjar</TableCell>
                 <TableCell>{data?.data?.banjar}</TableCell>

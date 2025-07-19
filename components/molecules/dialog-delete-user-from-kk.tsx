@@ -50,7 +50,6 @@ export default function DialogDeleteUserFromKK({
     <AlertDialog>
       <AlertDialogTrigger className={ButtonDestructiveCSS}>
         <Trash />
-        Hapus
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

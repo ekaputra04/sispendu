@@ -12,7 +12,7 @@ export default function Page() {
             <div className="flex justify-center items-center bg-primary rounded-md size-6 text-primary-foreground">
               <GalleryVerticalEnd className="size-4" />
             </div>
-            Sispendu
+            <p>SISPENDU BEBALANG</p>
           </Link>
         </div>
         <div className="flex flex-1 justify-center items-center">

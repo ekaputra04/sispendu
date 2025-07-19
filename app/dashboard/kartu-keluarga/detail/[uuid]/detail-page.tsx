@@ -14,7 +14,7 @@ import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
-import { Copy, Pencil, PlusCircle } from "lucide-react";
+import { Copy, Eye, Pencil } from "lucide-react";
 import DialogDeleteUserFromKK from "../../../../../components/molecules/dialog-delete-user-from-kk";
 import { handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
@@ -39,7 +39,7 @@ export default function DetailKartuKeluargaPage({
   return (
     <div className="">
       {isLoading && <LoadingView />}
-      {data?.data ? (
+      {!isLoading && data?.data ? (
         <div className="">
           <div className="flex justify-between items-center">
             <Heading1 text="Detail Data Kartu Keluarga" />
@@ -164,10 +164,15 @@ export default function DetailKartuKeluargaPage({
                         <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
                         <TableCell className="flex gap-2">
                           <Link
+                            href={`/dashboard/penduduk/detail/${pendudukDetail.id}`}>
+                            <Button variant={"outline"}>
+                              <Eye />
+                            </Button>
+                          </Link>
+                          <Link
                             href={`/dashboard/penduduk/edit/${pendudukDetail.id}`}>
                             <Button variant={"outline"}>
                               <Pencil />
-                              Edit
                             </Button>
                           </Link>
                           <DialogDeleteUserFromKK

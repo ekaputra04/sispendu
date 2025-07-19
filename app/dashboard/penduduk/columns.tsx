@@ -31,6 +31,10 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
     header: "Agama",
   },
   {
+    accessorKey: "banjar",
+    header: "Banjar",
+  },
+  {
     accessorKey: "statusPerkawinan",
     header: "Status Perkawinan",
   },
