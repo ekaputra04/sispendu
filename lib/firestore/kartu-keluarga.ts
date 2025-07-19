@@ -9,6 +9,7 @@ import {
 import {
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -224,6 +225,7 @@ export async function addAnggotaToKK({
       throw new Error("Status hubungan dalam keluarga tidak valid");
     }
 
+    // Add anggota to kartu-keluarga subcollection
     const anggotaDocRef = doc(
       db,
       "kartu-keluarga",
@@ -236,15 +238,87 @@ export async function addAnggotaToKK({
       statusHubunganDalamKeluarga,
     });
 
+    // Update penduduk document with kkRef
+    await updateDoc(pendudukDocRef, {
+      kkRef: kkId,
+    });
+
     return {
       success: true,
-      message: "Anggota berhasil ditambahkan ke kartu keluarga",
+      message:
+        "Anggota berhasil ditambahkan ke kartu keluarga dan penduduk telah diupdate",
     };
   } catch (error: any) {
     console.error("Gagal menambahkan anggota ke kartu keluarga:", error);
     return {
       success: false,
       message: error.message || "Gagal menambahkan anggota ke kartu keluarga",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
+export async function deleteAnggotaFromKK({
+  kkId,
+  pendudukId,
+}: {
+  kkId: string;
+  pendudukId: string;
+}): Promise<FirestoreResponse<void>> {
+  try {
+    if (!kkId) {
+      throw new Error("ID kartu keluarga diperlukan");
+    }
+    if (!pendudukId) {
+      throw new Error("ID penduduk diperlukan");
+    }
+
+    await checkAuth();
+
+    const kkDocRef = doc(db, "kartu-keluarga", kkId);
+    const kkDocSnap = await getDoc(kkDocRef);
+    if (!kkDocSnap.exists()) {
+      throw new Error(`Kartu keluarga dengan ID ${kkId} tidak ditemukan`);
+    }
+
+    const pendudukDocRef = doc(db, "penduduk", pendudukId);
+    const pendudukDocSnap = await getDoc(pendudukDocRef);
+    if (!pendudukDocSnap.exists()) {
+      throw new Error(`Penduduk dengan ID ${pendudukId} tidak ditemukan`);
+    }
+
+    const anggotaDocRef = doc(
+      db,
+      "kartu-keluarga",
+      kkId,
+      "anggota",
+      pendudukId
+    );
+    const anggotaDocSnap = await getDoc(anggotaDocRef);
+    if (!anggotaDocSnap.exists()) {
+      throw new Error(
+        `Anggota dengan ID ${pendudukId} tidak ditemukan di kartu keluarga ${kkId}`
+      );
+    }
+
+    // Delete anggota from kartu-keluarga subcollection
+    await deleteDoc(anggotaDocRef);
+
+    // Remove kkRef from penduduk document
+    await updateDoc(pendudukDocRef, {
+      kkRef: deleteField(),
+    });
+
+    return {
+      success: true,
+      message:
+        "Anggota berhasil dihapus dari kartu keluarga dan kkRef telah dihapus dari penduduk",
+    };
+  } catch (error: any) {
+    console.error("Gagal menghapus anggota dari kartu keluarga:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal menghapus anggota dari kartu keluarga",
       errorCode: error.code || "unknown",
     };
   }

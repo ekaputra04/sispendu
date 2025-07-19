@@ -58,11 +58,7 @@ export default function SheetAddPendudukToKK({
     useState<TStatusHubunganDalamKeluarga>();
 
   const queryClient = useQueryClient();
-  const router = useRouter();
 
-  // const [isLoadingSave, setIsLoadingSave] = useState<boolean>(false);
-
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,10 +66,7 @@ export default function SheetAddPendudukToKK({
     },
   });
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
     setSearchQuery(values.name);
   }
@@ -81,8 +74,8 @@ export default function SheetAddPendudukToKK({
   const { data, isLoading, error } = useQuery({
     queryKey: ["pendudukByName", searchQuery],
     queryFn: () => getPendudukByName(searchQuery),
-    enabled: !!searchQuery, // Hanya jalankan query jika searchNama tidak kosong
-    staleTime: 5 * 60 * 1000, // Cache valid selama 5 menit
+    enabled: !!searchQuery,
+    staleTime: 5 * 60 * 1000,
   });
 
   function handlePendudukClick(pendudukId: string) {
@@ -124,6 +117,10 @@ export default function SheetAddPendudukToKK({
   });
 
   async function onSave() {
+    if (!pendudukId || !statusHubungan) {
+      toast.error("Silahkan pilih penduduk dan status hubungan");
+      return;
+    }
     mutate();
   }
 
@@ -196,17 +193,24 @@ export default function SheetAddPendudukToKK({
                 <div
                   className="flex justify-between items-center shadow-sm px-4 py-2 border rounded-md"
                   key={item.id}>
-                  <p className="text-sm">{item.nama}</p>
-                  <Button
-                    size={"sm"}
-                    onClick={() => handlePendudukClick(item.id)}
-                    className={`${
-                      pendudukId === item.id
-                        ? "bg-green-600 hover:bg-green-600 text-primary-foreground"
-                        : ""
-                    }`}>
-                    {pendudukId === item.id ? <Check /> : <Plus />}
-                  </Button>
+                  <p className="text-sm">
+                    {item.nama} - ({item.banjar})
+                  </p>
+                  {item.kkRef != null ? (
+                    <p className="text-green-600 text-sm">Sudah ada di KK</p>
+                  ) : (
+                    <Button
+                      size={"sm"}
+                      onClick={() => handlePendudukClick(item.id)}
+                      className={`${
+                        pendudukId === item.id
+                          ? "bg-green-600 hover:bg-green-600 text-primary-foreground"
+                          : ""
+                      }`}
+                      disabled={item.kkRef != null}>
+                      {pendudukId === item.id ? <Check /> : <Plus />}
+                    </Button>
+                  )}
                 </div>
               ))}
               <Button

@@ -37,6 +37,7 @@ export default function DetailKartuKeluargaPage({
 
   return (
     <div className="">
+      {JSON.stringify(data)}
       {isLoading && <LoadingView />}
       {data?.data ? (
         <div className="">
@@ -149,13 +150,19 @@ export default function DetailKartuKeluargaPage({
                       <TableCell>{pendudukDetail.nama}</TableCell>
                       <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
                       <TableCell className="flex gap-2">
-                        <Link href={"/"}>
+                        <Link
+                          href={
+                            "/dashboard/penduduk/edit/" + pendudukDetail.id
+                          }>
                           <Button variant={"outline"}>
                             <Pencil />
                             Edit
                           </Button>
                         </Link>
-                        <DialogDeleteUserFromKK />
+                        <DialogDeleteUserFromKK
+                          kkId={uuid}
+                          pendudukId={penduduk.pendudukId}
+                        />
                       </TableCell>
                     </TableRow>
                   );

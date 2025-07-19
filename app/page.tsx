@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { auth, db } from "@/config/firebase-init";
 import { decrypt } from "@/lib/utils";
@@ -23,6 +24,8 @@ export default function Home() {
       // Jika tidak ada sesi, arahkan ke login
       if (!session) {
         setIsSessionValid(false);
+        clearSession();
+        clearUser();
         router.push("/login");
         return;
       }
@@ -88,16 +91,18 @@ export default function Home() {
     }
   }
 
-  if (isSessionValid === null) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="">
-      <Button onClick={handleLogout}>Logout</Button>
-      <Link href={"/dashboard"}>
-        <Button>Dashboard</Button>
-      </Link>
+      {isSessionValid ? (
+        <div className="">
+          <Button onClick={handleLogout}>Logout</Button>
+          <Link href={"/dashboard"}>
+            <Button>Dashboard</Button>
+          </Link>
+        </div>
+      ) : (
+        <LoadingView />
+      )}
     </div>
   );
 }

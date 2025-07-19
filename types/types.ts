@@ -83,27 +83,16 @@ export type TBanjar =
 
 export interface IKartuKeluarga {
   id: string;
-  // noKK: string;
   namaKepalaKeluarga: string;
   alamat: string;
-  // rt?: string;
-  // rw?: string;
-  // desa: string;
-  // kecamatan: string;
-  // kabupaten: string;
-  // provinsi: string;
-  // kodePos: string;
   tanggalPenerbitan: string;
   banjar: TBanjar;
   anggota?: IAnggotaKeluarga[];
 }
 
-// export interface IKartuKeluargaWithAnggota extends IKartuKeluarga {}
-
 export interface IDataPenduduk {
   id: string;
   nama: string;
-  // nik: string;
   jenisKelamin: TJenisKelamin;
   tempatLahir: string;
   tanggalLahir: string;
@@ -111,18 +100,13 @@ export interface IDataPenduduk {
   pendidikan: string;
   jenisPekerjaan: string;
   statusPerkawinan: TStatusPerkawinan;
-  // statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
   kewarganegaraan: TKewarganegaraan;
   golonganDarah: TGolonganDarah;
   penyandangCacat: TPenyandangCacat;
-  // nomorPaspor?: string;
-  // nomorKitas?: string;
   namaAyah: string;
   namaIbu: string;
   banjar: TBanjar;
-  // kartuKeluargaRef?: string;
-  // ayahRef?: string;
-  // ibuRef?: string;
+  kkRef?: string;
 }
 
 export interface IAnggotaKeluarga {
