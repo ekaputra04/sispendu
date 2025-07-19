@@ -17,16 +17,14 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { getPendudukByName } from "@/lib/firestore/penduduk";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -34,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { TStatusHubunganDalamKeluarga } from "@/types/types";
+import { IDataPenduduk, TStatusHubunganDalamKeluarga } from "@/types/types";
 import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
 import { addAnggotaToKK } from "@/lib/firestore/kartu-keluarga";
 import { toast } from "sonner";
@@ -56,8 +54,10 @@ export default function SheetAddPendudukToKK({
   const [pendudukId, setPendudukId] = useState<string>("");
   const [statusHubungan, setStatusHubungan] =
     useState<TStatusHubunganDalamKeluarga>();
+  const [searchPenduduk, setSearchPenduduk] = useState<IDataPenduduk[]>();
 
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -77,6 +77,12 @@ export default function SheetAddPendudukToKK({
     enabled: !!searchQuery,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    if (data?.success && data?.data) {
+      setSearchPenduduk(data.data);
+    }
+  }, [data]);
 
   function handlePendudukClick(pendudukId: string) {
     setPendudukId(pendudukId);
@@ -100,6 +106,7 @@ export default function SheetAddPendudukToKK({
 
         if (result.success) {
           toast.success("Berhasil menambahkan anggota keluarga");
+          router.refresh();
         }
       } catch (error) {
         console.log(error);
@@ -108,6 +115,9 @@ export default function SheetAddPendudukToKK({
     onSuccess: () => {
       toast.success("Berhasil menambahkan data anggota keluarga");
       form.reset();
+      setPendudukId("");
+      setStatusHubungan(undefined);
+      setSearchPenduduk(undefined);
 
       queryClient.invalidateQueries({ queryKey: ["kartu-keluarga", kkId] });
     },
@@ -185,7 +195,55 @@ export default function SheetAddPendudukToKK({
             </div>
           )}
           {error && <p>Error: {error.message}</p>}
-          {data?.success && data?.data && data?.data.length > 0 ? (
+          {searchPenduduk?.length === 0 ? (
+            <p className="text-sm">Tidak ada penduduk yang cocok</p>
+          ) : (
+            <div className="space-y-2">
+              <hr />
+              <p className="font-semibold text-sm">Hasil pencarian</p>
+              {searchPenduduk &&
+                searchPenduduk.map((item) => (
+                  <div
+                    className="flex justify-between items-center shadow-sm px-4 py-2 border rounded-md"
+                    key={item.id}>
+                    <p className="text-sm">
+                      {item.nama} - ({item.banjar})
+                    </p>
+                    {item.kkRef != null ? (
+                      <p className="text-green-600 text-sm">Sudah ada di KK</p>
+                    ) : (
+                      <Button
+                        size={"sm"}
+                        onClick={() => handlePendudukClick(item.id)}
+                        className={`${
+                          pendudukId === item.id
+                            ? "bg-green-600 hover:bg-green-600 text-primary-foreground"
+                            : ""
+                        }`}
+                        disabled={item.kkRef != null}>
+                        {pendudukId === item.id ? <Check /> : <Plus />}
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              <Button
+                className="mt-4 w-full"
+                disabled={isPending}
+                onClick={onSave}>
+                {isPending ? (
+                  <div className="flex items-center gap-2">
+                    <LoadingIcon /> <p>Loading</p>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Save />
+                    <p>Simpan</p>
+                  </div>
+                )}
+              </Button>
+            </div>
+          )}
+          {/* {data?.success && data?.data && data?.data.length > 0 ? (
             <div className="space-y-2">
               <hr />
               <p className="font-semibold text-sm">Hasil pencarian</p>
@@ -234,7 +292,7 @@ export default function SheetAddPendudukToKK({
               <hr />
               <p className="text-sm">Penduduk tidak ditemukan</p>
             </div>
-          )}
+          )} */}
         </div>
       </SheetContent>
     </Sheet>

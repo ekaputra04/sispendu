@@ -10,13 +10,29 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   let navItem;
-  if (pathname === "/dashboard/penduduk/add") {
+  if (pathname.startsWith("/dashboard/penduduk/add")) {
     navItem = {
       title: "Tambah Data Penduduk",
     };
-  } else if (pathname === "/dashboard/kartu-keluarga/add") {
+  } else if (pathname.startsWith("/dashboard/kartu-keluarga/add")) {
     navItem = {
       title: "Tambah Data Kartu Keluarga",
+    };
+  } else if (pathname.startsWith("/dashboard/penduduk/edit")) {
+    navItem = {
+      title: "Edit Data Penduduk",
+    };
+  } else if (pathname.startsWith("/dashboard/kartu-keluarga/edit")) {
+    navItem = {
+      title: "Edit Data Kartu Keluarga",
+    };
+  } else if (pathname.startsWith("/dashboard/penduduk/detail")) {
+    navItem = {
+      title: "Detail Data Penduduk",
+    };
+  } else if (pathname.startsWith("/dashboard/kartu-keluarga/detail")) {
+    navItem = {
+      title: "Detail Data Kartu Keluarga",
     };
   } else {
     navItem = dataNavbar.navMain.find((item) => item.url === pathname);

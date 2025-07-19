@@ -107,8 +107,16 @@ export interface IDataPenduduk {
   namaIbu: string;
   banjar: TBanjar;
   kkRef?: string;
+  createdBy?: string;
+  editedBy?: string;
 }
 
+export interface IDataPengguna {
+  id: string;
+  nama: string;
+  email: string;
+  role: string;
+}
 export interface IAnggotaKeluarga {
   pendudukId: string;
   statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;

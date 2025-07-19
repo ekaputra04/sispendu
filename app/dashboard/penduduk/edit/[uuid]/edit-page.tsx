@@ -19,6 +19,7 @@ export default function EditPendudukPage({ uuid }: EditPendudukPageProps) {
     queryFn: () => getPendudukById(uuid),
     retry: false,
   });
+
   return (
     <div className="">
       {isLoading && <LoadingView />}

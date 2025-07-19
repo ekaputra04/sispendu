@@ -59,13 +59,13 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
           </div>
           <hr className="my-4" />
           <Table>
-            <TableHeader>
+            {/* <TableHeader>
               <TableRow>
                 <TableHead>Atribut</TableHead>
                 <TableHead>Nilai</TableHead>
                 <TableHead>Aksi</TableHead>
               </TableRow>
-            </TableHeader>
+            </TableHeader> */}
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">Nama Lengkap</TableCell>

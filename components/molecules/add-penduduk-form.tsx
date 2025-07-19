@@ -35,13 +35,13 @@ import {
   Kewarganegaraan,
   Pendidikan,
   PenyandangCacat,
-  StatusHubunganDalamKeluarga,
   StatusPerkawinan,
 } from "@/consts/dataDefinitions";
+import { Heading1 } from "../atoms/heading";
+import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
   nama: z.string().min(2),
-  // nik: z.string().min(5),
   jenisKelamin: z.enum(["Laki-laki", "Perempuan"]),
   tempatLahir: z.string().min(2),
   tanggalLahir: z.string().min(2),
@@ -62,18 +62,6 @@ const formSchema = z.object({
     "Cerai Hidup",
     "Cerai Mati",
   ]),
-  // statusHubunganDalamKeluarga: z.enum([
-  //   "Kepala Keluarga",
-  //   "Istri",
-  //   "Suami",
-  //   "Anak",
-  //   "Orang Tua",
-  //   "Mertua",
-  //   "Menantu",
-  //   "Cucu",
-  //   "Pembantu",
-  //   "Famili Lain",
-  // ]),
   kewarganegaraan: z.enum(["WNI", "WNA"]),
   golonganDarah: z.enum([
     "A",
@@ -99,8 +87,6 @@ const formSchema = z.object({
     "Cacat Lainnya",
   ]),
   banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
-  // nomorPaspor: z.string().min(2).optional(),
-  // nomorKitas: z.string().min(2).optional(),
   namaAyah: z.string().min(2),
   namaIbu: z.string().min(2),
 });
@@ -108,18 +94,16 @@ const formSchema = z.object({
 export default function AddPendudukForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { user } = useUserStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       nama: "",
-      // nik: "",
       tempatLahir: "",
       tanggalLahir: "",
       pendidikan: "",
       jenisPekerjaan: "",
-      // nomorPaspor: "",
-      // nomorKitas: "",
       namaAyah: "",
       namaIbu: "",
     },
@@ -145,7 +129,6 @@ export default function AddPendudukForm() {
     const data: IDataPenduduk = {
       id: crypto.randomUUID(),
       nama: values.nama,
-      // nik: values.nik,
       jenisKelamin: values.jenisKelamin,
       tempatLahir: values.tempatLahir,
       tanggalLahir: values.tanggalLahir,
@@ -153,15 +136,13 @@ export default function AddPendudukForm() {
       pendidikan: values.pendidikan,
       jenisPekerjaan: values.jenisPekerjaan,
       statusPerkawinan: values.statusPerkawinan,
-      // statusHubunganDalamKeluarga: values.statusHubunganDalamKeluarga,
       kewarganegaraan: values.kewarganegaraan,
       golonganDarah: values.golonganDarah,
       penyandangCacat: values.penyandangCacat,
-      // nomorPaspor: values.nomorPaspor,
-      // nomorKitas: values.nomorKitas,
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
       banjar: values.banjar,
+      createdBy: user.email,
     };
     console.log(data);
 
@@ -170,6 +151,8 @@ export default function AddPendudukForm() {
 
   return (
     <div className="">
+      <Heading1 text="Tambah Data Penduduk" />
+      <hr className="my-4" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
@@ -190,24 +173,6 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="nik"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>NIK</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="NIK"
-                      {...field}
-                      disabled={isPending}
-                      type="number"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="jenisKelamin"
@@ -380,33 +345,6 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="statusHubunganDalamKeluarga"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status Hubungan dalam Keluarga</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={isPending}>
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Status Hubungan dalam Keluarga" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {StatusHubunganDalamKeluarga.map((item) => (
-                        <SelectItem value={item} key={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="kewarganegaraan"
@@ -488,41 +426,6 @@ export default function AddPendudukForm() {
                 </FormItem>
               )}
             />
-            {/* <FormField
-              control={form.control}
-              name="nomorPaspor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nomor Paspor</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nomor Paspor"
-                      {...field}
-                      disabled={isPending}
-                      type="number"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="nomorKitas"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nomor Kitas</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nomor Kitas"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="namaAyah"

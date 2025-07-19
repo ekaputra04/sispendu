@@ -1,19 +1,16 @@
 import {
   IconCamera,
   IconChartBar,
-  IconDashboard,
   IconDashboardFilled,
   IconDatabase,
   IconFileAi,
   IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
+  IconUserCircle,
   IconUsers,
 } from "@tabler/icons-react";
 
@@ -39,16 +36,11 @@ export const dataNavbar = {
       url: "/dashboard/kartu-keluarga",
       icon: IconChartBar,
     },
-    // {
-    //   title: "Projects",
-    //   url: "#",
-    //   icon: IconFolder,
-    // },
-    // {
-    //   title: "Team",
-    //   url: "#",
-    //   icon: IconUsers,
-    // },
+    {
+      title: "Pengguna",
+      url: "/dashboard/pengguna",
+      icon: IconUserCircle,
+    },
   ],
   navClouds: [
     {
