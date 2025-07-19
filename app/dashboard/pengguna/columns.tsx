@@ -7,6 +7,7 @@ import { IDataPengguna } from "@/types/types";
 import Link from "next/link";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { Badge } from "@/components/ui/badge";
+import { usePenggunaSelectedForUpdate } from "@/store/usePenggunaSelectedForUpdate";
 
 export const columns: ColumnDef<IDataPengguna>[] = [
   {
@@ -44,21 +45,18 @@ export const columns: ColumnDef<IDataPengguna>[] = [
     cell: ({ row }) => {
       const pengguna: IDataPengguna = row.original;
 
+      const { setPengguna, setIsOpen } = usePenggunaSelectedForUpdate();
+
+      async function handleOpenDialog() {
+        setPengguna(pengguna);
+        setIsOpen(true);
+      }
+
       return (
         <div className="flex gap-2">
-          <Link href={`/dashboard/pengguna/detail/${pengguna.id}`}>
-            <Button size={"sm"} variant={"outline"}>
-              <Eye />
-            </Button>
-          </Link>
-          <Link href={`/dashboard/pengguna/edit/${pengguna.id}`}>
-            <Button
-              size={"sm"}
-              variant={"outline"}
-              className={ButtonOutlineGreen}>
-              <Pencil />
-            </Button>
-          </Link>
+          <Button size={"sm"} variant={"outline"} onClick={handleOpenDialog}>
+            <Pencil />
+          </Button>
         </div>
       );
     },

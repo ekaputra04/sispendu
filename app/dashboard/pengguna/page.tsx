@@ -7,6 +7,7 @@ import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { IDataPengguna } from "@/types/types";
 import LoadingView from "@/components/atoms/loading-view";
+import DialogEditPengguna from "./dialog-edit-pengguna";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
@@ -27,6 +28,7 @@ export default function Page() {
           />
         )}
       </div>
+      <DialogEditPengguna />
     </div>
   );
 }

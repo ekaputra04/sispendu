@@ -63,8 +63,38 @@ export async function createUser({
   return docRef;
 }
 
-export async function updateUserRole(userId: string, role: string) {
-  const userRef = doc(db, "users", userId);
-  const result = await updateDoc(userRef, { role: role });
-  return result;
+export async function updateUserRole(
+  userId: string,
+  role: string
+): Promise<FirestoreResponse<void>> {
+  try {
+    if (!userId) {
+      throw new Error("ID pengguna diperlukan");
+    }
+    if (!role) {
+      throw new Error("Role diperlukan");
+    }
+
+    await checkAuth();
+
+    const validRoles = ["admin", "petugas", "user"];
+    if (!validRoles.includes(role)) {
+      throw new Error("Role tidak valid");
+    }
+
+    const userRef = doc(db, "users", userId);
+    await updateDoc(userRef, { role });
+
+    return {
+      success: true,
+      message: "Role pengguna berhasil diperbarui",
+    };
+  } catch (error: any) {
+    console.error("Gagal memperbarui role pengguna:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal memperbarui role pengguna",
+      errorCode: error.code || "unknown",
+    };
+  }
 }
