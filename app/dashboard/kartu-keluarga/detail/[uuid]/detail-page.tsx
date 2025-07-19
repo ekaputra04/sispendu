@@ -20,7 +20,8 @@ import { handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
-import { IDataPenduduk } from "@/types/types";
+import { IAnggotaKeluarga, IDataPenduduk } from "@/types/types";
+import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
 
 interface DetailKartuKeluargaPageProps {
   uuid: string;
@@ -37,7 +38,6 @@ export default function DetailKartuKeluargaPage({
 
   return (
     <div className="">
-      {JSON.stringify(data)}
       {isLoading && <LoadingView />}
       {data?.data ? (
         <div className="">
@@ -137,36 +137,47 @@ export default function DetailKartuKeluargaPage({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data?.data?.anggota?.map((penduduk: any, index: number) => {
-                  const pendudukDetail: IDataPenduduk = penduduk.detail;
-                  console.log(pendudukDetail);
+                {data?.data?.anggota
+                  ?.slice()
+                  .sort((a: IAnggotaKeluarga, b: IAnggotaKeluarga) => {
+                    const indexA = StatusHubunganDalamKeluarga.indexOf(
+                      a.statusHubunganDalamKeluarga
+                    );
+                    const indexB = StatusHubunganDalamKeluarga.indexOf(
+                      b.statusHubunganDalamKeluarga
+                    );
+                    return indexA - indexB;
+                  })
+                  .map((penduduk: IAnggotaKeluarga, index: number) => {
+                    const pendudukDetail: IDataPenduduk = penduduk.detail!;
+                    console.log(pendudukDetail);
 
-                  return (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{index + 1}</TableCell>
-                      <TableCell>
-                        {penduduk.statusHubunganDalamKeluarga}
-                      </TableCell>
-                      <TableCell>{pendudukDetail.nama}</TableCell>
-                      <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
-                      <TableCell className="flex gap-2">
-                        <Link
-                          href={
-                            "/dashboard/penduduk/edit/" + pendudukDetail.id
-                          }>
-                          <Button variant={"outline"}>
-                            <Pencil />
-                            Edit
-                          </Button>
-                        </Link>
-                        <DialogDeleteUserFromKK
-                          kkId={uuid}
-                          pendudukId={penduduk.pendudukId}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                    return (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          {index + 1}
+                        </TableCell>
+                        <TableCell>
+                          {penduduk.statusHubunganDalamKeluarga}
+                        </TableCell>
+                        <TableCell>{pendudukDetail.nama}</TableCell>
+                        <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
+                        <TableCell className="flex gap-2">
+                          <Link
+                            href={`/dashboard/penduduk/edit/${pendudukDetail.id}`}>
+                            <Button variant={"outline"}>
+                              <Pencil />
+                              Edit
+                            </Button>
+                          </Link>
+                          <DialogDeleteUserFromKK
+                            kkId={uuid}
+                            pendudukId={penduduk.pendudukId}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </div>

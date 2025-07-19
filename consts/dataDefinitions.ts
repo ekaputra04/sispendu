@@ -64,8 +64,8 @@ export const StatusPerkawinan: TStatusPerkawinan[] = [
 
 export const StatusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga[] = [
   "Kepala Keluarga",
-  "Suami",
   "Istri",
+  "Suami",
   "Anak",
   "Orang Tua",
   "Mertua",
