@@ -24,7 +24,7 @@ export default function Page() {
       </div>
       <div className="hidden lg:block relative bg-muted">
         <img
-          src="/images/bg-bali.png"
+          src="/images/bg-sawah.jpg"
           alt="Image"
           className="absolute inset-0 dark:brightness-[0.2] dark:grayscale w-full h-full object-cover"
         />
