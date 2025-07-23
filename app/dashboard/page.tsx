@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardAction,
@@ -9,15 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import { ChartPieLabel } from "@/components/pie-chart";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useState } from "react";
+import TabelJenisKelamin from "@/components/molecules/tabel-jenis-kelamin";
 
 const populations = [
   { name: "Total Penduduk", population: 5000 },
@@ -32,7 +27,7 @@ const populations = [
 ];
 
 const conditions = [
-  { key: "all", label: "Semua", active: true },
+  { key: "all", label: "Semua" },
   { key: "rentang-umur", label: "Rentang Umur" },
   { key: "kategori-umur", label: "Kategori Umur" },
   { key: "pendidikan", label: "Pendidikan" },
@@ -46,8 +41,11 @@ const conditions = [
 ];
 
 export default function Page() {
+  const [condition, setCondition] = useState<string>("all");
+
   return (
     <div>
+      {/* Kartu Statistik */}
       <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {populations.map((item) => (
           <Card key={item.name} className="@container/card">
@@ -65,84 +63,53 @@ export default function Page() {
           </Card>
         ))}
       </div>
-      <hr className="my-4" />
+
+      <hr className="my-6" />
+
+      {/* Sidebar dan Chart */}
       <div className="gap-4 grid grid-cols-1 md:grid-cols-3">
-        <div className="">
+        {/* Sidebar */}
+        <div>
           <p className="mb-4 font-semibold text-lg">Filter Kondisi</p>
           <div className="space-y-2">
-            {conditions.map((condition) => (
-              <div className="" key={condition.key}>
+            {conditions.map((item) => (
+              <div key={item.key}>
                 <Button
                   size={"sm"}
                   className="flex justify-start w-full text-start"
-                  variant={condition.active ? "default" : "outline"}>
-                  {condition.label}
+                  variant={condition === item.key ? "default" : "outline"}
+                  onClick={() => setCondition(item.key)}>
+                  {item.label}
                 </Button>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Chart */}
         <div className="space-y-4 md:col-span-2">
           <ChartPieLabel />
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>No</TableHead>
-                <TableHead>Kelompok</TableHead>
-                <TableHead colSpan={2} className="text-center">
-                  Jumlah
-                </TableHead>
-                <TableHead colSpan={2} className="text-center">
-                  Laki-laki
-                </TableHead>
-                <TableHead colSpan={2} className="text-center">
-                  Perempuan
-                </TableHead>
-              </TableRow>
-              <TableRow>
-                <TableHead />
-                <TableHead />
-                <TableHead className="w-[60px]">n</TableHead>
-                <TableHead className="w-[60px]">%</TableHead>
-                <TableHead className="w-[60px]">n</TableHead>
-                <TableHead className="w-[60px]">%</TableHead>
-                <TableHead className="w-[60px]">n</TableHead>
-                <TableHead className="w-[60px]">%</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>Laki-laki</TableCell>
-                <TableCell>3</TableCell>
-                <TableCell>0,10%</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>0,03%</TableCell>
-                <TableCell>2</TableCell>
-                <TableCell>0,07%</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>2</TableCell>
-                <TableCell>Perempuan</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>0,03%</TableCell>
-                <TableCell>0</TableCell>
-                <TableCell>0,00%</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>0,03%</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell />
-                <TableCell>Total</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>0,03%</TableCell>
-                <TableCell>0</TableCell>
-                <TableCell>0,00%</TableCell>
-                <TableCell>1</TableCell>
-                <TableCell>0,03%</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          {condition === "all" && (
+            <div>
+              <TabelJenisKelamin />
+            </div>
+          )}
+          {condition === "rentang-umur" && <div>Diagram Rentang Umur</div>}
+          {condition === "kategori-umur" && <div>Diagram Kategori Umur</div>}
+          {condition === "pendidikan" && <div>Diagram Pendidikan</div>}
+          {condition === "pekerjaan" && <div>Diagram Pekerjaan</div>}
+          {condition === "agama" && <div>Diagram Agama</div>}
+          {condition === "hubungan-dalam-kk" && (
+            <div>Diagram Hubungan dalam KK</div>
+          )}
+          {condition === "status-perkawinan" && (
+            <div>Diagram Status Perkawinan</div>
+          )}
+          {condition === "golongan-darah" && <div>Diagram Golongan Darah</div>}
+          {condition === "penyandang-cacat" && (
+            <div>Diagram Penyandang Cacat</div>
+          )}
+          {condition === "wilayah" && <div>Diagram Wilayah</div>}
         </div>
       </div>
     </div>

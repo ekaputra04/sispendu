@@ -7,6 +7,7 @@ import { IDataPenduduk } from "@/types/types";
 import Link from "next/link";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<IDataPenduduk>[] = [
   {
@@ -27,20 +28,25 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
     header: "Tanggal Lahir",
   },
   {
-    accessorKey: "agama",
-    header: "Agama",
-  },
-  {
     accessorKey: "banjar",
     header: "Banjar",
   },
   {
-    accessorKey: "statusPerkawinan",
-    header: "Status Perkawinan",
-  },
-  {
     accessorKey: "jenisPekerjaan",
     header: "Pekerjaan",
+  },
+  {
+    accessorKey: "kkRef",
+    header: "Terdaftar di KK",
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+
+      return (
+        <Badge variant={penduduk.kkRef ? "default" : "destructive"}>
+          {penduduk.kkRef ? "Ya" : "Tidak"}
+        </Badge>
+      );
+    },
   },
   {
     id: "Aksi",

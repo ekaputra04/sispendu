@@ -210,7 +210,9 @@ export default function SheetAddPendudukToKK({
                       {item.nama} - ({item.banjar})
                     </p>
                     {item.kkRef != null ? (
-                      <p className="text-green-600 text-sm">Sudah ada di KK</p>
+                      <p className="text-green-600 text-sm">
+                        Sudah terdaftar di KK
+                      </p>
                     ) : (
                       <Button
                         size={"sm"}
@@ -243,56 +245,6 @@ export default function SheetAddPendudukToKK({
               </Button>
             </div>
           )}
-          {/* {data?.success && data?.data && data?.data.length > 0 ? (
-            <div className="space-y-2">
-              <hr />
-              <p className="font-semibold text-sm">Hasil pencarian</p>
-              {data?.data.map((item) => (
-                <div
-                  className="flex justify-between items-center shadow-sm px-4 py-2 border rounded-md"
-                  key={item.id}>
-                  <p className="text-sm">
-                    {item.nama} - ({item.banjar})
-                  </p>
-                  {item.kkRef != null ? (
-                    <p className="text-green-600 text-sm">Sudah ada di KK</p>
-                  ) : (
-                    <Button
-                      size={"sm"}
-                      onClick={() => handlePendudukClick(item.id)}
-                      className={`${
-                        pendudukId === item.id
-                          ? "bg-green-600 hover:bg-green-600 text-primary-foreground"
-                          : ""
-                      }`}
-                      disabled={item.kkRef != null}>
-                      {pendudukId === item.id ? <Check /> : <Plus />}
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button
-                className="mt-4 w-full"
-                disabled={isPending}
-                onClick={onSave}>
-                {isPending ? (
-                  <div className="flex items-center gap-2">
-                    <LoadingIcon /> <p>Loading</p>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Save />
-                    <p>Simpan</p>
-                  </div>
-                )}
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <hr />
-              <p className="text-sm">Penduduk tidak ditemukan</p>
-            </div>
-          )} */}
         </div>
       </SheetContent>
     </Sheet>

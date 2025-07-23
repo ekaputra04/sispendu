@@ -59,13 +59,6 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
           </div>
           <hr className="my-4" />
           <Table>
-            {/* <TableHeader>
-              <TableRow>
-                <TableHead>Atribut</TableHead>
-                <TableHead>Nilai</TableHead>
-                <TableHead>Aksi</TableHead>
-              </TableRow>
-            </TableHeader> */}
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">Nama Lengkap</TableCell>
