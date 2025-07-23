@@ -1,6 +1,6 @@
 "use client";
 
-import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
+import { IconCirclePlus, type Icon } from "@tabler/icons-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -31,7 +31,7 @@ export function NavMain({
               <SidebarMenuButton
                 tooltip="Tambah data penduduk"
                 className="bg-primary hover:bg-primary/90 active:bg-primary/90 min-w-8 text-primary-foreground hover:text-primary-foreground active:text-primary-foreground duration-200 ease-linear hover:cursor-pointer">
-                <IconCirclePlusFilled />
+                <IconCirclePlus />
                 <span>Tambah Data Penduduk</span>
               </SidebarMenuButton>
             </SidebarMenuItem>

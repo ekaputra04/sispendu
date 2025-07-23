@@ -1,6 +1,7 @@
 import {
   IconCamera,
   IconChartBar,
+  IconDashboard,
   IconDashboardFilled,
   IconDatabase,
   IconFileAi,
@@ -24,7 +25,7 @@ export const dataNavbar = {
     {
       title: "Dashboard",
       url: "/dashboard",
-      icon: IconDashboardFilled,
+      icon: IconDashboard,
     },
     {
       title: "Penduduk",

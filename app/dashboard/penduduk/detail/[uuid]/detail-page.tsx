@@ -15,7 +15,7 @@ import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
-import { Copy, Pencil } from "lucide-react";
+import { Copy, Eye, Pencil } from "lucide-react";
 import { calculateAge, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { getPendudukById } from "@/lib/firestore/penduduk";
@@ -50,12 +50,23 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
         <div>
           <div className="flex justify-between items-center">
             <Heading1 text="Detail Data Penduduk" />
-            <Link href={"/dashboard/penduduk/edit/" + uuid}>
-              <Button variant={"outline"} className={ButtonOutlineGreen}>
-                <Pencil />
-                Edit Data Penduduk
-              </Button>
-            </Link>
+            <div className="flex gap-2">
+              {data.data.kkRef && (
+                <Link
+                  href={"/dashboard/kartu-keluarga/detail/" + data.data.kkRef}>
+                  <Button variant={"outline"}>
+                    <Eye />
+                    Kartu Keluarga
+                  </Button>
+                </Link>
+              )}
+              <Link href={"/dashboard/penduduk/edit/" + uuid}>
+                <Button variant={"outline"} className={ButtonOutlineGreen}>
+                  <Pencil />
+                  Edit Data Penduduk
+                </Button>
+              </Link>
+            </div>
           </div>
           <hr className="my-4" />
           <Table>

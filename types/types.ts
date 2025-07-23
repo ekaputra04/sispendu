@@ -117,6 +117,7 @@ export interface IDataPengguna {
   email: string;
   role: string;
 }
+
 export interface IAnggotaKeluarga {
   pendudukId: string;
   statusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga;
