@@ -39,6 +39,7 @@ import {
 } from "@/consts/dataDefinitions";
 import { Heading1 } from "../atoms/heading";
 import { useUserStore } from "@/store/useUserStore";
+import { Save } from "lucide-react";
 
 const formSchema = z.object({
   nama: z.string().min(2),
@@ -496,7 +497,10 @@ export default function AddPendudukForm() {
                 <p>Proses</p>
               </div>
             ) : (
-              <p>Simpan</p>
+              <div className="flex items-center gap-2">
+                <Save />
+                Simpan
+              </div>
             )}
           </Button>
         </form>

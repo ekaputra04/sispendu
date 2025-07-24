@@ -24,14 +24,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5">
+            <SidebarMenuButton asChild>
               <Link href="/">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="font-semibold text-base">
-                  SISPENDU BEBALANG
-                </span>
+                <div className="flex justify-between items-center gap-2 py-8 h-32">
+                  <img
+                    src="/images/logo.png"
+                    alt=""
+                    className="w-8 h-8 object-fill"
+                  />
+                  <span className="font-semibold text-base">
+                    SISPENDU BEBALANG
+                  </span>
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

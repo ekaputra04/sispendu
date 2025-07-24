@@ -21,6 +21,7 @@ import LoadingIcon from "@/components/atoms/loading-icon";
 import { formatWitaDate } from "@/lib/utils";
 import LoadingView from "@/components/atoms/loading-view";
 import { PieChartAll } from "@/components/charts/pie-chart";
+import { Heading1 } from "@/components/atoms/heading";
 
 const populations = [
   { name: "Total Penduduk", population: 5000 },
@@ -92,10 +93,10 @@ export default function Page() {
       {isLoading && <LoadingView />}
       {report && (
         <>
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="font-semibold text-2xl">Laporan Penduduk</h1>
+          <div className="flex flex-wrap justify-between items-center gap-y-2 mb-6">
+            <Heading1 text="Laporan Penduduk" />
 
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Badge variant={"outline"}>
                 Terakhir diperbarui {formatWitaDate(report?.createdAt)}
               </Badge>

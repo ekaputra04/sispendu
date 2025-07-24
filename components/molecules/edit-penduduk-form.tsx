@@ -38,6 +38,7 @@ import {
   StatusPerkawinan,
 } from "@/consts/dataDefinitions";
 import { useUserStore } from "@/store/useUserStore";
+import { Save } from "lucide-react";
 
 const formSchema = z.object({
   nama: z.string().min(2),
@@ -504,7 +505,10 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
                 <p>Proses</p>
               </div>
             ) : (
-              <p>Simpan</p>
+              <div className="flex items-center gap-2">
+                <Save />
+                Simpan
+              </div>
             )}
           </Button>
         </form>

@@ -9,6 +9,7 @@ import { columns } from "./columns";
 import { DataTable } from "./data-table";
 import LoadingView from "@/components/atoms/loading-view";
 import DialogDeleteKK from "./dialog-delete-kk";
+import { Heading1 } from "@/components/atoms/heading";
 
 export default function Page() {
   const { data, isLoading, error } = useQuery({
@@ -19,7 +20,9 @@ export default function Page() {
   return (
     <div className="">
       {isLoading && <LoadingView />}
-      <div className="">
+      <div className="flex justify-between items-center mb-2">
+        <Heading1 text="Data Kartu Keluarga" />
+
         <Link href={"/dashboard/kartu-keluarga/add"}>
           <Button>
             <PlusCircle />

@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Banjar } from "@/consts/dataDefinitions";
+import { Save } from "lucide-react";
 
 const formSchema = z.object({
   // noKK: z.string().min(2),
@@ -313,7 +314,10 @@ export default function AddKKForm() {
                 <p>Proses</p>
               </div>
             ) : (
-              <p>Simpan</p>
+              <div className="flex items-center gap-2">
+                <Save />
+                Simpan
+              </div>
             )}
           </Button>
         </form>
