@@ -1,7 +1,17 @@
-import { db } from "@/config/firebase-init";
-import { IAnggotaKeluarga, IDataPenduduk, IKartuKeluarga } from "@/types/types";
 import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/config/firebase-init";
 import { calculateAge } from "./utils";
+import { IDataPenduduk, IAnggotaKeluarga, IKartuKeluarga } from "@/types/types";
+import {
+  Agama,
+  Banjar,
+  GolonganDarah,
+  JenisPekerjaan,
+  Pendidikan,
+  PenyandangCacat,
+  StatusHubunganDalamKeluarga,
+  StatusPerkawinan,
+} from "@/consts/dataDefinitions";
 
 export interface ReportData {
   category: string;
@@ -14,201 +24,432 @@ export interface ReportData {
 }
 
 export async function aggregateReportData(): Promise<ReportData[]> {
-  // Fetch penduduk data
-  const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
-  const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map(
-    (doc) =>
-      ({
-        id: doc.id,
-        ...doc.data(),
-      } as IDataPenduduk)
-  );
-
-  // Fetch kartu-keluarga data with validation
-  const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
-  const kkList: IKartuKeluarga[] = kkSnapshot.docs
-    .map((doc) => {
+  try {
+    // Fetch penduduk data
+    const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
+    const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map((doc) => {
       const data = doc.data();
-      // Validate required fields
-      if (
-        !data.namaKepalaKeluarga ||
-        !data.alamat ||
-        !data.tanggalPenerbitan ||
-        !data.banjar
-      ) {
-        console.warn(`Dokumen kartu-keluarga ${doc.id} tidak lengkap`);
-        return null;
-      }
+      console.log(`Penduduk ${doc.id} data:`, {
+        id: doc.id,
+        jenisPekerjaan: data.jenisPekerjaan,
+        statusPerkawinan: data.statusPerkawinan,
+        golonganDarah: data.golonganDarah,
+        penyandangCacat: data.penyandangCacat,
+        banjar: data.banjar,
+        agama: data.agama,
+        pendidikan: data.pendidikan,
+        jenisKelamin: data.jenisKelamin,
+      });
       return {
         id: doc.id,
-        namaKepalaKeluarga: data.namaKepalaKeluarga,
-        alamat: data.alamat,
-        tanggalPenerbitan: data.tanggalPenerbitan,
-        banjar: data.banjar,
-        anggota: [],
-      } as IKartuKeluarga;
-    })
-    .filter((item): item is IKartuKeluarga => item !== null);
+        ...data,
+      } as IDataPenduduk;
+    });
 
-  // Fetch anggota subcollection for each kartu-keluarga
-  for (const kk of kkList) {
-    const anggotaSnapshot = await getDocs(
-      collection(db, "kartu-keluarga", kk.id, "anggota")
-    );
-    kk.anggota = anggotaSnapshot.docs
+    console.log("Total penduduk:", pendudukList.length);
+
+    // Fetch kartu-keluarga data with validation
+    const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
+    const kkList: IKartuKeluarga[] = kkSnapshot.docs
       .map((doc) => {
-        const anggotaData = doc.data();
-        if (!anggotaData.statusHubunganDalamKeluarga) {
-          console.warn(
-            `Dokumen anggota ${doc.id} tidak memiliki statusHubunganDalamKeluarga`
-          );
+        const data = doc.data();
+        if (
+          !data.namaKepalaKeluarga ||
+          !data.alamat ||
+          !data.tanggalPenerbitan ||
+          !data.banjar
+        ) {
+          console.warn(`Dokumen kartu-keluarga ${doc.id} tidak lengkap:`, data);
           return null;
         }
         return {
-          pendudukId: doc.id,
-          statusHubunganDalamKeluarga: anggotaData.statusHubunganDalamKeluarga,
-          detail: pendudukList.find((p) => p.id === doc.id),
-        } as IAnggotaKeluarga;
+          id: doc.id,
+          namaKepalaKeluarga: data.namaKepalaKeluarga,
+          alamat: data.alamat,
+          tanggalPenerbitan: data.tanggalPenerbitan,
+          banjar: data.banjar,
+          anggota: [],
+        } as IKartuKeluarga;
       })
-      .filter((item): item is IAnggotaKeluarga => item !== null);
-  }
+      .filter((item): item is IKartuKeluarga => item !== null);
 
-  const totalPopulation = pendudukList.length;
-
-  // Initialize report structure
-  const report: ReportData[] = [
-    { category: "all", groups: [] },
-    { category: "rentang-umur", groups: [] },
-    { category: "kategori-umur", groups: [] },
-    { category: "pendidikan", groups: [] },
-    { category: "pekerjaan", groups: [] },
-    { category: "agama", groups: [] },
-    { category: "hubungan-dalam-kk", groups: [] },
-    { category: "status-perkawinan", groups: [] },
-    { category: "golongan-darah", groups: [] },
-    { category: "penyandang-cacat", groups: [] },
-    { category: "wilayah", groups: [] },
-  ];
-
-  // Define group definitions
-  const ageRanges = ["0-5", "6-12", "13-18", "19-30", "31-50", "51+"];
-  const ageCategories = ["Anak", "Remaja", "Dewasa", "Lansia"];
-
-  // Aggregate data
-  report.forEach((category) => {
-    const groups: Record<
-      string,
-      { total: number; male: number; female: number }
-    > = {};
-
-    if (category.category === "all") {
-      groups["Total"] = { total: 0, male: 0, female: 0 };
-    } else if (category.category === "rentang-umur") {
-      ageRanges.forEach((range) => {
-        groups[range] = { total: 0, male: 0, female: 0 };
-      });
-    } else if (category.category === "kategori-umur") {
-      ageCategories.forEach((cat) => {
-        groups[cat] = { total: 0, male: 0, female: 0 };
-      });
-    } else if (category.category === "wilayah") {
-      pendudukList.forEach((p) => {
-        if (p.banjar) groups[p.banjar] = { total: 0, male: 0, female: 0 };
-      });
-    } else if (category.category === "hubungan-dalam-kk") {
-      kkList.forEach((kk) => {
-        kk.anggota?.forEach((a) => {
-          if (a.statusHubunganDalamKeluarga) {
-            groups[a.statusHubunganDalamKeluarga] = {
-              total: 0,
-              male: 0,
-              female: 0,
-            };
+    // Fetch anggota subcollection
+    for (const kk of kkList) {
+      const anggotaSnapshot = await getDocs(
+        collection(db, "kartu-keluarga", kk.id, "anggota")
+      );
+      kk.anggota = anggotaSnapshot.docs
+        .map((doc) => {
+          const anggotaData = doc.data();
+          if (!anggotaData.statusHubunganDalamKeluarga) {
+            console.warn(
+              `Dokumen anggota ${doc.id} tidak memiliki statusHubunganDalamKeluarga:`,
+              anggotaData
+            );
+            return null;
           }
-        });
-      });
-    } else {
-      pendudukList.forEach((p) => {
-        const key = p[category.category as keyof IDataPenduduk];
-        if (key) groups[key as string] = { total: 0, male: 0, female: 0 };
-      });
+          return {
+            pendudukId: doc.id,
+            statusHubunganDalamKeluarga:
+              anggotaData.statusHubunganDalamKeluarga,
+            detail: pendudukList.find((p) => p.id === doc.id),
+          } as IAnggotaKeluarga;
+        })
+        .filter((item): item is IAnggotaKeluarga => item !== null);
     }
 
-    pendudukList.forEach((p) => {
-      const age = calculateAge(p.tanggalLahir).years;
+    const totalPopulation = pendudukList.length;
 
-      // All
+    // Initialize report structure
+    const report: ReportData[] = [
+      { category: "all", groups: [] },
+      { category: "rentang-umur", groups: [] },
+      { category: "kategori-umur", groups: [] },
+      { category: "pendidikan", groups: [] },
+      { category: "pekerjaan", groups: [] },
+      { category: "agama", groups: [] },
+      { category: "hubungan-dalam-kk", groups: [] },
+      { category: "status-perkawinan", groups: [] },
+      { category: "golongan-darah", groups: [] },
+      { category: "penyandang-cacat", groups: [] },
+      { category: "wilayah", groups: [] },
+    ];
+
+    // Define group definitions
+    const ageRanges = ["0-5", "6-12", "13-18", "19-30", "31-50", "51+"];
+    const ageCategories = ["Anak", "Remaja", "Dewasa", "Lansia"];
+
+    // Normalize function to match Firestore data with enum values
+    const normalizeString = (value: string | undefined): string | undefined => {
+      if (!value) {
+        console.warn(
+          `Nilai tidak valid (undefined/null) untuk normalisasi: ${value}`
+        );
+        return undefined;
+      }
+      // Preserve special characters like '-' for golonganDarah
+      return value.trim();
+    };
+
+    // Map Firestore string to enum values with fallback
+    const mapToEnum = (
+      value: string | undefined,
+      enumValues: string[],
+      defaultValue: string,
+      category: string,
+      pendudukId: string
+    ): string => {
+      if (!value) {
+        console.warn(
+          `Nilai tidak valid (undefined/null) untuk kategori ${category}, penduduk ${pendudukId}, menggunakan default: ${defaultValue}`
+        );
+        return defaultValue;
+      }
+      // Exact match to handle special characters
+      const matchedEnum = enumValues.find((enumVal) => enumVal === value);
+      if (!matchedEnum) {
+        console.warn(
+          `Nilai "${value}" tidak ditemukan di enum untuk kategori ${category}, penduduk ${pendudukId}, menggunakan default: ${defaultValue}`
+        );
+        return defaultValue;
+      }
+      console.log(
+        `Memetakan ${category}="${value}" ke key="${matchedEnum}" untuk penduduk ${pendudukId}`
+      );
+      return matchedEnum;
+    };
+
+    // Aggregate data
+    report.forEach((category) => {
+      const groups: Record<
+        string,
+        { total: number; male: number; female: number }
+      > = {};
+
+      // Initialize all possible groups
       if (category.category === "all") {
-        groups["Total"].total++;
-        if (p.jenisKelamin === "Laki-laki") groups["Total"].male++;
-        else if (p.jenisKelamin === "Perempuan") groups["Total"].female++;
+        groups["Total"] = { total: 0, male: 0, female: 0 };
+      } else if (category.category === "rentang-umur") {
+        ageRanges.forEach((range) => {
+          groups[range] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "kategori-umur") {
+        ageCategories.forEach((cat) => {
+          groups[cat] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "pendidikan") {
+        Pendidikan.forEach((p) => {
+          groups[p] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "pekerjaan") {
+        JenisPekerjaan.forEach((p) => {
+          groups[p] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "agama") {
+        Agama.forEach((a) => {
+          groups[a] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "hubungan-dalam-kk") {
+        StatusHubunganDalamKeluarga.forEach((s) => {
+          groups[s] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "status-perkawinan") {
+        StatusPerkawinan.forEach((s) => {
+          groups[s] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "golongan-darah") {
+        GolonganDarah.forEach((g) => {
+          groups[g] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "penyandang-cacat") {
+        PenyandangCacat.forEach((p) => {
+          groups[p] = { total: 0, male: 0, female: 0 };
+        });
+      } else if (category.category === "wilayah") {
+        Banjar.forEach((b) => {
+          groups[b] = { total: 0, male: 0, female: 0 };
+        });
       }
-      // Age Ranges
-      else if (category.category === "rentang-umur") {
-        let range = "";
-        if (age <= 5) range = "0-5";
-        else if (age <= 12) range = "6-12";
-        else if (age <= 18) range = "13-18";
-        else if (age <= 30) range = "19-30";
-        else if (age <= 50) range = "31-50";
-        else range = "51+";
-        groups[range].total++;
-        if (p.jenisKelamin === "Laki-laki") groups[range].male++;
-        else if (p.jenisKelamin === "Perempuan") groups[range].female++;
-      }
-      // Age Categories
-      else if (category.category === "kategori-umur") {
-        let cat = "";
-        if (age < 13) cat = "Anak";
-        else if (age < 19) cat = "Remaja";
-        else if (age < 60) cat = "Dewasa";
-        else cat = "Lansia";
-        groups[cat].total++;
-        if (p.jenisKelamin === "Laki-laki") groups[cat].male++;
-        else if (p.jenisKelamin === "Perempuan") groups[cat].female++;
-      }
-      // Other categories
-      else if (category.category === "hubungan-dalam-kk") {
-        const anggota = kkList
-          .flatMap((kk) => kk.anggota || [])
-          .find((a) => a.pendudukId === p.id);
-        if (anggota?.statusHubunganDalamKeluarga) {
-          const key = anggota.statusHubunganDalamKeluarga;
+
+      // Populate counts
+      pendudukList.forEach((p) => {
+        const age = calculateAge(p.tanggalLahir).years;
+
+        if (category.category === "all") {
+          groups["Total"].total++;
+          if (p.jenisKelamin === "Laki-laki") groups["Total"].male++;
+          else if (p.jenisKelamin === "Perempuan") groups["Total"].female++;
+        } else if (category.category === "rentang-umur") {
+          let range = "";
+          if (age <= 5) range = "0-5";
+          else if (age <= 12) range = "6-12";
+          else if (age <= 18) range = "13-18";
+          else if (age <= 30) range = "19-30";
+          else if (age <= 50) range = "31-50";
+          else range = "51+";
+          groups[range].total++;
+          if (p.jenisKelamin === "Laki-laki") groups[range].male++;
+          else if (p.jenisKelamin === "Perempuan") groups[range].female++;
+        } else if (category.category === "kategori-umur") {
+          let cat = "";
+          if (age < 13) cat = "Anak";
+          else if (age < 19) cat = "Remaja";
+          else if (age < 60) cat = "Dewasa";
+          else cat = "Lansia";
+          groups[cat].total++;
+          if (p.jenisKelamin === "Laki-laki") groups[cat].male++;
+          else if (p.jenisKelamin === "Perempuan") groups[cat].female++;
+        } else if (category.category === "hubungan-dalam-kk") {
+          const anggota = kkList
+            .flatMap((kk) => kk.anggota || [])
+            .find((a) => a.pendudukId === p.id);
+          if (anggota?.statusHubunganDalamKeluarga) {
+            const key = mapToEnum(
+              anggota.statusHubunganDalamKeluarga,
+              StatusHubunganDalamKeluarga,
+              "Famili Lain",
+              "hubungan-dalam-kk",
+              p.id
+            );
+            groups[key].total++;
+            if (p.jenisKelamin === "Laki-laki") groups[key].male++;
+            else if (p.jenisKelamin === "Perempuan") groups[key].female++;
+          }
+        } else {
+          let field: keyof IDataPenduduk;
+          if (category.category === "pekerjaan") {
+            field = "jenisPekerjaan";
+          } else if (category.category === "wilayah") {
+            field = "banjar";
+          } else {
+            field = category.category as keyof IDataPenduduk;
+          }
+          const value = p[field];
+          let key: string;
+          if (field === "pendidikan") {
+            key = mapToEnum(
+              value as string,
+              Pendidikan,
+              "Tidak / Belum Sekolah",
+              category.category,
+              p.id
+            );
+          } else if (field === "jenisPekerjaan") {
+            key = mapToEnum(
+              value as string,
+              JenisPekerjaan,
+              "Lainnya",
+              category.category,
+              p.id
+            );
+          } else if (field === "agama") {
+            key = mapToEnum(
+              value as string,
+              Agama,
+              "Kepercayaan Terhadap Tuhan YME / Lainnya",
+              category.category,
+              p.id
+            );
+          } else if (field === "statusPerkawinan") {
+            key = mapToEnum(
+              value as string,
+              StatusPerkawinan,
+              "Belum Kawin",
+              category.category,
+              p.id
+            );
+          } else if (field === "golonganDarah") {
+            key = mapToEnum(
+              value as string,
+              GolonganDarah,
+              "O",
+              category.category,
+              p.id
+            );
+          } else if (field === "penyandangCacat") {
+            key = mapToEnum(
+              value as string,
+              PenyandangCacat,
+              "Tidak Cacat",
+              category.category,
+              p.id
+            );
+          } else if (field === "banjar") {
+            key = mapToEnum(
+              value as string,
+              Banjar,
+              "Bebalang",
+              category.category,
+              p.id
+            );
+          } else {
+            console.warn(
+              `Kategori ${category.category} tidak dikenali untuk penduduk ${p.id}`
+            );
+            return;
+          }
+          console.log(
+            `Menambahkan ke grup ${key} untuk kategori ${category.category}, penduduk ${p.id}, jenisKelamin: ${p.jenisKelamin}`
+          );
           groups[key].total++;
           if (p.jenisKelamin === "Laki-laki") groups[key].male++;
           else if (p.jenisKelamin === "Perempuan") groups[key].female++;
         }
-      } else {
-        const key = p[category.category as keyof IDataPenduduk];
-        if (key) {
-          groups[key as string].total++;
-          if (p.jenisKelamin === "Laki-laki") groups[key as string].male++;
-          else if (p.jenisKelamin === "Perempuan")
-            groups[key as string].female++;
-        }
+      });
+
+      // Calculate totals for the category
+      const categoryTotal = Object.values(groups).reduce(
+        (acc, group) => ({
+          total: acc.total + group.total,
+          male: acc.male + group.male,
+          female: acc.female + group.female,
+        }),
+        { total: 0, male: 0, female: 0 }
+      );
+
+      console.log(`Kategori ${category.category} groups:`, groups);
+      console.log(`Kategori ${category.category} total:`, categoryTotal);
+
+      // Convert to final format with percentages
+      category.groups = Object.entries(groups)
+        .map(([name, data]) => ({
+          name,
+          total: {
+            count: data.total,
+            percentage:
+              totalPopulation > 0 ? (data.total / totalPopulation) * 100 : 0,
+          },
+          male: {
+            count: data.male,
+            percentage:
+              totalPopulation > 0 ? (data.male / totalPopulation) * 100 : 0,
+          },
+          female: {
+            count: data.female,
+            percentage:
+              totalPopulation > 0 ? (data.female / totalPopulation) * 100 : 0,
+          },
+        }))
+        .sort((a, b) => {
+          if (category.category === "pendidikan") {
+            return (
+              Pendidikan.indexOf(a.name as any) -
+              Pendidikan.indexOf(b.name as any)
+            );
+          } else if (category.category === "pekerjaan") {
+            return (
+              JenisPekerjaan.indexOf(a.name as any) -
+              JenisPekerjaan.indexOf(b.name as any)
+            );
+          } else if (category.category === "agama") {
+            return Agama.indexOf(a.name as any) - Agama.indexOf(b.name as any);
+          } else if (category.category === "hubungan-dalam-kk") {
+            return (
+              StatusHubunganDalamKeluarga.indexOf(a.name as any) -
+              StatusHubunganDalamKeluarga.indexOf(b.name as any)
+            );
+          } else if (category.category === "status-perkawinan") {
+            return (
+              StatusPerkawinan.indexOf(a.name as any) -
+              StatusPerkawinan.indexOf(b.name as any)
+            );
+          } else if (category.category === "golongan-darah") {
+            return (
+              GolonganDarah.indexOf(a.name as any) -
+              GolonganDarah.indexOf(b.name as any)
+            );
+          } else if (category.category === "penyandang-cacat") {
+            return (
+              PenyandangCacat.indexOf(a.name as any) -
+              PenyandangCacat.indexOf(b.name as any)
+            );
+          } else if (category.category === "wilayah") {
+            return (
+              Banjar.indexOf(a.name as any) - Banjar.indexOf(b.name as any)
+            );
+          } else if (category.category === "rentang-umur") {
+            return ageRanges.indexOf(a.name) - ageRanges.indexOf(b.name);
+          } else if (category.category === "kategori-umur") {
+            return (
+              ageCategories.indexOf(a.name) - ageCategories.indexOf(b.name)
+            );
+          }
+          return a.name.localeCompare(b.name);
+        });
+
+      // Add total group for the category
+      if (category.category !== "all") {
+        category.groups.push({
+          name: "Total",
+          total: {
+            count: categoryTotal.total,
+            percentage:
+              totalPopulation > 0
+                ? (categoryTotal.total / totalPopulation) * 100
+                : 0,
+          },
+          male: {
+            count: categoryTotal.male,
+            percentage:
+              totalPopulation > 0
+                ? (categoryTotal.male / totalPopulation) * 100
+                : 0,
+          },
+          female: {
+            count: categoryTotal.female,
+            percentage:
+              totalPopulation > 0
+                ? (categoryTotal.female / totalPopulation) * 100
+                : 0,
+          },
+        });
       }
     });
 
-    // Convert to final format with percentages
-    category.groups = Object.entries(groups).map(([name, data]) => ({
-      name,
-      total: {
-        count: data.total,
-        percentage:
-          totalPopulation > 0 ? (data.total / totalPopulation) * 100 : 0,
-      },
-      male: {
-        count: data.male,
-        percentage:
-          totalPopulation > 0 ? (data.male / totalPopulation) * 100 : 0,
-      },
-      female: {
-        count: data.female,
-        percentage:
-          totalPopulation > 0 ? (data.female / totalPopulation) * 100 : 0,
-      },
-    }));
-  });
-
-  return report;
+    console.log("Laporan akhir:", JSON.stringify(report, null, 2));
+    return report;
+  } catch (error: any) {
+    console.error("Gagal mengagregasi data laporan:", error);
+    throw new Error("Gagal mengagregasi data laporan: " + error.message);
+  }
 }
