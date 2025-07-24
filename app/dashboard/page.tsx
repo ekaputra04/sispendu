@@ -14,12 +14,13 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import ReportTable from "@/components/molecules/report-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { aggregateReportData } from "@/lib/agregatePopulationData";
+import { aggregateReportData, ReportData } from "@/lib/agregatePopulationData";
 import { fetchLatestReport, saveReport } from "@/lib/firestore/report";
 import { toast } from "sonner";
 import LoadingIcon from "@/components/atoms/loading-icon";
 import { formatWitaDate } from "@/lib/utils";
 import LoadingView from "@/components/atoms/loading-view";
+import { PieChartAll } from "@/components/charts/pie-chart";
 
 const populations = [
   { name: "Total Penduduk", population: 5000 },
@@ -179,9 +180,7 @@ export default function Page() {
 
           <hr className="my-6" />
 
-          {/* Sidebar dan Chart */}
           <div className="gap-4 grid grid-cols-1 md:grid-cols-3">
-            {/* Sidebar */}
             <div>
               <p className="mb-4 font-semibold text-lg">Filter Kondisi</p>
               <div className="space-y-2">
@@ -199,36 +198,139 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Chart */}
             <div className="space-y-4 md:col-span-2">
-              <ChartPieLabel />
-              {condition === "all" && <ReportTable condition={condition} />}
+              {condition === "all" && (
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
+              )}
               {condition === "rentang-umur" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
               {condition === "kategori-umur" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
               {condition === "pendidikan" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
               {condition === "pekerjaan" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
-              {condition === "agama" && <ReportTable condition={condition} />}
+              {condition === "agama" && (
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
+              )}
               {condition === "hubungan-dalam-kk" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
               {condition === "status-perkawinan" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
               {condition === "golongan-darah" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
               {condition === "penyandang-cacat" && (
-                <ReportTable condition={condition} />
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
               )}
-              {condition === "wilayah" && <ReportTable condition={condition} />}
+              {condition === "wilayah" && (
+                <>
+                  <PieChartAll
+                    data={
+                      report?.data?.find(
+                        (item) => item.category === condition
+                      ) as ReportData
+                    }
+                  />
+                  <ReportTable condition={condition} />
+                </>
+              )}
             </div>
           </div>
         </>
