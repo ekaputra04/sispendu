@@ -1,0 +1,47 @@
+{
+  "groups": [
+    {
+      "male": { "percentage": 0, "count": 0 },
+      "total": { "percentage": 50, "count": 1 },
+      "female": { "percentage": 50, "count": 1 },
+      "name": "Bebalang"
+    },
+    {
+      "male": { "count": 0, "percentage": 0 },
+      "total": { "percentage": 0, "count": 0 },
+      "female": { "count": 0, "percentage": 0 },
+      "name": "Tegal"
+    },
+    {
+      "total": { "percentage": 0, "count": 0 },
+      "male": { "percentage": 0, "count": 0 },
+      "name": "Sedit",
+      "female": { "percentage": 0, "count": 0 }
+    },
+    {
+      "name": "Gancan",
+      "male": { "count": 1, "percentage": 50 },
+      "total": { "percentage": 50, "count": 1 },
+      "female": { "percentage": 0, "count": 0 }
+    },
+    {
+      "female": { "percentage": 0, "count": 0 },
+      "total": { "percentage": 0, "count": 0 },
+      "name": "Sembung",
+      "male": { "count": 0, "percentage": 0 }
+    },
+    {
+      "male": { "percentage": 0, "count": 0 },
+      "total": { "count": 0, "percentage": 0 },
+      "female": { "percentage": 0, "count": 0 },
+      "name": "Petak"
+    },
+    {
+      "total": { "percentage": 100, "count": 2 },
+      "male": { "percentage": 50, "count": 1 },
+      "female": { "count": 1, "percentage": 50 },
+      "name": "Total"
+    }
+  ],
+  "category": "wilayah"
+}

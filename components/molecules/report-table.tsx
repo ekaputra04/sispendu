@@ -1,7 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
+import { useQuery } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
@@ -11,22 +10,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
-import { db } from "@/config/firebase-init";
-import { aggregateReportData } from "@/lib/agregatePopulationData";
-import { fetchLatestReport, saveReport } from "@/lib/firestore/report";
+import { fetchLatestReport } from "@/lib/firestore/report";
 import { ReportConditions } from "@/consts/dataDefinitions";
-
-interface ReportData {
-  category: string;
-  groups: {
-    name: string;
-    total: { count: number; percentage: number };
-    male: { count: number; percentage: number };
-    female: { count: number; percentage: number };
-  }[];
-}
 
 interface ReportTableProps {
   condition: string;
@@ -45,7 +30,7 @@ export default function ReportTable({ condition }: ReportTableProps) {
   const filteredReport = report?.data.find((r) => r.category === condition);
 
   return (
-    <div className="mx-auto py-8 container">
+    <div className="mx-auto container">
       {isLoading ? (
         <p>Memuat laporan...</p>
       ) : error ? (

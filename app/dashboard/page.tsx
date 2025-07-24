@@ -12,7 +12,6 @@ import { RefreshCw, Users } from "lucide-react";
 import { ChartPieLabel } from "@/components/pie-chart";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import TabelJenisKelamin from "@/components/molecules/tabel-jenis-kelamin";
 import ReportTable from "@/components/molecules/report-table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { aggregateReportData } from "@/lib/agregatePopulationData";
@@ -20,7 +19,7 @@ import { fetchLatestReport, saveReport } from "@/lib/firestore/report";
 import { toast } from "sonner";
 import LoadingIcon from "@/components/atoms/loading-icon";
 import { formatWitaDate } from "@/lib/utils";
-import { Timestamp } from "firebase/firestore";
+import LoadingView from "@/components/atoms/loading-view";
 
 const populations = [
   { name: "Total Penduduk", population: 5000 },
@@ -61,7 +60,6 @@ export default function Page() {
     queryFn: fetchLatestReport,
   });
 
-  // Mutation for generating new report
   const generateReportMutation = useMutation({
     mutationFn: async () => {
       const reportData = await aggregateReportData();
@@ -80,104 +78,161 @@ export default function Page() {
     },
   });
 
+  const wilayahData = report?.data.find((item) => item.category === "wilayah");
+  const totalGroup = wilayahData?.groups.find(
+    (group) => group.name === "Total"
+  );
+  const banjarGroups = wilayahData?.groups
+    .filter((group) => group.name !== "Total")
+    .sort((a, b) => b.total.count - a.total.count);
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="font-semibold text-2xl">Laporan Penduduk</h1>
+      {isLoading && <LoadingView />}
+      {report && (
+        <>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="font-semibold text-2xl">Laporan Penduduk</h1>
 
-        <div className="flex items-center gap-4">
-          <Badge variant={"outline"}>
-            Terakhir diperbarui {formatWitaDate(report?.createdAt)}
-          </Badge>
-          <Button
-            onClick={() => generateReportMutation.mutate()}
-            disabled={generateReportMutation.isPending}>
-            {generateReportMutation.isPending ? (
-              <>
-                <LoadingIcon />
-                Memproses...
-              </>
-            ) : (
-              <>
-                <RefreshCw /> Perbarui Laporan
-              </>
-            )}
-          </Button>
-        </div>
-      </div>
-      {/* Kartu Statistik */}
-      <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {populations.map((item) => (
-          <Card key={item.name} className="@container/card">
-            <CardHeader>
-              <CardDescription>{item.name}</CardDescription>
-              <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
-                {item.population}
-              </CardTitle>
-              <CardAction>
-                <Badge variant="outline">
-                  <Users />
-                </Badge>
-              </CardAction>
-            </CardHeader>
-          </Card>
-        ))}
-      </div>
-
-      <hr className="my-6" />
-
-      {/* Sidebar dan Chart */}
-      <div className="gap-4 grid grid-cols-1 md:grid-cols-3">
-        {/* Sidebar */}
-        <div>
-          <p className="mb-4 font-semibold text-lg">Filter Kondisi</p>
-          <div className="space-y-2">
-            {conditions.map((item) => (
-              <div key={item.key}>
-                <Button
-                  size={"sm"}
-                  className="flex justify-start w-full text-start"
-                  variant={condition === item.key ? "default" : "outline"}
-                  onClick={() => setCondition(item.key)}>
-                  {item.label}
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Chart */}
-        <div className="space-y-4 md:col-span-2">
-          <ChartPieLabel />
-          {condition === "all" && (
-            <div>
-              <TabelJenisKelamin />
+            <div className="flex items-center gap-4">
+              <Badge variant={"outline"}>
+                Terakhir diperbarui {formatWitaDate(report?.createdAt)}
+              </Badge>
+              <Button
+                onClick={() => generateReportMutation.mutate()}
+                disabled={generateReportMutation.isPending}>
+                {generateReportMutation.isPending ? (
+                  <>
+                    <LoadingIcon />
+                    Memproses...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw /> Perbarui Laporan
+                  </>
+                )}
+              </Button>
             </div>
-          )}
-          {condition === "rentang-umur" && (
-            <ReportTable condition={condition} />
-          )}
-          {condition === "kategori-umur" && (
-            <ReportTable condition={condition} />
-          )}
-          {condition === "pendidikan" && <ReportTable condition={condition} />}
-          {condition === "pekerjaan" && <ReportTable condition={condition} />}
-          {condition === "agama" && <ReportTable condition={condition} />}
-          {condition === "hubungan-dalam-kk" && (
-            <ReportTable condition={condition} />
-          )}
-          {condition === "status-perkawinan" && (
-            <ReportTable condition={condition} />
-          )}
-          {condition === "golongan-darah" && (
-            <ReportTable condition={condition} />
-          )}
-          {condition === "penyandang-cacat" && (
-            <ReportTable condition={condition} />
-          )}
-          {condition === "wilayah" && <ReportTable condition={condition} />}
-        </div>
-      </div>
+          </div>
+          {/* Kartu Statistik */}
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-6">
+            {/* Kartu Total Penduduk */}
+            <Card className="@container/card">
+              <CardHeader>
+                <CardDescription>Total Penduduk</CardDescription>
+                <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
+                  {totalGroup && totalGroup.total.count}
+                </CardTitle>
+                <CardAction>
+                  <Badge variant="outline">
+                    <Users />
+                  </Badge>
+                </CardAction>
+              </CardHeader>
+            </Card>
+            {/* Kartu Total Laki-laki */}
+            <Card className="@container/card">
+              <CardHeader>
+                <CardDescription>Total Laki-laki</CardDescription>
+                <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
+                  {totalGroup && totalGroup.male.count}
+                </CardTitle>
+                <CardAction>
+                  <Badge variant="outline">
+                    <Users />
+                  </Badge>
+                </CardAction>
+              </CardHeader>
+            </Card>
+            {/* Kartu Total Perempuan */}
+            <Card className="@container/card">
+              <CardHeader>
+                <CardDescription>Total Perempuan</CardDescription>
+                <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
+                  {totalGroup && totalGroup.female.count}
+                </CardTitle>
+                <CardAction>
+                  <Badge variant="outline">
+                    <Users />
+                  </Badge>
+                </CardAction>
+              </CardHeader>
+            </Card>
+            {/* Kartu per Banjar */}
+            {banjarGroups &&
+              banjarGroups.map((item) => (
+                <Card key={item.name} className="@container/card">
+                  <CardHeader>
+                    <CardDescription>{item.name}</CardDescription>
+                    <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
+                      {item.total.count}
+                    </CardTitle>
+                    <CardAction>
+                      <Badge variant="outline">
+                        <Users />
+                      </Badge>
+                    </CardAction>
+                  </CardHeader>
+                </Card>
+              ))}
+          </div>
+
+          <hr className="my-6" />
+
+          {/* Sidebar dan Chart */}
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-3">
+            {/* Sidebar */}
+            <div>
+              <p className="mb-4 font-semibold text-lg">Filter Kondisi</p>
+              <div className="space-y-2">
+                {conditions.map((item) => (
+                  <div key={item.key}>
+                    <Button
+                      size={"sm"}
+                      className="flex justify-start w-full text-start"
+                      variant={condition === item.key ? "default" : "outline"}
+                      onClick={() => setCondition(item.key)}>
+                      {item.label}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Chart */}
+            <div className="space-y-4 md:col-span-2">
+              <ChartPieLabel />
+              {condition === "all" && <ReportTable condition={condition} />}
+              {condition === "rentang-umur" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "kategori-umur" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "pendidikan" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "pekerjaan" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "agama" && <ReportTable condition={condition} />}
+              {condition === "hubungan-dalam-kk" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "status-perkawinan" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "golongan-darah" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "penyandang-cacat" && (
+                <ReportTable condition={condition} />
+              )}
+              {condition === "wilayah" && <ReportTable condition={condition} />}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
