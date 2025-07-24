@@ -25,7 +25,6 @@ export interface ReportData {
 
 export async function aggregateReportData(): Promise<ReportData[]> {
   try {
-    // Fetch penduduk data
     const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
     const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map((doc) => {
       const data = doc.data();
@@ -48,7 +47,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
 
     console.log("Total penduduk:", pendudukList.length);
 
-    // Fetch kartu-keluarga data with validation
     const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
     const kkList: IKartuKeluarga[] = kkSnapshot.docs
       .map((doc) => {
@@ -73,7 +71,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
       })
       .filter((item): item is IKartuKeluarga => item !== null);
 
-    // Fetch anggota subcollection
     for (const kk of kkList) {
       const anggotaSnapshot = await getDocs(
         collection(db, "kartu-keluarga", kk.id, "anggota")
@@ -100,7 +97,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
 
     const totalPopulation = pendudukList.length;
 
-    // Initialize report structure
     const report: ReportData[] = [
       { category: "all", groups: [] },
       { category: "rentang-umur", groups: [] },
@@ -115,11 +111,9 @@ export async function aggregateReportData(): Promise<ReportData[]> {
       { category: "wilayah", groups: [] },
     ];
 
-    // Define group definitions
     const ageRanges = ["0-5", "6-12", "13-18", "19-30", "31-50", "51+"];
     const ageCategories = ["Anak", "Remaja", "Dewasa", "Lansia"];
 
-    // Normalize function to match Firestore data with enum values
     const normalizeString = (value: string | undefined): string | undefined => {
       if (!value) {
         console.warn(
@@ -127,11 +121,10 @@ export async function aggregateReportData(): Promise<ReportData[]> {
         );
         return undefined;
       }
-      // Preserve special characters like '-' for golonganDarah
+
       return value.trim();
     };
 
-    // Map Firestore string to enum values with fallback
     const mapToEnum = (
       value: string | undefined,
       enumValues: string[],
@@ -145,7 +138,7 @@ export async function aggregateReportData(): Promise<ReportData[]> {
         );
         return defaultValue;
       }
-      // Exact match to handle special characters
+
       const matchedEnum = enumValues.find((enumVal) => enumVal === value);
       if (!matchedEnum) {
         console.warn(
@@ -159,14 +152,12 @@ export async function aggregateReportData(): Promise<ReportData[]> {
       return matchedEnum;
     };
 
-    // Aggregate data
     report.forEach((category) => {
       const groups: Record<
         string,
         { total: number; male: number; female: number }
       > = {};
 
-      // Initialize all possible groups
       if (category.category === "all") {
         groups["Total"] = { total: 0, male: 0, female: 0 };
       } else if (category.category === "rentang-umur") {
@@ -211,7 +202,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
         });
       }
 
-      // Populate counts
       pendudukList.forEach((p) => {
         const age = calculateAge(p.tanggalLahir).years;
 
@@ -261,6 +251,12 @@ export async function aggregateReportData(): Promise<ReportData[]> {
             field = "jenisPekerjaan";
           } else if (category.category === "wilayah") {
             field = "banjar";
+          } else if (category.category === "status-perkawinan") {
+            field = "statusPerkawinan";
+          } else if (category.category === "golongan-darah") {
+            field = "golonganDarah";
+          } else if (category.category === "penyandang-cacat") {
+            field = "penyandangCacat";
           } else {
             field = category.category as keyof IDataPenduduk;
           }
@@ -337,7 +333,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
         }
       });
 
-      // Calculate totals for the category
       const categoryTotal = Object.values(groups).reduce(
         (acc, group) => ({
           total: acc.total + group.total,
@@ -350,7 +345,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
       console.log(`Kategori ${category.category} groups:`, groups);
       console.log(`Kategori ${category.category} total:`, categoryTotal);
 
-      // Convert to final format with percentages
       category.groups = Object.entries(groups)
         .map(([name, data]) => ({
           name,
@@ -417,7 +411,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
           return a.name.localeCompare(b.name);
         });
 
-      // Add total group for the category
       if (category.category !== "all") {
         category.groups.push({
           name: "Total",
