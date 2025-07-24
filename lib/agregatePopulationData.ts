@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/config/firebase-init";
 import { calculateAge } from "./utils";
 import { IDataPenduduk, IAnggotaKeluarga, IKartuKeluarga } from "@/types/types";
@@ -12,6 +12,11 @@ import {
   StatusHubunganDalamKeluarga,
   StatusPerkawinan,
 } from "@/consts/dataDefinitions";
+
+export interface IReport {
+  createdAt: Timestamp;
+  data: ReportData[];
+}
 
 export interface ReportData {
   category: string;

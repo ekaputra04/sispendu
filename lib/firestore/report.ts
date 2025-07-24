@@ -1,7 +1,15 @@
 import { FirestoreResponse } from "@/types/types";
-import { ReportData } from "../agregatePopulationData";
+import { IReport, ReportData } from "../agregatePopulationData";
 import { checkAuth } from "../auth";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "@/config/firebase-init";
 
 export async function saveReport(
@@ -28,3 +36,28 @@ export async function saveReport(
     };
   }
 }
+
+export const fetchLatestReport = async (): Promise<IReport> => {
+  const reportQuery = query(
+    collection(db, "report"),
+    orderBy("createdAt", "desc"),
+    limit(1)
+  );
+  const reportSnapshot = await getDocs(reportQuery);
+  if (!reportSnapshot.empty) {
+    return reportSnapshot.docs[0].data() as IReport;
+  }
+  return {} as IReport;
+};
+// export const fetchLatestReport = async (): Promise<ReportData[]> => {
+//   const reportQuery = query(
+//     collection(db, "report"),
+//     orderBy("createdAt", "desc"),
+//     limit(1)
+//   );
+//   const reportSnapshot = await getDocs(reportQuery);
+//   if (!reportSnapshot.empty) {
+//     return reportSnapshot.docs[0].data().data as ReportData[];
+//   }
+//   return [];
+// };

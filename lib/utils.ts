@@ -3,6 +3,9 @@ import { twMerge } from "tailwind-merge";
 import { SessionPayload } from "./definitions";
 import { jwtVerify, SignJWT } from "jose";
 import { toast } from "sonner";
+import { Timestamp } from "firebase/firestore";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -87,3 +90,9 @@ export function calculateAge(birthDate: string): {
 
   return { years, months, days };
 }
+
+export const formatWitaDate = (timestamp?: Timestamp): string => {
+  if (!timestamp) return "Tidak tersedia";
+  const date = timestamp.toDate();
+  return format(date, "d MMMM yyyy, HH:mm", { locale: id }) + " WITA";
+};

@@ -110,3 +110,17 @@ export const Banjar: TBanjar[] = [
   "Sembung",
   "Petak",
 ];
+
+export const ReportConditions = [
+  { key: "all", label: "Semua" },
+  { key: "rentang-umur", label: "Rentang Umur" },
+  { key: "kategori-umur", label: "Kategori Umur" },
+  { key: "pendidikan", label: "Pendidikan" },
+  { key: "pekerjaan", label: "Pekerjaan" },
+  { key: "agama", label: "Agama" },
+  { key: "hubungan-dalam-kk", label: "Hubungan dalam KK" },
+  { key: "status-perkawinan", label: "Status Perkawinan" },
+  { key: "golongan-darah", label: "Golongan Darah" },
+  { key: "penyandang-cacat", label: "Penyandang Cacat" },
+  { key: "wilayah", label: "Wilayah" },
+];

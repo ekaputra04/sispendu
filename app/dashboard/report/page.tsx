@@ -16,6 +16,7 @@ import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "@/config/firebase-init";
 import { aggregateReportData } from "@/lib/agregatePopulationData";
 import { saveReport } from "@/lib/firestore/report";
+import { ReportConditions } from "@/consts/dataDefinitions";
 
 interface ReportData {
   category: string;
@@ -27,30 +28,14 @@ interface ReportData {
   }[];
 }
 
-const conditions = [
-  { key: "all", label: "Semua" },
-  { key: "rentang-umur", label: "Rentang Umur" },
-  { key: "kategori-umur", label: "Kategori Umur" },
-  { key: "pendidikan", label: "Pendidikan" },
-  { key: "pekerjaan", label: "Pekerjaan" },
-  { key: "agama", label: "Agama" },
-  { key: "hubungan-dalam-kk", label: "Hubungan dalam KK" },
-  { key: "status-perkawinan", label: "Status Perkawinan" },
-  { key: "golongan-darah", label: "Golongan Darah" },
-  { key: "penyandang-cacat", label: "Penyandang Cacat" },
-  { key: "wilayah", label: "Wilayah" },
-];
-
 export default function ReportPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [report, setReport] = useState<ReportData[]>([]);
 
-  // Fetch latest report on mount
   useEffect(() => {
     fetchLatestReport();
   }, []);
 
-  // Fetch latest report
   const fetchLatestReport = async () => {
     try {
       const reportQuery = query(
@@ -70,7 +55,6 @@ export default function ReportPage() {
     }
   };
 
-  // Trigger report generation
   const handleGenerateReport = async () => {
     setIsLoading(true);
     try {
@@ -78,7 +62,7 @@ export default function ReportPage() {
       const result = await saveReport(reportData);
       if (result.success) {
         toast.success(result.message);
-        await fetchLatestReport(); // Refresh report
+        await fetchLatestReport();
       } else {
         toast.error(result.message);
       }
@@ -105,8 +89,8 @@ export default function ReportPage() {
           <Card key={category.category} className="mb-6">
             <CardHeader>
               <CardTitle>
-                {conditions.find((c) => c.key === category.category)?.label ||
-                  category.category}
+                {ReportConditions.find((c) => c.key === category.category)
+                  ?.label || category.category}
               </CardTitle>
             </CardHeader>
             <CardContent>
