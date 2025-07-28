@@ -1,23 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/utils";
 
-// Definisikan rute terproteksi dan publik
+// Definisikan rute terproteksi, publik, dan preview
 const protectedRoutes = [
   "/dashboard",
   "/dashboard/penduduk",
   "/dashboard/kartu-keluarga",
+];
+const previewRoutes = [
+  "/preview",
+  "/preview/penduduk",
+  "/preview/kartu-keluarga",
 ];
 const publicRoutes = ["/login", "/register", "/"];
 const authRoutes = ["/login", "/register"]; // Rute autentikasi yang akan redirect ke / jika sudah login
 
 // Role yang diizinkan untuk mengakses rute terproteksi
 const authorizedRoles = ["admin", "petugas"];
+// Role yang diizinkan untuk mengakses rute preview
+const previewAuthorizedRoles = ["admin", "petugas", "user"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   const isProtectedRoute = protectedRoutes.some((route) =>
     path.startsWith(route)
   );
+  const isPreviewRoute = previewRoutes.some((route) => path.startsWith(route));
   const isPublicRoute = publicRoutes.includes(path);
   const isAuthRoute = authRoutes.includes(path);
 
@@ -41,16 +49,25 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Jika pengguna terautentikasi dengan role "user" dan mencoba mengakses rute terproteksi
-  if (isProtectedRoute && session?.userId && session?.role === "user") {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+  // Jika pengguna tidak terautentikasi dan mencoba mengakses rute preview
+  if (isPreviewRoute && !session) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  // Jika pengguna terautentikasi tetapi role tidak diizinkan untuk rute terproteksi
+  // Jika pengguna terautentikasi dengan role yang tidak diizinkan untuk rute terproteksi
   if (
     isProtectedRoute &&
     session?.userId &&
     !authorizedRoles.includes(session?.role as string)
+  ) {
+    return NextResponse.redirect(new URL("/?error=unauthorized", req.nextUrl));
+  }
+
+  // Jika pengguna terautentikasi dengan role yang tidak diizinkan untuk rute preview
+  if (
+    isPreviewRoute &&
+    session?.userId &&
+    !previewAuthorizedRoles.includes(session?.role as string)
   ) {
     return NextResponse.redirect(new URL("/?error=unauthorized", req.nextUrl));
   }
