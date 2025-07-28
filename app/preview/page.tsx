@@ -34,6 +34,7 @@ import { IDataPenduduk, IKartuKeluarga } from "@/types/types";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import DialogDeletePenduduk from "./dialog-delete-penduduk";
+import LoadingView from "@/components/atoms/loading-view";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
@@ -65,135 +66,138 @@ export default function PreviewPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <div className="px-8 md:px-16 lg:px-32 py-8 border-green-500 border-b">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Preview</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-      <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
-        <h1 className="mb-6 font-bold text-gray-900 text-2xl">
-          Data yang Dibuat oleh Anda
-        </h1>
+    <>
+      {(isKKLoading || isPendudukLoading) && <LoadingView />}
+      <div className="min-h-screen">
+        <Navbar />
+        <div className="px-8 md:px-16 lg:px-32 py-8 border-green-500 border-b">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Preview</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
+          <h1 className="mb-6 font-bold text-gray-900 text-2xl">
+            Data yang Dibuat oleh Anda
+          </h1>
 
-        <section className="mb-12">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="mb-4 font-semibold text-gray-800 text-xl">
-              Kartu Keluarga
-            </h2>
-            <Link href="/preview/kartu-keluarga/add">
-              <Button>
-                <PlusCircle className="w-4 h-4" />
-                Tambah Data Kartu Keluarga
-              </Button>
-            </Link>
-          </div>
-          {isKKLoading ? (
-            <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} className="rounded-lg w-full h-40" />
-              ))}
+          <section className="mb-12">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="mb-4 font-semibold text-gray-800 text-xl">
+                Kartu Keluarga
+              </h2>
+              <Link href="/preview/kartu-keluarga/add">
+                <Button>
+                  <PlusCircle className="w-4 h-4" />
+                  Tambah Data Kartu Keluarga
+                </Button>
+              </Link>
             </div>
-          ) : kkError || !kkData?.success ? (
-            <Alert variant="destructive">
-              <AlertCircle className="w-4 h-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                {kkError?.message ||
-                  kkData?.message ||
-                  "Gagal memuat data kartu keluarga"}
-              </AlertDescription>
-            </Alert>
-          ) : kkData?.data?.length === 0 ? (
-            <Alert>
-              <AlertTitle>Tidak Ada Data</AlertTitle>
-              <AlertDescription>
-                Tidak ada kartu keluarga yang dibuat oleh Anda.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {kkData?.data?.map((kk) => (
-                <Card
-                  key={kk.id}
-                  className="shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader className="flex justify-between items-center">
-                    <Link href={`/preview/kartu-keluarga/detail/${kk.id}`}>
-                      <CardTitle className="font-semibold text-gray-900 text-lg hover:underline">
-                        Kartu Keluarga
-                      </CardTitle>
-                    </Link>
-                    <div className="flex gap-2">
-                      <Link href={`/preview/kartu-keluarga/edit/${kk.id}`}>
-                        <Button
-                          variant="outline"
-                          className={ButtonOutlineGreen}>
-                          <Pencil className="w-4 h-4" />
-                        </Button>
+            {isKKLoading ? (
+              <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} className="rounded-lg w-full h-40" />
+                ))}
+              </div>
+            ) : kkError || !kkData?.success ? (
+              <Alert variant="destructive">
+                <AlertCircle className="w-4 h-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  {kkError?.message ||
+                    kkData?.message ||
+                    "Gagal memuat data kartu keluarga"}
+                </AlertDescription>
+              </Alert>
+            ) : kkData?.data?.length === 0 ? (
+              <Alert>
+                <AlertTitle>Tidak Ada Data</AlertTitle>
+                <AlertDescription>
+                  Tidak ada kartu keluarga yang dibuat oleh Anda.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {kkData?.data?.map((kk) => (
+                  <Card
+                    key={kk.id}
+                    className="shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="flex justify-between items-center">
+                      <Link href={`/preview/kartu-keluarga/detail/${kk.id}`}>
+                        <CardTitle className="font-semibold text-gray-900 text-lg hover:underline">
+                          Kartu Keluarga
+                        </CardTitle>
                       </Link>
-                      <Button
-                        variant={"destructive"}
-                        onClick={() => handleOpenDialog(kk)}>
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-2 -mt-4">
-                    <p className="text-gray-600 text-sm">
-                      <span className="font-medium">Kepala Keluarga:</span>{" "}
-                      {kk.namaKepalaKeluarga}
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                      <span className="font-medium">Alamat:</span> {kk.alamat}
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                      <span className="font-medium">Banjar:</span> {kk.banjar}
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                      <span className="font-medium">Tanggal Penerbitan:</span>{" "}
-                      {kk.tanggalPenerbitan}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section>
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="mb-4 font-semibold text-gray-800 text-xl">
-              Penduduk
-            </h2>
-            <Link href="/preview/penduduk/add">
-              <Button>
-                <PlusCircle className="w-4 h-4" />
-                Tambah Data Penduduk
-              </Button>
-            </Link>
-          </div>
-          <div className="relative w-full">
-            {!isPendudukLoading && (
-              <DataTable
-                columns={columns}
-                data={(pendudukData?.data as IDataPenduduk[]) || []}
-              />
+                      <div className="flex gap-2">
+                        <Link href={`/preview/kartu-keluarga/edit/${kk.id}`}>
+                          <Button
+                            variant="outline"
+                            className={ButtonOutlineGreen}>
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => handleOpenDialog(kk)}>
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-2 -mt-4">
+                      <p className="text-gray-600 text-sm">
+                        <span className="font-medium">Kepala Keluarga:</span>{" "}
+                        {kk.namaKepalaKeluarga}
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        <span className="font-medium">Alamat:</span> {kk.alamat}
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        <span className="font-medium">Banjar:</span> {kk.banjar}
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        <span className="font-medium">Tanggal Penerbitan:</span>{" "}
+                        {kk.tanggalPenerbitan}
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             )}
-          </div>
-        </section>
-      </div>
+          </section>
 
-      <DialogDeletePenduduk />
-      <DialogDeleteKK />
-    </div>
+          <section>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="mb-4 font-semibold text-gray-800 text-xl">
+                Penduduk
+              </h2>
+              <Link href="/preview/penduduk/add">
+                <Button>
+                  <PlusCircle className="w-4 h-4" />
+                  Tambah Data Penduduk
+                </Button>
+              </Link>
+            </div>
+            <div className="relative w-full">
+              {!isPendudukLoading && (
+                <DataTable
+                  columns={columns}
+                  data={(pendudukData?.data as IDataPenduduk[]) || []}
+                />
+              )}
+            </div>
+          </section>
+        </div>
+
+        <DialogDeletePenduduk />
+        <DialogDeleteKK />
+      </div>
+    </>
   );
 }

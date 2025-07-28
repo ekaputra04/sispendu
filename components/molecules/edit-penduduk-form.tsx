@@ -93,9 +93,13 @@ const formSchema = z.object({
 
 interface EditPendudukFormProps {
   data: IDataPenduduk | null | undefined;
+  redirectTo?: "dashboard" | "preview";
 }
 
-export default function EditPendudukForm({ data }: EditPendudukFormProps) {
+export default function EditPendudukForm({
+  data,
+  redirectTo = "dashboard",
+}: EditPendudukFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useUserStore();
@@ -128,7 +132,9 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
 
       queryClient.invalidateQueries({ queryKey: ["penduduk"] });
 
-      router.push("/dashboard/penduduk");
+      router.push(
+        redirectTo === "dashboard" ? "/dashboard/penduduk" : "/preview"
+      );
       toast.success("Berhasil mengedit data penduduk");
     },
     onError: (error: any) => {

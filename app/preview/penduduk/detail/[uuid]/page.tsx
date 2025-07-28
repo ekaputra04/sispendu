@@ -1,4 +1,4 @@
-import DetailKartuKeluargaPage from "./detail-page";
+import DetailPendudukPage from "./detail-page";
 
 export default async function Page({
   params,
@@ -6,5 +6,5 @@ export default async function Page({
   params: Promise<{ uuid: string }>;
 }) {
   const { uuid } = await params;
-  return <DetailKartuKeluargaPage uuid={uuid} />;
+  return <DetailPendudukPage uuid={uuid} />;
 }

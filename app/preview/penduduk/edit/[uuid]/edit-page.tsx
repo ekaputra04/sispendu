@@ -2,11 +2,9 @@
 
 import { Heading1 } from "@/components/atoms/heading";
 import LoadingView from "@/components/atoms/loading-view";
-import EditKKForm from "@/components/molecules/edit-kk-form";
 import Navbar from "@/components/molecules/navbar";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { getKKById } from "@/lib/firestore/kartu-keluarga";
-import { IKartuKeluarga } from "@/types/types";
+import { IDataPenduduk } from "@/types/types";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircleIcon } from "lucide-react";
 import {
@@ -17,17 +15,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getPendudukById } from "@/lib/firestore/penduduk";
+import EditPendudukForm from "@/components/molecules/edit-penduduk-form";
 
-interface EditKartuKeluargaPageProps {
+interface EditPendudukPageProps {
   uuid: string;
 }
 
-export default function EditKartuKeluargaPage({
-  uuid,
-}: EditKartuKeluargaPageProps) {
+export default function EditPendudukPage({ uuid }: EditPendudukPageProps) {
   const { data, isLoading, error, isError } = useQuery({
-    queryKey: ["kartu-keluarga", uuid],
-    queryFn: () => getKKById(uuid),
+    queryKey: ["penduduk", uuid],
+    queryFn: () => getPendudukById(uuid),
     retry: false,
   });
   return (
@@ -46,13 +44,13 @@ export default function EditKartuKeluargaPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Edit Data Kartu Keluarga</BreadcrumbPage>
+              <BreadcrumbPage>Edit Data Penduduk</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
       <div className="my-8 px-8 md:px-16 lg:px-32">
-        <Heading1 text="Edit Data Kartu Keluarga" />
+        <Heading1 text="Edit Data Penduduk" />
         <hr className="my-4" />
         {isError && error && (
           <Alert variant="destructive">
@@ -64,7 +62,10 @@ export default function EditKartuKeluargaPage({
           </Alert>
         )}
         {data?.data && (
-          <EditKKForm data={data.data as IKartuKeluarga} redirectTo="preview" />
+          <EditPendudukForm
+            data={data.data as IDataPenduduk}
+            redirectTo="preview"
+          />
         )}
       </div>
     </div>

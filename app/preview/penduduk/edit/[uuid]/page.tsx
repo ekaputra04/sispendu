@@ -1,4 +1,3 @@
-import { Heading1 } from "@/components/atoms/heading";
 import EditKartuKeluargaPage from "./edit-page";
 
 export default async function Page({
