@@ -1,5 +1,7 @@
 "use client";
 
+import LoadingView from "@/components/atoms/loading-view";
+import ReportView from "@/components/molecules/report-view";
 import { Button } from "@/components/ui/button";
 import { auth, db } from "@/config/firebase-init";
 import { decrypt } from "@/lib/utils";
@@ -21,27 +23,18 @@ export default function Home() {
 
   useEffect(() => {
     async function validateSession() {
-      // Jika tidak ada sesi, arahkan ke login
-      // if (!session) {
-      //   setIsSessionValid(false);
-      //   router.push("/login");
-      //   return;
-      // }
-
       try {
-        // Dekripsi sesi
         const sessionDecrypted = await decrypt(session);
         console.log("Session decrypted:", sessionDecrypted);
 
-        // Periksa apakah sesi kadaluarsa
         const now = Date.now();
         if (sessionDecrypted) {
           const expiresAtMs = sessionDecrypted?.expiresAt
             ? Date.parse(sessionDecrypted?.expiresAt as string)
-            : Infinity; // Fallback jika expiresAt tidak ada
+            : Infinity;
           const expMs = sessionDecrypted.exp
-            ? sessionDecrypted.exp * 1000 // Konversi detik ke milidetik
-            : Infinity; // Fallback jika exp tidak ada
+            ? sessionDecrypted.exp * 1000
+            : Infinity;
 
           if (expiresAtMs < now || expMs < now) {
             console.log("Session expired:", {
@@ -89,74 +82,85 @@ export default function Home() {
     }
   }
 
-  if (isSessionValid === null) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="relative h-[70vh]">
-      {/* Navbar */}
-      <nav className="top-0 right-0 left-0 z-20 absolute bg-transparent">
-        <div className="flex justify-between items-center mx-auto px-8 lg:px-32 py-4 md:16">
-          <div className="flex flex-col">
-            <h2 className="font-semibold text-white text-xl">Desa Bebalang</h2>
-            <p className="text-white">Bangli, Bali, Indonesia</p>
-          </div>
-          <div className="flex items-center gap-4">
-            {session ? (
-              <>
-                <Button
-                  variant="outline"
-                  className="bg-transparent hover:bg-white/10 text-white hover:text-white"
-                  onClick={handleLogout}>
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </Button>
-                <Link href="/dashboard">
-                  <Button className="bg-white hover:bg-gray-200 text-gray-900">
-                    Dashboard
+    <div className="">
+      {isSessionValid == null && <LoadingView />}
+      <div className="relative h-[70vh]">
+        {/* Navbar */}
+        <nav className="top-0 right-0 left-0 z-20 absolute bg-transparent">
+          <div className="flex justify-between items-center mx-auto px-8 lg:px-32 py-4 md:16">
+            <div className="flex flex-col">
+              <h2 className="font-semibold text-white text-xl">
+                Desa Bebalang
+              </h2>
+              <p className="text-white">Bangli, Bali, Indonesia</p>
+            </div>
+            <div className="flex items-center gap-4">
+              {session ? (
+                <>
+                  <Button
+                    variant="outline"
+                    className="bg-transparent hover:bg-white/10 text-white hover:text-white"
+                    onClick={handleLogout}>
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </Button>
+                  <Link href="/dashboard">
+                    <Button className="bg-white hover:bg-gray-200 text-gray-900">
+                      Dashboard
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <Link href="/login">
+                  <Button
+                    variant="outline"
+                    className="flex justify-center items-center bg-transparent hover:bg-white/10 text-white hover:text-white">
+                    <LogIn className="w-4 h-4" />
+                    <p>Login</p>
                   </Button>
                 </Link>
-              </>
-            ) : (
-              <Link href="/login">
-                <Button
-                  variant="outline"
-                  className="flex justify-center items-center bg-transparent hover:bg-white/10 text-white hover:text-white">
-                  <LogIn className="w-4 h-4" />
-                  <p>Login</p>
-                </Button>
-              </Link>
-            )}
+              )}
+            </div>
+          </div>
+        </nav>
+
+        {/* Hero Section */}
+        <div className="relative flex justify-center items-center h-full overflow-hidden">
+          {/* Background Image */}
+          <div className="-z-10 absolute inset-0">
+            <img
+              src="/images/bg-sawah.jpg"
+              className="w-full h-full object-center object-cover"
+              alt="background"
+            />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black opacity-40"></div>
+          </div>
+
+          {/* Hero Content */}
+          <div className="z-10 space-y-4 px-4 text-center">
+            <h1 className="font-bold text-white text-2xl md:text-3xl">
+              SELAMAT DATANG
+            </h1>
+            <h2 className="font-semibold text-white text-xl md:text-2xl">
+              Sistem Informasi Pendataan Penduduk
+            </h2>
+            <h3 className="font-normal text-white text-lg md:text-xl">
+              Kelurahan Bebalang
+            </h3>
           </div>
         </div>
-      </nav>
-
-      {/* Hero Section */}
-      <div className="relative flex justify-center items-center h-full overflow-hidden">
-        {/* Background Image */}
-        <div className="-z-10 absolute inset-0">
-          <img
-            src="/images/bg-sawah.jpg"
-            className="w-full h-full object-center object-cover"
-            alt="background"
-          />
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-black opacity-40"></div>
-        </div>
-
-        {/* Hero Content */}
-        <div className="z-10 space-y-4 px-4 text-center">
-          <h1 className="font-bold text-white text-2xl md:text-3xl">
-            SELAMAT DATANG
-          </h1>
-          <h2 className="font-semibold text-white text-xl md:text-2xl">
-            Sistem Informasi Pendataan Penduduk
-          </h2>
-          <h3 className="font-normal text-white text-lg md:text-xl">
-            Kelurahan Bebalang
-          </h3>
-        </div>
+      </div>
+      <div className="px-8 md:px-16 lg:px-32 py-16">
+        <h1 className="font-semibold text-2xl text-center">
+          Data Statistik Penduduk
+        </h1>
+        <div className="bg-primary mx-auto my-6 w-32 h-1"></div>
+        <p className="mb-16 font-semibold text-center">
+          Jumlah dan Persentase Penduduk di Kelurahan Bebalang
+        </p>
+        <ReportView />
       </div>
     </div>
   );

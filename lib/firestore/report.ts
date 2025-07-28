@@ -49,15 +49,3 @@ export const fetchLatestReport = async (): Promise<IReport> => {
   }
   return {} as IReport;
 };
-// export const fetchLatestReport = async (): Promise<ReportData[]> => {
-//   const reportQuery = query(
-//     collection(db, "report"),
-//     orderBy("createdAt", "desc"),
-//     limit(1)
-//   );
-//   const reportSnapshot = await getDocs(reportQuery);
-//   if (!reportSnapshot.empty) {
-//     return reportSnapshot.docs[0].data().data as ReportData[];
-//   }
-//   return [];
-// };
