@@ -1,0 +1,31 @@
+rules_version = '1';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdminOrPetugas() {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'petugas'];
+    }
+    match /users/{userId} {
+      allow read: if true;
+  		allow write: if true;
+    }
+    match /kartu-keluarga/{kkId} {
+      allow read: if request.auth != null;
+      allow write: if isAdminOrPetugas();
+      
+      match /anggota/{idAnggota} {
+        allow read: if request.auth != null;
+        allow create, update: if isAdminOrPetugas() 
+        allow delete: if isAdminOrPetugas();
+    	}
+    }
+    match /penduduk/{nik} {
+      allow read: if request.auth != null;
+      allow write: if isAdminOrPetugas();
+    }
+    match /report/{reportId} {
+  		allow read: if true;
+  		allow write: if isAdminOrPetugas();
+		}
+  }
+}

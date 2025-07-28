@@ -15,8 +15,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/molecules/navbar";
 import { getKKByCreatedBy } from "@/lib/firestore/kartu-keluarga";
 import { useUserStore } from "@/store/useUserStore";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, PlusCircle } from "lucide-react";
 import { getPendudukByCreatedBy } from "@/lib/firestore/penduduk";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
@@ -44,16 +54,36 @@ export default function PreviewPage() {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <div className="px-8 md:px-16 lg:px-32 py-8 border-green-500 border-b">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Preview</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
-        <h1 className="mb-6 font-bold text-gray-900 text-3xl">
+        <h1 className="mb-6 font-bold text-gray-900 text-2xl">
           Data yang Dibuat oleh Anda
         </h1>
 
-        {/* Kartu Keluarga Section */}
         <section className="mb-12">
-          <h2 className="mb-4 font-semibold text-gray-800 text-2xl">
-            Kartu Keluarga
-          </h2>
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="mb-4 font-semibold text-gray-800 text-lg">
+              Kartu Keluarga
+            </h2>
+            <Link href="/preview/kartu-keluarga/add">
+              <Button>
+                <PlusCircle className="w-4 h-4" />
+                Tambah Kartu Keluarga
+              </Button>
+            </Link>
+          </div>
           {isKKLoading ? (
             <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {[...Array(3)].map((_, i) => (
@@ -85,16 +115,23 @@ export default function PreviewPage() {
                   className="shadow-sm hover:shadow-md transition-shadow">
                   <CardHeader>
                     <CardTitle className="font-semibold text-gray-900 text-lg">
-                      KK:
+                      Kartu Keluarga
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="space-y-2 -mt-4">
                     <p className="text-gray-600 text-sm">
                       <span className="font-medium">Kepala Keluarga:</span>{" "}
                       {kk.namaKepalaKeluarga}
                     </p>
                     <p className="text-gray-600 text-sm">
                       <span className="font-medium">Alamat:</span> {kk.alamat}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      <span className="font-medium">Banjar:</span> {kk.banjar}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      <span className="font-medium">Tanggal Penerbitan:</span>{" "}
+                      {kk.tanggalPenerbitan}
                     </p>
                   </CardContent>
                 </Card>
@@ -103,11 +140,8 @@ export default function PreviewPage() {
           )}
         </section>
 
-        {/* Penduduk Section */}
         <section>
-          <h2 className="mb-4 font-semibold text-gray-800 text-2xl">
-            Penduduk
-          </h2>
+          <h2 className="mb-4 font-semibold text-gray-800 text-lg">Penduduk</h2>
           {isPendudukLoading ? (
             <div className="overflow-x-auto">
               <Table>
