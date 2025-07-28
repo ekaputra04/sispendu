@@ -30,7 +30,10 @@ import {
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import DialogDeleteKK from "../dashboard/kartu-keluarga/dialog-delete-kk";
 import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
-import { IKartuKeluarga } from "@/types/types";
+import { IDataPenduduk, IKartuKeluarga } from "@/types/types";
+import { DataTable } from "./data-table";
+import { columns } from "./columns";
+import DialogDeletePenduduk from "./dialog-delete-penduduk";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
@@ -90,7 +93,7 @@ export default function PreviewPage() {
             <Link href="/preview/kartu-keluarga/add">
               <Button>
                 <PlusCircle className="w-4 h-4" />
-                Tambah Kartu Keluarga
+                Tambah Data Kartu Keluarga
               </Button>
             </Link>
           </div>
@@ -167,86 +170,29 @@ export default function PreviewPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 font-semibold text-gray-800 text-xl">Penduduk</h2>
-          {isPendudukLoading ? (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nama</TableHead>
-                    <TableHead>NIK</TableHead>
-                    <TableHead>Tanggal Lahir</TableHead>
-                    <TableHead>Jenis Kelamin</TableHead>
-                    <TableHead>Alamat</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {[...Array(3)].map((_, i) => (
-                    <TableRow key={i}>
-                      <TableCell>
-                        <Skeleton className="w-32 h-4" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="w-40 h-4" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="w-24 h-4" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="w-20 h-4" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="w-48 h-4" />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ) : pendudukError || !pendudukData?.success ? (
-            <Alert variant="destructive">
-              <AlertCircle className="w-4 h-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                {pendudukError?.message ||
-                  pendudukData?.message ||
-                  "Gagal memuat data penduduk"}
-              </AlertDescription>
-            </Alert>
-          ) : pendudukData?.data?.length === 0 ? (
-            <Alert>
-              <AlertTitle>Tidak Ada Data</AlertTitle>
-              <AlertDescription>
-                Tidak ada data penduduk yang dibuat oleh Anda.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nama</TableHead>
-                    <TableHead>NIK</TableHead>
-                    <TableHead>Tanggal Lahir</TableHead>
-                    <TableHead>Jenis Kelamin</TableHead>
-                    <TableHead>Alamat</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {pendudukData?.data?.map((penduduk) => (
-                    <TableRow key={penduduk.id}>
-                      <TableCell>{penduduk.nama}</TableCell>
-                      <TableCell>{penduduk.tanggalLahir}</TableCell>
-                      <TableCell>{penduduk.jenisKelamin}</TableCell>
-                      <TableCell>{penduduk.banjar}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="mb-4 font-semibold text-gray-800 text-xl">
+              Penduduk
+            </h2>
+            <Link href="/preview/penduduk/add">
+              <Button>
+                <PlusCircle className="w-4 h-4" />
+                Tambah Data Penduduk
+              </Button>
+            </Link>
+          </div>
+          <div className="relative w-full">
+            {!isPendudukLoading && (
+              <DataTable
+                columns={columns}
+                data={(pendudukData?.data as IDataPenduduk[]) || []}
+              />
+            )}
+          </div>
         </section>
       </div>
+
+      <DialogDeletePenduduk />
       <DialogDeleteKK />
     </div>
   );

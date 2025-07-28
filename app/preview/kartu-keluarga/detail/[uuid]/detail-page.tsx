@@ -70,7 +70,7 @@ export default function DetailKartuKeluargaPage({
         <div className="my-8 px-8 md:px-16 lg:px-32">
           <div className="flex justify-between items-center">
             <Heading1 text="Detail Data Kartu Keluarga" />
-            <Link href={"/dashboard/kartu-keluarga/edit/" + uuid}>
+            <Link href={"/preview/kartu-keluarga/edit/" + uuid}>
               <Button variant={"outline"} className={ButtonOutlineGreen}>
                 <Pencil />
                 Edit Data Kartu Keluarga
@@ -219,7 +219,7 @@ export default function DetailKartuKeluargaPage({
           </div>
         </div>
       ) : (
-        <div className="">
+        <div className="my-8 px-8 md:px-16 lg:px-32">
           <Heading1 text="Data Detail Kartu Keluarga Tidak Ditemukan" />
         </div>
       )}

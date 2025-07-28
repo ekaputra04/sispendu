@@ -92,7 +92,13 @@ const formSchema = z.object({
   namaIbu: z.string().min(2),
 });
 
-export default function AddPendudukForm() {
+interface AddPendudukFormProps {
+  redirectTo?: "preview" | "dashboard";
+}
+
+export default function AddPendudukForm({
+  redirectTo = "dashboard",
+}: AddPendudukFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useUserStore();
@@ -118,7 +124,9 @@ export default function AddPendudukForm() {
 
       queryClient.invalidateQueries({ queryKey: ["penduduk"] });
 
-      router.push("/dashboard/penduduk");
+      router.push(
+        redirectTo === "dashboard" ? "/dashboard/penduduk" : "/preview"
+      );
       toast.success("Berhasil menambah data penduduk");
     },
     onError: (error: any) => {
@@ -150,8 +158,6 @@ export default function AddPendudukForm() {
 
   return (
     <div className="">
-      <Heading1 text="Tambah Data Penduduk" />
-      <hr className="my-4" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">

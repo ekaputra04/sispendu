@@ -46,7 +46,6 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
   useEffect(() => {
     async function checkAdminStatus() {
       const sessionDecrypted = await decrypt(session);
-      console.log("Session decrypted:", sessionDecrypted);
 
       if (
         sessionDecrypted?.role == "admin" ||
