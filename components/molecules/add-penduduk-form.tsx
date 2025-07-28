@@ -145,8 +145,6 @@ export default function AddPendudukForm() {
       banjar: values.banjar,
       createdBy: user.email,
     };
-    console.log(data);
-
     mutate(data);
   }
 

@@ -28,18 +28,12 @@ import {
 } from "../ui/select";
 import { Banjar } from "@/consts/dataDefinitions";
 import { Save } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
-  // noKK: z.string().min(2),
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
-  // rt: z.string().optional(),
-  // rw: z.string().optional(),
-  // desa: z.string().min(2),
-  // kecamatan: z.string().min(2),
-  // kabupaten: z.string().min(2),
-  // provinsi: z.string().min(2),
-  // kodePos: z.string().min(2),
+
   banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
   tanggalPenerbitan: z.string().min(2),
 });
@@ -47,21 +41,15 @@ const formSchema = z.object({
 export default function AddKKForm() {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { user } = useUserStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
 
     defaultValues: {
-      // noKK: "",
       namaKepalaKeluarga: "",
       alamat: "",
-      // rt: "",
-      // rw: "",
-      // desa: "",
-      // kecamatan: "",
-      // kabupaten: "",
-      // provinsi: "",
-      // kodePos: "",
+
       tanggalPenerbitan: "",
     },
   });
@@ -83,18 +71,11 @@ export default function AddKKForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const data: IKartuKeluarga = {
       id: crypto.randomUUID(),
-      // noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
-      // rt: values.rt,
-      // rw: values.rw,
-      // desa: values.desa,
-      // kecamatan: values.kecamatan,
-      // kabupaten: values.kabupaten,
-      // provinsi: values.provinsi,
-      // kodePos: values.kodePos,
       banjar: values.banjar,
       tanggalPenerbitan: values.tanggalPenerbitan,
+      createdBy: user.email,
     };
     mutate(data);
   }
@@ -104,24 +85,6 @@ export default function AddKKForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-            {/* <FormField
-              control={form.control}
-              name="noKK"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nomor KK</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nomor KK"
-                      {...field}
-                      disabled={isPending}
-                      type="number"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="namaKepalaKeluarga"
@@ -156,115 +119,6 @@ export default function AddKKForm() {
                 </FormItem>
               )}
             />
-            {/* <div className="gap-4 grid grid-cols-2">
-              <FormField
-                control={form.control}
-                name="rt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>RT</FormLabel>
-                    <FormControl>
-                      <Input placeholder="RT" {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="rw"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>RW</FormLabel>
-                    <FormControl>
-                      <Input placeholder="RW" {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div> */}
-            {/* <FormField
-              control={form.control}
-              name="desa"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Desa</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Desa" {...field} disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kecamatan"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kecamatan</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Kecamatan"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kabupaten"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kabupaten</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Kabupaten"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="provinsi"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Provinsi</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Provinsi"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="kodePos"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Kode Pos</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Kode Pos"
-                      {...field}
-                      disabled={isPending}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="tanggalPenerbitan"

@@ -137,8 +137,6 @@ export default function EditPendudukForm({ data }: EditPendudukFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-
     const dataSubmit: IDataPenduduk = {
       id: data?.id as string,
       nama: values.nama,

@@ -14,13 +14,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { IKartuKeluarga } from "@/types/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import LoadingIcon from "../atoms/loading-icon";
-import { getKKById, updateKK } from "@/lib/firestore/kartu-keluarga";
-import { useEffect } from "react";
-import LoadingView from "../atoms/loading-view";
+import { updateKK } from "@/lib/firestore/kartu-keluarga";
 import {
   Select,
   SelectContent,
@@ -30,9 +28,9 @@ import {
 } from "../ui/select";
 import { Banjar } from "@/consts/dataDefinitions";
 import { Save } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
-  // noKK: z.string().min(2),
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
   banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
@@ -46,35 +44,11 @@ interface EditKKFormProps {
 export default function EditKKForm({ data }: EditKKFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
-
-  // const { data, isLoading, error } = useQuery({
-  //   queryKey: ["kartu-keluarga", uuid],
-  //   queryFn: () => getKKById(uuid),
-  //   retry: false,
-  // });
-
-  // useEffect(() => {
-  //   console.log(data);
-
-  //   const dataResult = data?.data;
-  //   // form.setValue("noKK", dataResult?.noKK || "");
-  //   form.setValue("namaKepalaKeluarga", dataResult?.namaKepalaKeluarga || "");
-  //   form.setValue("alamat", dataResult?.alamat || "");
-  //   form.setValue("rt", dataResult?.rt || "");
-  //   form.setValue("rw", dataResult?.rw || "");
-  //   form.setValue("desa", dataResult?.desa || "");
-  //   form.setValue("kecamatan", dataResult?.kecamatan || "");
-  //   form.setValue("kabupaten", dataResult?.kabupaten || "");
-  //   form.setValue("provinsi", dataResult?.provinsi || "");
-  //   form.setValue("kodePos", dataResult?.kodePos || "");
-  //   form.setValue("tanggalPenerbitan", dataResult?.tanggalPenerbitan || "");
-  // }, [data]);
+  const { user } = useUserStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-
     defaultValues: {
-      // noKK: "",
       namaKepalaKeluarga: data?.namaKepalaKeluarga,
       alamat: data?.alamat,
       banjar: data?.banjar,
@@ -99,18 +73,11 @@ export default function EditKKForm({ data }: EditKKFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const dataSubmit: IKartuKeluarga = {
       id: data?.id as string,
-      // noKK: values.noKK,
       namaKepalaKeluarga: values.namaKepalaKeluarga,
       alamat: values.alamat,
-      // rt: values.rt,
-      // rw: values.rw,
-      // desa: values.desa,
-      // kecamatan: values.kecamatan,
-      // kabupaten: values.kabupaten,
-      // provinsi: values.provinsi,
-      // kodePos: values.kodePos,
       banjar: values.banjar,
       tanggalPenerbitan: values.tanggalPenerbitan,
+      editedBy: user.email,
     };
     mutate(dataSubmit);
   }

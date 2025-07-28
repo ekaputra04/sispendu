@@ -88,6 +88,8 @@ export interface IKartuKeluarga {
   tanggalPenerbitan: string;
   banjar: TBanjar;
   anggota?: IAnggotaKeluarga[];
+  createdBy?: string;
+  editedBy?: string;
 }
 
 export interface IDataPenduduk {

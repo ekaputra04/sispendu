@@ -69,14 +69,12 @@ export async function getKKById(
       };
     }
 
-    // Ambil subkoleksi anggota
     const anggotaSnapshot = await getDocs(
       collection(db, "kartu-keluarga", kkId, "anggota")
     );
 
     const anggota: IAnggotaKeluarga[] = [];
 
-    // Lakukan join dengan koleksi penduduk
     for (const anggotaDoc of anggotaSnapshot.docs) {
       const anggotaData = anggotaDoc.data();
       console.log(anggotaData);
@@ -225,7 +223,6 @@ export async function addAnggotaToKK({
       throw new Error("Status hubungan dalam keluarga tidak valid");
     }
 
-    // Add anggota to kartu-keluarga subcollection
     const anggotaDocRef = doc(
       db,
       "kartu-keluarga",
@@ -238,7 +235,6 @@ export async function addAnggotaToKK({
       statusHubunganDalamKeluarga,
     });
 
-    // Update penduduk document with kkRef
     await updateDoc(pendudukDocRef, {
       kkRef: kkId,
     });
@@ -301,10 +297,8 @@ export async function deleteAnggotaFromKK({
       );
     }
 
-    // Delete anggota from kartu-keluarga subcollection
     await deleteDoc(anggotaDocRef);
 
-    // Remove kkRef from penduduk document
     await updateDoc(pendudukDocRef, {
       kkRef: deleteField(),
     });

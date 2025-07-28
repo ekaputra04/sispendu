@@ -17,6 +17,7 @@ import { ReportData } from "@/lib/agregatePopulationData";
 import { fetchLatestReport } from "@/lib/firestore/report";
 import LoadingView from "@/components/atoms/loading-view";
 import { PieChartAll } from "@/components/charts/pie-chart";
+import { formatWitaDate } from "@/lib/utils";
 
 const conditions = [
   { key: "all", label: "Semua" },
@@ -58,6 +59,11 @@ export default function ReportView() {
       {report && (
         <>
           {/* Kartu Statistik */}
+          <div className="flex justify-end mb-4">
+            <Badge variant={"outline"}>
+              Terakhir diperbarui {formatWitaDate(report?.createdAt)}
+            </Badge>
+          </div>
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-6">
             {/* Kartu Total Penduduk */}
             <Card className="@container/card">
