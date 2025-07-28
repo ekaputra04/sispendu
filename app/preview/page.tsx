@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/molecules/navbar";
 import { getKKByCreatedBy } from "@/lib/firestore/kartu-keluarga";
 import { useUserStore } from "@/store/useUserStore";
-import { AlertCircle, PlusCircle } from "lucide-react";
+import { AlertCircle, Pencil, PlusCircle, Trash2 } from "lucide-react";
 import { getPendudukByCreatedBy } from "@/lib/firestore/penduduk";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,18 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { ButtonDestructiveCSS, ButtonOutlineGreen } from "@/consts/buttonCss";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
@@ -74,7 +86,7 @@ export default function PreviewPage() {
 
         <section className="mb-12">
           <div className="flex justify-between items-center mb-2">
-            <h2 className="mb-4 font-semibold text-gray-800 text-lg">
+            <h2 className="mb-4 font-semibold text-gray-800 text-xl">
               Kartu Keluarga
             </h2>
             <Link href="/preview/kartu-keluarga/add">
@@ -113,10 +125,42 @@ export default function PreviewPage() {
                 <Card
                   key={kk.id}
                   className="shadow-sm hover:shadow-md transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="font-semibold text-gray-900 text-lg">
-                      Kartu Keluarga
-                    </CardTitle>
+                  <CardHeader className="flex justify-between items-center">
+                    <Link href={`/preview/kartu-keluarga/detail/${kk.id}`}>
+                      <CardTitle className="font-semibold text-gray-900 text-lg hover:underline">
+                        Kartu Keluarga
+                      </CardTitle>
+                    </Link>
+                    <div className="flex gap-2">
+                      <Link href={`/preview/kartu-keluarga/edit/${kk.id}`}>
+                        <Button
+                          variant="outline"
+                          className={ButtonOutlineGreen}>
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                      <AlertDialog>
+                        <AlertDialogTrigger className={ButtonDestructiveCSS}>
+                          <Trash2 className="w-4 h-4" />
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you absolutely sure?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete your account and remove your
+                              data from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction>Continue</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </CardHeader>
                   <CardContent className="space-y-2 -mt-4">
                     <p className="text-gray-600 text-sm">
@@ -141,7 +185,7 @@ export default function PreviewPage() {
         </section>
 
         <section>
-          <h2 className="mb-4 font-semibold text-gray-800 text-lg">Penduduk</h2>
+          <h2 className="mb-4 font-semibold text-gray-800 text-xl">Penduduk</h2>
           {isPendudukLoading ? (
             <div className="overflow-x-auto">
               <Table>

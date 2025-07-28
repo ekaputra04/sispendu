@@ -239,9 +239,7 @@ export default function SheetAddPendudukToKK({
                 ) : (
                   <div className="flex items-center gap-2">
                     <Save />
-                    <div className="flex items-center gap-2">
-                      <Save /> Simpan
-                    </div>
+                    Simpan
                   </div>
                 )}
               </Button>
