@@ -1,10 +1,192 @@
-import Navbar from "@/components/molecules/navbar";
+"use client";
 
-export default function Page() {
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
+import Navbar from "@/components/molecules/navbar";
+import { getKKByCreatedBy } from "@/lib/firestore/kartu-keluarga";
+import { useUserStore } from "@/store/useUserStore";
+import { AlertCircle } from "lucide-react";
+import { getPendudukByCreatedBy } from "@/lib/firestore/penduduk";
+
+export default function PreviewPage() {
+  const { user } = useUserStore();
+
+  const {
+    data: kkData,
+    isLoading: isKKLoading,
+    error: kkError,
+  } = useQuery({
+    queryKey: ["kartu-keluarga", user?.email],
+    queryFn: () => getKKByCreatedBy(user?.email || ""),
+    enabled: !!user?.email,
+  });
+
+  const {
+    data: pendudukData,
+    isLoading: isPendudukLoading,
+    error: pendudukError,
+  } = useQuery({
+    queryKey: ["penduduk", user?.email],
+    queryFn: () => getPendudukByCreatedBy(user?.email || ""),
+    enabled: !!user?.email,
+  });
+
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
-      <hr />
+      <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
+        <h1 className="mb-6 font-bold text-gray-900 text-3xl">
+          Data yang Dibuat oleh Anda
+        </h1>
+
+        {/* Kartu Keluarga Section */}
+        <section className="mb-12">
+          <h2 className="mb-4 font-semibold text-gray-800 text-2xl">
+            Kartu Keluarga
+          </h2>
+          {isKKLoading ? (
+            <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="rounded-lg w-full h-40" />
+              ))}
+            </div>
+          ) : kkError || !kkData?.success ? (
+            <Alert variant="destructive">
+              <AlertCircle className="w-4 h-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {kkError?.message ||
+                  kkData?.message ||
+                  "Gagal memuat data kartu keluarga"}
+              </AlertDescription>
+            </Alert>
+          ) : kkData?.data?.length === 0 ? (
+            <Alert>
+              <AlertTitle>Tidak Ada Data</AlertTitle>
+              <AlertDescription>
+                Tidak ada kartu keluarga yang dibuat oleh Anda.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {kkData?.data?.map((kk) => (
+                <Card
+                  key={kk.id}
+                  className="shadow-sm hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="font-semibold text-gray-900 text-lg">
+                      KK:
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm">
+                      <span className="font-medium">Kepala Keluarga:</span>{" "}
+                      {kk.namaKepalaKeluarga}
+                    </p>
+                    <p className="text-gray-600 text-sm">
+                      <span className="font-medium">Alamat:</span> {kk.alamat}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Penduduk Section */}
+        <section>
+          <h2 className="mb-4 font-semibold text-gray-800 text-2xl">
+            Penduduk
+          </h2>
+          {isPendudukLoading ? (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nama</TableHead>
+                    <TableHead>NIK</TableHead>
+                    <TableHead>Tanggal Lahir</TableHead>
+                    <TableHead>Jenis Kelamin</TableHead>
+                    <TableHead>Alamat</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[...Array(3)].map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        <Skeleton className="w-32 h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-40 h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-24 h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-20 h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-48 h-4" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : pendudukError || !pendudukData?.success ? (
+            <Alert variant="destructive">
+              <AlertCircle className="w-4 h-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {pendudukError?.message ||
+                  pendudukData?.message ||
+                  "Gagal memuat data penduduk"}
+              </AlertDescription>
+            </Alert>
+          ) : pendudukData?.data?.length === 0 ? (
+            <Alert>
+              <AlertTitle>Tidak Ada Data</AlertTitle>
+              <AlertDescription>
+                Tidak ada data penduduk yang dibuat oleh Anda.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nama</TableHead>
+                    <TableHead>NIK</TableHead>
+                    <TableHead>Tanggal Lahir</TableHead>
+                    <TableHead>Jenis Kelamin</TableHead>
+                    <TableHead>Alamat</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendudukData?.data?.map((penduduk) => (
+                    <TableRow key={penduduk.id}>
+                      <TableCell>{penduduk.nama}</TableCell>
+                      <TableCell>{penduduk.tanggalLahir}</TableCell>
+                      <TableCell>{penduduk.jenisKelamin}</TableCell>
+                      <TableCell>{penduduk.banjar}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

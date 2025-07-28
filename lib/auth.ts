@@ -18,7 +18,7 @@ export async function checkAuth() {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (
             !userDoc.exists() ||
-            !["admin", "petugas"].includes(userDoc.data().role)
+            !["admin", "petugas", "user"].includes(userDoc.data().role)
           ) {
             reject(new Error("Akses tidak diizinkan"));
             return;

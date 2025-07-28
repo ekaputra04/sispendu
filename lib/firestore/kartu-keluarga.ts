@@ -13,8 +13,10 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
 import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
@@ -107,6 +109,35 @@ export async function getKKById(
       message: error.message || "Gagal mengambil kartu keluarga",
       errorCode: error.code || "unknown",
       data: null,
+    };
+  }
+}
+
+export async function getKKByCreatedBy(
+  createdBy: string
+): Promise<FirestoreResponse<IKartuKeluarga[]>> {
+  try {
+    await checkAuth();
+    const q = query(
+      collection(db, "kartu-keluarga"),
+      where("createdBy", "==", createdBy)
+    );
+    const querySnapshot = await getDocs(q);
+    const data: IKartuKeluarga[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() } as IKartuKeluarga);
+    });
+    return {
+      success: true,
+      message: "Berhasil mengambil data kartu keluarga berdasarkan pembuat",
+      data,
+    };
+  } catch (error: any) {
+    console.error("Gagal mengambil data kartu keluarga:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal mengambil data kartu keluarga",
+      errorCode: error.code || "unknown",
     };
   }
 }

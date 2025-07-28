@@ -61,7 +61,12 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
     checkAdminStatus();
   }, [session]);
   return (
-    <nav className="top-0 right-0 left-0 z-20 absolute bg-transparent">
+    <nav
+      className={`${
+        isInHeroView
+          ? "top-0 right-0 left-0 z-20 absolute bg-transparent"
+          : "border-b bg-white shadow-sm"
+      }`}>
       <div className="flex justify-between items-center mx-auto px-8 lg:px-32 py-4 md:16">
         <Link href={"/"}>
           <div className="flex flex-col">

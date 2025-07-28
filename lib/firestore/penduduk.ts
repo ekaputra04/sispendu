@@ -82,47 +82,6 @@ export async function getPendudukById(
   }
 }
 
-export async function getPendudukByNik(
-  nik: string
-): Promise<FirestoreResponse<IDataPenduduk | null>> {
-  try {
-    if (!nik) {
-      throw new Error("NIK diperlukan");
-    }
-
-    await checkAuth();
-
-    const q = query(collection(db, "penduduk"), where("nik", "==", nik));
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      return {
-        success: false,
-        message: `Penduduk dengan NIK ${nik} tidak ditemukan`,
-        data: null,
-      };
-    }
-
-    const penduduk = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))[0];
-
-    return {
-      success: true,
-      data: penduduk as IDataPenduduk,
-      message: "Berhasil mengambil data penduduk",
-    };
-  } catch (error: any) {
-    console.error("Gagal mencari penduduk berdasarkan NIK:", error);
-    return {
-      success: false,
-      message: error.message || "Gagal mencari penduduk",
-      errorCode: error.code || "unknown",
-    };
-  }
-}
-
 export async function getPendudukByName(
   nama: string
 ): Promise<FirestoreResponse<IDataPenduduk[] | null>> {
@@ -163,6 +122,34 @@ export async function getPendudukByName(
   }
 }
 
+export async function getPendudukByCreatedBy(
+  email: string
+): Promise<FirestoreResponse<IDataPenduduk[]>> {
+  try {
+    const q = query(
+      collection(db, "penduduk"),
+      where("createdBy", "==", email)
+    );
+    const querySnapshot = await getDocs(q);
+    const data: IDataPenduduk[] = [];
+    querySnapshot.forEach((doc) => {
+      data.push({ id: doc.id, ...doc.data() } as IDataPenduduk);
+    });
+    return {
+      success: true,
+      message: "Berhasil mengambil data penduduk berdasarkan pembuat",
+      data,
+    };
+  } catch (error: any) {
+    console.error("Gagal mengambil data penduduk:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal mengambil data penduduk",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
 export async function createPenduduk({
   penduduk,
 }: {
@@ -173,7 +160,6 @@ export async function createPenduduk({
 
     if (
       !penduduk.id ||
-      // !penduduk.nik ||
       !penduduk.nama ||
       !penduduk.jenisKelamin ||
       !penduduk.tempatLahir ||
@@ -186,16 +172,6 @@ export async function createPenduduk({
     ) {
       throw new Error("Semua field wajib diisi");
     }
-
-    // console.log(`Memeriksa keunikan NIK: ${penduduk.nik}`);
-    // const nikQuery = query(
-    //   collection(db, "penduduk"),
-    //   where("nik", "==", penduduk.nik)
-    // );
-    // const nikSnapshot = await getDocs(nikQuery);
-    // if (!nikSnapshot.empty) {
-    //   throw new Error("NIK sudah terdaftar");
-    // }
 
     const docRef = doc(db, "penduduk", penduduk.id);
 
@@ -248,17 +224,6 @@ export async function updatePenduduk({
     if (!docSnap.exists()) {
       throw new Error("Penduduk tidak ditemukan");
     }
-
-    // if (penduduk.nik && penduduk.nik !== docSnap.data().nik) {
-    //   const nikQuery = query(
-    //     collection(db, "penduduk"),
-    //     where("nik", "==", penduduk.nik)
-    //   );
-    //   const nikSnapshot = await getDocs(nikQuery);
-    //   if (!nikSnapshot.empty) {
-    //     throw new Error("NIK sudah terdaftar");
-    //   }
-    // }
 
     await setDoc(
       docRef,
