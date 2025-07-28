@@ -34,7 +34,7 @@ export default function Page() {
         <h1 className="mb-6 font-bold text-gray-900 text-2xl">
           Tambah Data Kartu Keluarga
         </h1>
-        <AddKKForm />
+        <AddKKForm redirectTo="preview" />
       </div>
     </div>
   );

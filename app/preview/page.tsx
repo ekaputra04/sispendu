@@ -27,21 +27,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { ButtonDestructiveCSS, ButtonOutlineGreen } from "@/consts/buttonCss";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { ButtonOutlineGreen } from "@/consts/buttonCss";
+import DialogDeleteKK from "../dashboard/kartu-keluarga/dialog-delete-kk";
+import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
+import { IKartuKeluarga } from "@/types/types";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
+  const { setKartuKeluarga, setIsOpen } = useKKSelectedForDelete();
 
   const {
     data: kkData,
@@ -62,6 +55,11 @@ export default function PreviewPage() {
     queryFn: () => getPendudukByCreatedBy(user?.email || ""),
     enabled: !!user?.email,
   });
+
+  async function handleOpenDialog(kk: IKartuKeluarga) {
+    setKartuKeluarga(kk);
+    setIsOpen(true);
+  }
 
   return (
     <div className="min-h-screen">
@@ -139,27 +137,11 @@ export default function PreviewPage() {
                           <Pencil className="w-4 h-4" />
                         </Button>
                       </Link>
-                      <AlertDialog>
-                        <AlertDialogTrigger className={ButtonDestructiveCSS}>
-                          <Trash2 className="w-4 h-4" />
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Are you absolutely sure?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will
-                              permanently delete your account and remove your
-                              data from our servers.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction>Continue</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => handleOpenDialog(kk)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-2 -mt-4">
@@ -265,6 +247,7 @@ export default function PreviewPage() {
           )}
         </section>
       </div>
+      <DialogDeleteKK />
     </div>
   );
 }

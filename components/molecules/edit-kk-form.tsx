@@ -39,9 +39,13 @@ const formSchema = z.object({
 
 interface EditKKFormProps {
   data: IKartuKeluarga | null | undefined;
+  redirectTo?: "preview" | "dashboard";
 }
 
-export default function EditKKForm({ data }: EditKKFormProps) {
+export default function EditKKForm({
+  data,
+  redirectTo = "dashboard",
+}: EditKKFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useUserStore();
@@ -63,7 +67,9 @@ export default function EditKKForm({ data }: EditKKFormProps) {
       form.reset();
 
       queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
-      router.push("/dashboard/kartu-keluarga");
+      router.push(
+        redirectTo === "dashboard" ? "/dashboard/kartu-keluarga" : "/preview"
+      );
     },
     onError: (error: any) => {
       toast.error(error.message || "Gagal menambahkan data kartu keluarga");

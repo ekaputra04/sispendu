@@ -33,12 +33,17 @@ import { useUserStore } from "@/store/useUserStore";
 const formSchema = z.object({
   namaKepalaKeluarga: z.string().min(2),
   alamat: z.string().min(2),
-
   banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
   tanggalPenerbitan: z.string().min(2),
 });
 
-export default function AddKKForm() {
+interface AddKKFormProps {
+  redirectTo?: "preview" | "dashboard";
+}
+
+export default function AddKKForm({
+  redirectTo = "dashboard",
+}: AddKKFormProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { user } = useUserStore();
@@ -60,7 +65,9 @@ export default function AddKKForm() {
       form.reset();
 
       queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
-      router.push("/dashboard/kartu-keluarga");
+      router.push(
+        redirectTo === "dashboard" ? "/dashboard/kartu-keluarga" : "/preview"
+      );
     },
     onError: (error: any) => {
       toast.error(error.message || "Gagal menambahkan data kartu keluarga");
