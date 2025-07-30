@@ -46,11 +46,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/privacy"
                   className="hover:text-primary transition-colors">
                   Kebijakan Privasi
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
