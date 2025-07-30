@@ -1,3 +1,4 @@
+import Footer from "@/components/atoms/footer";
 import HeroView from "@/components/molecules/hero-view";
 import ReportView from "@/components/molecules/report-view";
 
@@ -16,6 +17,7 @@ export default function Home() {
         </p>
         <ReportView />
       </div>
+      <Footer />
     </div>
   );
 }

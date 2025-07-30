@@ -13,6 +13,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ModeToggle } from "./mode-toggle";
 
 interface NavbarProps {
   isInHeroView?: boolean;
@@ -65,7 +66,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
         className={`${
           isInHeroView
             ? "top-0 right-0 left-0 z-20 absolute bg-transparent"
-            : "border-b bg-white shadow-sm"
+            : "border-b bg-background shadow-sm"
         }`}>
         <div className="flex justify-between items-center mx-auto px-8 lg:px-32 py-4 md:16">
           <Link href={"/"}>
@@ -94,10 +95,10 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                 </Link>
                 <Button
                   variant="outline"
-                  className={`bg-transparent hover:bg-white/10 ${
+                  className={`bg-transparent hover:bg-white/10 text-primary ${
                     isInHeroView
                       ? "text-white hover:text-white"
-                      : "text-gray-900 hover:text-gray-900"
+                      : "text-gray-900 dark:text-white hover:text-gray-900"
                   }`}
                   onClick={handleLogout}>
                   <LogOut className="w-4 h-4" />
@@ -114,6 +115,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                 </Button>
               </Link>
             )}
+            <ModeToggle />
           </div>
         </div>
       </nav>

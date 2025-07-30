@@ -36,6 +36,14 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
     header: "Pekerjaan",
   },
   {
+    accessorKey: "namaAyah",
+    header: "Nama Ayah",
+  },
+  {
+    accessorKey: "namaIbu",
+    header: "Nama Ibu",
+  },
+  {
     accessorKey: "kkRef",
     header: "Terdaftar di KK",
     cell: ({ row }) => {
