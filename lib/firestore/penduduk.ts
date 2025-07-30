@@ -18,7 +18,6 @@ export async function getAllPenduduk(): Promise<
   try {
     await checkAuth();
 
-    console.log("Mengambil data dari koleksi penduduk...");
     const querySnapshot = await getDocs(collection(db, "penduduk"));
     const data: IDataPenduduk[] = [];
     querySnapshot.forEach((doc) => {
@@ -91,8 +90,6 @@ export async function getPendudukByName(
     }
 
     await checkAuth();
-
-    console.log(`Mencari penduduk dengan nama: ${nama}`);
 
     const q = query(
       collection(db, "penduduk"),

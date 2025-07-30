@@ -38,24 +38,11 @@ export async function aggregateReportData(): Promise<ReportData[]> {
     const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
     const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map((doc) => {
       const data = doc.data();
-      console.log(`Penduduk ${doc.id} data:`, {
-        id: doc.id,
-        jenisPekerjaan: data.jenisPekerjaan,
-        statusPerkawinan: data.statusPerkawinan,
-        golonganDarah: data.golonganDarah,
-        penyandangCacat: data.penyandangCacat,
-        banjar: data.banjar,
-        agama: data.agama,
-        pendidikan: data.pendidikan,
-        jenisKelamin: data.jenisKelamin,
-      });
       return {
         id: doc.id,
         ...data,
       } as IDataPenduduk;
     });
-
-    console.log("Total penduduk:", pendudukList.length);
 
     const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
     const kkList: IKartuKeluarga[] = kkSnapshot.docs
@@ -156,9 +143,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
         );
         return defaultValue;
       }
-      console.log(
-        `Memetakan ${category}="${value}" ke key="${matchedEnum}" untuk penduduk ${pendudukId}`
-      );
       return matchedEnum;
     };
 
@@ -334,9 +318,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
             );
             return;
           }
-          console.log(
-            `Menambahkan ke grup ${key} untuk kategori ${category.category}, penduduk ${p.id}, jenisKelamin: ${p.jenisKelamin}`
-          );
           groups[key].total++;
           if (p.jenisKelamin === "Laki-laki") groups[key].male++;
           else if (p.jenisKelamin === "Perempuan") groups[key].female++;
@@ -351,9 +332,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
         }),
         { total: 0, male: 0, female: 0 }
       );
-
-      console.log(`Kategori ${category.category} groups:`, groups);
-      console.log(`Kategori ${category.category} total:`, categoryTotal);
 
       category.groups = Object.entries(groups)
         .map(([name, data]) => ({
@@ -449,7 +427,6 @@ export async function aggregateReportData(): Promise<ReportData[]> {
       }
     });
 
-    console.log("Laporan akhir:", JSON.stringify(report, null, 2));
     return report;
   } catch (error: any) {
     console.error("Gagal mengagregasi data laporan:", error);

@@ -79,7 +79,6 @@ export async function getKKById(
 
     for (const anggotaDoc of anggotaSnapshot.docs) {
       const anggotaData = anggotaDoc.data();
-      console.log(anggotaData);
 
       const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
       const pendudukDocSnap = await getDoc(pendudukDocRef);

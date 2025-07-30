@@ -42,8 +42,6 @@ export default async function middleware(req: NextRequest) {
     session = null;
   }
 
-  console.log("session: ", session);
-
   // Jika pengguna tidak terautentikasi dan mencoba mengakses rute terproteksi
   if (isProtectedRoute && !session) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));

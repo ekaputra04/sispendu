@@ -16,7 +16,6 @@ export async function getAllUsers(): Promise<
   try {
     await checkAuth();
 
-    console.log("Mengambil data dari koleksi pengguna...");
     const querySnapshot = await getDocs(collection(db, "users"));
     const data: IDataPengguna[] = [];
     querySnapshot.forEach((doc) => {

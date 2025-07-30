@@ -181,7 +181,6 @@ export default function DetailKartuKeluargaPage({
                   })
                   .map((penduduk: IAnggotaKeluarga, index: number) => {
                     const pendudukDetail: IDataPenduduk = penduduk.detail!;
-                    console.log(pendudukDetail);
 
                     return (
                       <TableRow key={index}>

@@ -67,7 +67,6 @@ export default function SheetAddPendudukToKK({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     setSearchQuery(values.name);
   }
 
@@ -101,8 +100,6 @@ export default function SheetAddPendudukToKK({
           pendudukId: pendudukId,
           statusHubunganDalamKeluarga: statusHubungan,
         });
-
-        console.log(result);
 
         if (result.success) {
           toast.success("Berhasil menambahkan anggota keluarga");

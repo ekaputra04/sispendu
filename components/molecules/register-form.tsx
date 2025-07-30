@@ -86,8 +86,6 @@ export function RegisterForm() {
       setSession(encryptedSession);
       setUser({ userId: user.uid, nama: values.name, email: values.email });
 
-      console.log("encryptedSession", encryptedSession);
-
       await axios.post("/api/auth/session", {
         session: encryptedSession,
       });

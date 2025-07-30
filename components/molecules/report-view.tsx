@@ -145,7 +145,6 @@ export default function ReportView() {
                 const banjarKK = reportKK?.data?.groups.find(
                   (group) => group.name === item.name
                 );
-                console.log("Banjar KK:", banjarKK);
 
                 return (
                   <Card key={item.name}>
