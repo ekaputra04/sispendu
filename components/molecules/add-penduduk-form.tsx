@@ -513,7 +513,10 @@ export default function AddPendudukForm({
             />
           </div>
 
-          <Button type="submit" className="mt-4 w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            className="mt-4 w-full text-white"
+            disabled={isPending}>
             {isPending ? (
               <div className="flex items-center gap-2">
                 <LoadingIcon />

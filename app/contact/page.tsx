@@ -48,7 +48,6 @@ const formSchema = z.object({
 export default function ContactPage() {
   const [isLoading, setIsLoading] = useState(false);
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,12 +57,9 @@ export default function ContactPage() {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      // Do something with the form values.
-      // ✅ This will be type-safe and validated.
       console.log(values);
       const response = await createContact(values);
       console.log(response);
@@ -103,10 +99,10 @@ export default function ContactPage() {
         <div className="mx-auto px-8 md:px-16 lg:px-32 py-12">
           {/* Header */}
           <div className="mb-12 text-center">
-            <h1 className="font-bold text-gray-900 text-3xl md:text-4xl">
+            <h1 className="font-bold text-primary text-3xl md:text-4xl">
               Hubungi Kami
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-600 text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-accent-foreground">
               Silakan hubungi kami melalui informasi di bawah ini atau kirim
               pesan melalui form kontak.
             </p>
@@ -115,7 +111,7 @@ export default function ContactPage() {
           {/* Informasi Kontak dan Form */}
           <div className="gap-6 grid grid-cols-1 md:grid-cols-2 mb-12">
             {/* Informasi Kontak */}
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="font-semibold text-lg">
                   Informasi Kontak
@@ -126,11 +122,11 @@ export default function ContactPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-5 h-5" />
                   <p>Jl. Bebalang No. 1, Kelurahan Bebalang, Bali</p>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail className="w-5 h-5" />
                   <a
                     href="mailto:info@bebalang.desa.id"
@@ -138,7 +134,7 @@ export default function ContactPage() {
                     info@bebalang.desa.id
                   </a>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Phone className="w-5 h-5" />
                   <a
                     href="tel:+621234567890"
@@ -150,7 +146,7 @@ export default function ContactPage() {
             </Card>
 
             {/* Form Kontak */}
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="font-semibold text-lg">
                   Kirim Pesan

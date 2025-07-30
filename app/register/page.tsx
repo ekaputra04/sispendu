@@ -23,7 +23,7 @@ export default function Page() {
         <img
           src="/images/bg-sawah.jpg"
           alt="Image"
-          className="absolute inset-0 dark:brightness-[0.2] dark:grayscale w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       </div>
     </div>

@@ -40,10 +40,10 @@ export default function Page() {
         <div className="mx-auto px-8 md:px-16 lg:px-32 py-12">
           {/* Header */}
           <div className="mb-12 text-center">
-            <h1 className="font-bold text-gray-900 text-3xl md:text-4xl">
+            <h1 className="font-bold text-primary text-3xl md:text-4xl">
               Kebijakan Privasi
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-600 text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-accent-foreground">
               Kami di Kelurahan Bebalang berkomitmen untuk melindungi privasi
               data masyarakat. Kebijakan ini menjelaskan bagaimana kami
               mengelola dan menjaga keamanan informasi Anda.
@@ -52,7 +52,7 @@ export default function Page() {
 
           {/* Kebijakan Privasi */}
           <div className="space-y-6 mb-12">
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="font-semibold text-lg">
                   Pengumpulan Data
@@ -63,7 +63,7 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   Kami mengumpulkan data pribadi yang diperlukan untuk Sistem
                   Data Kependudukan, seperti nama, alamat, tanggal lahir, dan
                   informasi kartu keluarga. Selain itu, melalui form kontak,
@@ -73,7 +73,7 @@ export default function Page() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="font-semibold text-lg">
                   Penggunaan Data
@@ -84,7 +84,7 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   Data yang dikumpulkan digunakan untuk mengelola informasi
                   penduduk, menghasilkan laporan berbasis banjar, dan memastikan
                   keakuratan data demografis. Data dari form kontak digunakan
@@ -94,7 +94,7 @@ export default function Page() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="font-semibold text-lg">
                   Keamanan Data
@@ -104,7 +104,7 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   Kami menerapkan langkah-langkah keamanan teknis dan organisasi
                   untuk melindungi data Anda dari akses tidak sah, kehilangan,
                   atau penyalahgunaan. Data disimpan dalam sistem yang aman, dan
@@ -114,7 +114,7 @@ export default function Page() {
               </CardContent>
             </Card>
 
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardHeader>
                 <CardTitle className="font-semibold text-lg">
                   Hak Pengguna
@@ -124,7 +124,7 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   Anda berhak untuk mengakses, memperbarui, atau meminta
                   penghapusan data pribadi Anda. Jika Anda memiliki pertanyaan
                   atau permintaan terkait data, silakan hubungi kami melalui

@@ -41,10 +41,10 @@ export default function Page() {
           <div className="mx-auto px-8 md:px-16 lg:px-32 py-16">
             {/* Header */}
             <div className="mb-12 text-center">
-              <h1 className="font-bold text-gray-900 text-3xl md:text-4xl">
+              <h1 className="font-bold text-primary text-3xl md:text-4xl">
                 Tentang Sistem Data Kependudukan
               </h1>
-              <p className="mx-auto mt-4 max-w-2xl text-gray-600 text-lg">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-accent-foreground">
                 Sistem Data Kependudukan adalah platform modern untuk mengelola
                 data penduduk dan kartu keluarga dengan efisien, akurat, dan
                 aman. Kami membantu komunitas lokal untuk mengelola informasi
@@ -54,11 +54,11 @@ export default function Page() {
 
             {/* Fitur Utama */}
             <div>
-              <h2 className="mb-6 font-semibold text-gray-900 text-2xl text-center">
+              <h2 className="mb-6 font-semibold text-primary text-2xl text-center">
                 Fitur Utama
               </h2>
               <div className="gap-6 grid grid-cols-1 md:grid-cols-3">
-                <Card className="bg-white shadow-sm">
+                <Card className="shadow-sm">
                   <CardHeader>
                     <CardTitle className="font-semibold text-lg">
                       Pengelolaan Kartu Keluarga
@@ -69,7 +69,7 @@ export default function Page() {
                     </CardDescription>
                   </CardHeader>
                 </Card>
-                <Card className="bg-white shadow-sm">
+                <Card className="shadow-sm">
                   <CardHeader>
                     <CardTitle className="font-semibold text-lg">
                       Laporan Berbasis Banjar
@@ -80,7 +80,7 @@ export default function Page() {
                     </CardDescription>
                   </CardHeader>
                 </Card>
-                <Card className="bg-white shadow-sm">
+                <Card className="shadow-sm">
                   <CardHeader>
                     <CardTitle className="font-semibold text-lg">
                       Validasi Data

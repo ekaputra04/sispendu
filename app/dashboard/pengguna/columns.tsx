@@ -33,7 +33,7 @@ export const columns: ColumnDef<IDataPengguna>[] = [
       const pengguna: IDataPengguna = row.original;
 
       if (pengguna.role === "admin") {
-        return <Badge>Admin</Badge>;
+        return <Badge className="text-white">Admin</Badge>;
       } else {
         return <Badge variant={"outline"}>{pengguna.role}</Badge>;
       }

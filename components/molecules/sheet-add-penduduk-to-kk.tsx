@@ -133,7 +133,7 @@ export default function SheetAddPendudukToKK({
 
   return (
     <Sheet>
-      <SheetTrigger className={ButtonDefaultCSS}>
+      <SheetTrigger className={ButtonDefaultCSS + " text-white"}>
         <PlusCircle />
         Tambah Anggota Keluarga
       </SheetTrigger>
@@ -178,7 +178,7 @@ export default function SheetAddPendudukToKK({
                   </FormItem>
                 )}
               />
-              <Button type="submit">
+              <Button type="submit" className="text-white">
                 <Search />
               </Button>
             </form>
@@ -188,7 +188,7 @@ export default function SheetAddPendudukToKK({
           {isLoading && (
             <div className="flex items-center gap-2">
               <LoadingIcon />
-              <p className="text-sm">Loading...</p>
+              <p className="text-sm">Proses...</p>
             </div>
           )}
           {error && <p>Error: {error.message}</p>}
@@ -226,7 +226,7 @@ export default function SheetAddPendudukToKK({
                   </div>
                 ))}
               <Button
-                className="mt-4 w-full"
+                className="mt-4 w-full text-white"
                 disabled={isPending}
                 onClick={onSave}>
                 {isPending ? (

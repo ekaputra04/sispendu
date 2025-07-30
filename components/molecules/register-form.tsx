@@ -26,6 +26,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { SessionPayload } from "@/lib/definitions";
 import { encrypt } from "@/lib/utils";
 import { useSessionStore } from "@/store/useSession";
+import { LogIn } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(255),
@@ -186,14 +187,20 @@ export function RegisterForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full text-white"
+            disabled={isLoading}>
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <LoadingIcon />
                 <p>Proses</p>
               </div>
             ) : (
-              <p>Daftar</p>
+              <div className="flex items-center gap-2">
+                <LogIn />
+                <p>Daftar</p>
+              </div>
             )}
           </Button>
         </form>

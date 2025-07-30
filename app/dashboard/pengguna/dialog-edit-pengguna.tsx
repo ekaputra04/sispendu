@@ -105,7 +105,7 @@ export default function DialogEditPengguna() {
                 <p>Proses</p>
               </>
             ) : (
-              <p>Simpan</p>
+              <p className="text-white">Simpan</p>
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

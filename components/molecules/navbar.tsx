@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
+import LoadingIcon from "../atoms/loading-icon";
 
 interface NavbarProps {
   isInHeroView?: boolean;
@@ -24,8 +25,10 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
   const { session, clearSession } = useSessionStore();
   const { clearUser } = useUserStore();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleLogout() {
+    setIsLoading(true);
     try {
       await signOut(auth);
       const response = await axios.post("/api/logout");
@@ -41,6 +44,8 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
     } catch (error) {
       toast.error("Gagal logout");
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -60,6 +65,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
 
     checkAdminStatus();
   }, [session]);
+
   return (
     <div className="">
       <nav
@@ -86,7 +92,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
             {session ? (
               <>
                 <Link href={isAdmin ? "/dashboard" : "/preview"}>
-                  <Button>
+                  <Button className="flex items-center gap-2 dark:text-white">
                     <>
                       <LayoutDashboard className="w-4 h-4" />
                       {isAdmin ? "Dashboard" : "Data Saya"}
@@ -100,9 +106,19 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                       ? "text-white hover:text-white"
                       : "text-gray-900 dark:text-white hover:text-gray-900"
                   }`}
-                  onClick={handleLogout}>
-                  <LogOut className="w-4 h-4" />
-                  Logout
+                  onClick={handleLogout}
+                  disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <LoadingIcon />
+                      <span>Logging out...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </div>
+                  )}
                 </Button>
               </>
             ) : (

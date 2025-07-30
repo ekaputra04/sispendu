@@ -26,6 +26,7 @@ import { useSessionStore } from "@/store/useSession";
 import { SessionPayload } from "@/lib/definitions";
 import { encrypt } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
+import { LogIn } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().min(2).max(255).email(),
@@ -137,14 +138,20 @@ export function LoginForm() {
             )}
           />
 
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full text-white"
+            disabled={isLoading}>
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <LoadingIcon />
                 <p>Proses</p>
               </div>
             ) : (
-              <p>Masuk</p>
+              <div className="flex items-center gap-2">
+                <LogIn />
+                <p>Masuk</p>
+              </div>
             )}
           </Button>
         </form>

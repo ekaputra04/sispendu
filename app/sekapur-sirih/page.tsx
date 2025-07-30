@@ -33,10 +33,10 @@ export default function Page() {
         <div className="mx-auto px-8 md:px-16 lg:px-32 py-12">
           {/* Header */}
           <div className="mb-12 text-center">
-            <h1 className="font-bold text-gray-900 text-3xl md:text-4xl">
+            <h1 className="font-bold text-primary text-3xl md:text-4xl">
               Sekapur Sirih dari Lurah Bebalang
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-600 text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-accent-foreground">
               Sambutan hangat dari Lurah Bebalang untuk menyapa warga dan
               pengguna Sistem Data Kependudukan, mengusung semangat keramahan
               dan gotong royong.
@@ -45,9 +45,9 @@ export default function Page() {
 
           {/* Sambutan */}
           <div className="mb-12">
-            <Card className="bg-white shadow-sm">
+            <Card className="shadow-sm">
               <CardContent className="p-6">
-                <p className="text-gray-600 leading-relaxed">
+                <p className="leading-relaxed text-accent-foreground">
                   Om Swastiastu
                   <br />
                   <br />
