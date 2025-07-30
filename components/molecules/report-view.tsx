@@ -3,6 +3,7 @@
 import {
   Card,
   CardAction,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -62,31 +63,52 @@ export default function ReportView() {
     .filter((group) => group.name !== "Total")
     .sort((a, b) => b.total.count - a.total.count);
 
+  // Hitung penduduk yang belum terdaftar dalam KK
+  const totalAnggotaKK =
+    reportKK?.data?.groups.find((group) => group.name === "Total")?.totalAnggota
+      .count || 0;
+  const pendudukBelumKK = totalGroup
+    ? totalGroup.total.count - totalAnggotaKK
+    : 0;
+
   return (
     <div>
-      {isLoading && <LoadingView />}
-      {JSON.stringify(reportKK)}
-      {report && (
+      {(isLoading || isLoadingKK) && <LoadingView />}
+      {error && (
+        <div className="text-red-500">Error: {(error as Error).message}</div>
+      )}
+      {errorKK && (
+        <div className="text-red-500">
+          Error KK: {(errorKK as Error).message}
+        </div>
+      )}
+      {report && reportKK && (
         <>
           {/* Kartu Statistik */}
           <div className="flex justify-end mb-4">
-            <Badge variant={"outline"}>
+            <Badge variant="outline">
               Terakhir diperbarui {formatWitaDate(report?.createdAt)}
             </Badge>
           </div>
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-6">
-            {/* Kartu Total Penduduk */}
             <Card className="@container/card">
               <CardHeader>
-                <CardDescription>Total Penduduk</CardDescription>
-                <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
-                  {totalGroup && totalGroup.total.count}
-                </CardTitle>
-                <CardAction>
+                <CardDescription className="flex justify-between items-center">
+                  <p>Total Penduduk</p>
                   <Badge variant="outline">
                     <Users />
                   </Badge>
-                </CardAction>
+                </CardDescription>
+                <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
+                  {totalGroup ? totalGroup.total.count : 0}
+                </CardTitle>
+                <CardContent className="m-0 mt-4 p-0">
+                  <Badge
+                    className="bg-red-100 border-red-600 text-red-600 text-sm"
+                    variant={"outline"}>
+                    {pendudukBelumKK} - Belum Terdaftar KK
+                  </Badge>
+                </CardContent>
               </CardHeader>
             </Card>
             {/* Kartu Total Laki-laki */}
@@ -94,7 +116,7 @@ export default function ReportView() {
               <CardHeader>
                 <CardDescription>Total Laki-laki</CardDescription>
                 <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
-                  {totalGroup && totalGroup.male.count}
+                  {totalGroup ? totalGroup.male.count : 0}
                 </CardTitle>
                 <CardAction>
                   <Badge variant="outline">
@@ -108,7 +130,7 @@ export default function ReportView() {
               <CardHeader>
                 <CardDescription>Total Perempuan</CardDescription>
                 <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
-                  {totalGroup && totalGroup.female.count}
+                  {totalGroup ? totalGroup.female.count : 0}
                 </CardTitle>
                 <CardAction>
                   <Badge variant="outline">
@@ -119,21 +141,44 @@ export default function ReportView() {
             </Card>
             {/* Kartu per Banjar */}
             {banjarGroups &&
-              banjarGroups.map((item) => (
-                <Card key={item.name} className="@container/card">
-                  <CardHeader>
-                    <CardDescription>{item.name}</CardDescription>
-                    <CardTitle className="font-semibold tabular-nums text-2xl @[250px]/card:text-3xl">
-                      {item.total.count}
-                    </CardTitle>
-                    <CardAction>
-                      <Badge variant="outline">
-                        <Users />
-                      </Badge>
-                    </CardAction>
-                  </CardHeader>
-                </Card>
-              ))}
+              banjarGroups.map((item) => {
+                const banjarKK = reportKK?.data?.groups.find(
+                  (group) => group.name === item.name
+                );
+                console.log("Banjar KK:", banjarKK);
+
+                return (
+                  <Card key={item.name}>
+                    <CardHeader>
+                      <CardDescription className="flex justify-between items-center">
+                        {item.name}
+                        <Badge variant="outline">
+                          <Users />
+                        </Badge>
+                      </CardDescription>
+                      <CardTitle className="flex justify-between items-center font-semibold text-2xl @[250px]/card:text-3xl">
+                        {item.total.count}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="-mt-2">
+                      <div className="flex justify-between gap-2 font-normal">
+                        <Badge
+                          className="bg-green-100 border-green-600 text-green-600 text-sm"
+                          variant={"outline"}>
+                          {banjarKK ? banjarKK.totalKK.count : 0} - Kartu
+                          Keluarga
+                        </Badge>
+                        <Badge
+                          className="bg-blue-100 border-blue-600 text-blue-600 text-sm"
+                          variant={"outline"}>
+                          {banjarKK ? banjarKK.totalAnggota.count : 0} -
+                          Penduduk
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
           </div>
 
           <hr className="my-6" />

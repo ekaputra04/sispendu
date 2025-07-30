@@ -21,22 +21,26 @@ export async function generateKKReport(): Promise<
     });
     reportData["Total"] = { totalKK: 0, totalAnggota: 0 };
 
-    querySnapshot.forEach((doc) => {
+    for (const doc of querySnapshot.docs) {
       const data = doc.data();
       const banjar = data.banjar as string;
-      const anggotaKeluarga = data.anggotaKeluarga
-        ? Array.isArray(data.anggotaKeluarga)
-          ? data.anggotaKeluarga.length
-          : Number(data.anggotaKeluarga)
-        : 0;
+
+      const anggotaSnapshot = await getDocs(
+        collection(db, "kartu-keluarga", doc.id, "anggota")
+      );
+      const anggotaCount = anggotaSnapshot.size;
+
+      console.log(
+        `Dokumen ${doc.id}: banjar=${banjar}, anggotaCount=${anggotaCount}`
+      );
 
       if (banjars.includes(banjar)) {
         reportData[banjar].totalKK += 1;
-        reportData[banjar].totalAnggota += anggotaKeluarga;
+        reportData[banjar].totalAnggota += anggotaCount;
         reportData["Total"].totalKK += 1;
-        reportData["Total"].totalAnggota += anggotaKeluarga;
+        reportData["Total"].totalAnggota += anggotaCount;
       }
-    });
+    }
 
     const groups = Object.entries(reportData).map(
       ([name, { totalKK, totalAnggota }]) => ({
