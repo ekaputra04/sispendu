@@ -31,10 +31,18 @@ import { Save } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
 
 const formSchema = z.object({
-  namaKepalaKeluarga: z.string().min(2),
-  alamat: z.string().min(2),
-  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
-  tanggalPenerbitan: z.string().min(2),
+  namaKepalaKeluarga: z
+    .string()
+    .min(2, { message: "Nama kepala keluarga harus diisi minimal 2 karakter" }),
+  alamat: z
+    .string()
+    .min(2, { message: "Alamat harus diisi minimal 2 karakter" }),
+  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"], {
+    message: "Banjar harus dipilih dari opsi yang tersedia",
+  }),
+  tanggalPenerbitan: z.string().min(2, {
+    message: "Tanggal penerbitan harus diisi dengan format yang valid",
+  }),
 });
 
 interface EditKKFormProps {

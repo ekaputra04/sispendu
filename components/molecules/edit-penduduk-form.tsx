@@ -41,54 +41,74 @@ import { useUserStore } from "@/store/useUserStore";
 import { Save } from "lucide-react";
 
 const formSchema = z.object({
-  nama: z.string().min(2),
-  jenisKelamin: z.enum(["Laki-laki", "Perempuan"]),
-  tempatLahir: z.string().min(2),
-  tanggalLahir: z.string().min(2),
-  agama: z.enum([
-    "Islam",
-    "Kristen",
-    "Katolik",
-    "Hindu",
-    "Budha",
-    "Konghucu",
-    "Kepercayaan Terhadap Tuhan YME / Lainnya",
-  ]),
-  pendidikan: z.string().min(2),
-  jenisPekerjaan: z.string().min(2),
-  statusPerkawinan: z.enum([
-    "Kawin",
-    "Belum Kawin",
-    "Cerai Hidup",
-    "Cerai Mati",
-  ]),
-  kewarganegaraan: z.enum(["WNI", "WNA"]),
-  golonganDarah: z.enum([
-    "A",
-    "B",
-    "AB",
-    "O",
-    "A+",
-    "A-",
-    "B+",
-    "B-",
-    "AB+",
-    "AB-",
-    "O+",
-    "O-",
-  ]),
-  penyandangCacat: z.enum([
-    "Tidak Cacat",
-    "Cacat Fisik",
-    "Cacat Netra / Buta",
-    "Cacat Rungu / Wicara",
-    "Cacat Mental / Jiwa",
-    "Cacat Fisik dan Mental",
-    "Cacat Lainnya",
-  ]),
-  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"]),
-  namaAyah: z.string().min(2),
-  namaIbu: z.string().min(2),
+  nama: z.string().min(2, { message: "Nama harus diisi minimal 2 karakter" }),
+  jenisKelamin: z.enum(["Laki-laki", "Perempuan"], {
+    message: "Jenis kelamin harus dipilih (Laki-laki atau Perempuan)",
+  }),
+  tempatLahir: z
+    .string()
+    .min(2, { message: "Tempat lahir harus diisi minimal 2 karakter" }),
+  tanggalLahir: z
+    .string()
+    .min(2, { message: "Tanggal lahir harus diisi dengan format yang valid" }),
+  agama: z.enum(
+    [
+      "Islam",
+      "Kristen",
+      "Katolik",
+      "Hindu",
+      "Budha",
+      "Konghucu",
+      "Kepercayaan Terhadap Tuhan YME / Lainnya",
+    ],
+    {
+      message: "Agama harus dipilih dari opsi yang tersedia",
+    }
+  ),
+  pendidikan: z
+    .string()
+    .min(2, { message: "Pendidikan harus diisi minimal 2 karakter" }),
+  jenisPekerjaan: z
+    .string()
+    .min(2, { message: "Jenis pekerjaan harus diisi minimal 2 karakter" }),
+  statusPerkawinan: z.enum(
+    ["Kawin", "Belum Kawin", "Cerai Hidup", "Cerai Mati"],
+    {
+      message: "Status perkawinan harus dipilih dari opsi yang tersedia",
+    }
+  ),
+  kewarganegaraan: z.enum(["WNI", "WNA"], {
+    message: "Kewarganegaraan harus dipilih (WNI atau WNA)",
+  }),
+  golonganDarah: z.enum(
+    ["A", "B", "AB", "O", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+    {
+      message: "Golongan darah harus dipilih dari opsi yang tersedia",
+    }
+  ),
+  penyandangCacat: z.enum(
+    [
+      "Tidak Cacat",
+      "Cacat Fisik",
+      "Cacat Netra / Buta",
+      "Cacat Rungu / Wicara",
+      "Cacat Mental / Jiwa",
+      "Cacat Fisik dan Mental",
+      "Cacat Lainnya",
+    ],
+    {
+      message: "Status penyandang cacat harus dipilih dari opsi yang tersedia",
+    }
+  ),
+  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"], {
+    message: "Banjar harus dipilih dari opsi yang tersedia",
+  }),
+  namaAyah: z
+    .string()
+    .min(2, { message: "Nama ayah harus diisi minimal 2 karakter" }),
+  namaIbu: z
+    .string()
+    .min(2, { message: "Nama ibu harus diisi minimal 2 karakter" }),
 });
 
 interface EditPendudukFormProps {
