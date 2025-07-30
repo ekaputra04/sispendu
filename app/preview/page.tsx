@@ -27,6 +27,7 @@ import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import DialogDeletePenduduk from "./dialog-delete-penduduk";
 import LoadingView from "@/components/atoms/loading-view";
+import Footer from "@/components/atoms/footer";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
@@ -66,7 +67,7 @@ export default function PreviewPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
@@ -190,6 +191,7 @@ export default function PreviewPage() {
         <DialogDeletePenduduk />
         <DialogDeleteKK />
       </div>
+      <Footer />
     </>
   );
 }

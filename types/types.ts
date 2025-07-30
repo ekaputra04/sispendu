@@ -154,3 +154,12 @@ export interface IReportKK {
   }[];
   createdAt: Timestamp;
 }
+
+export interface IContact {
+  id?: string;
+  nama: string;
+  email: string;
+  pesan: string;
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
+}

@@ -1,8 +1,6 @@
 "use client";
 
-import { Twitter, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { IconBrandWhatsapp } from "@tabler/icons-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -11,10 +9,10 @@ export default function Footer() {
         <div className="gap-8 grid grid-cols-1 md:grid-cols-3">
           {/* Bagian Kiri: Nama Proyek */}
           <div>
-            <h3 className="font-semibold text-primary text-lg">
+            <h3 className="font-semibold text-primary text-2xl">
               Sistem Informasi Penduduk
             </h3>
-            <p className="mt-2 text-sm">Kelurahan Bebalang, Bangli, Bali.</p>
+            <p className="mt-2 text-lg">Kelurahan Bebalang, Bangli, Bali.</p>
           </div>
 
           {/* Bagian Tengah: Tautan Navigasi */}
@@ -22,30 +20,30 @@ export default function Footer() {
             <h4 className="font-medium text-md text-primary">Tautan</h4>
             <ul className="space-y-2 mt-2 text-sm">
               <li>
-                <a href="/" className="hover:text-primary transition-colors">
+                <Link href="/" className="hover:text-primary transition-colors">
                   Beranda
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/about"
                   className="hover:text-primary transition-colors">
                   Tentang
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/sekapur-sirih"
                   className="hover:text-primary transition-colors">
                   Sekapur Sirih
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/contact"
                   className="hover:text-primary transition-colors">
                   Kontak
-                </a>
+                </Link>
               </li>
               <li>
                 <a
