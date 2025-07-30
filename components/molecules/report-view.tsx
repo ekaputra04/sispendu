@@ -14,7 +14,7 @@ import { useState } from "react";
 import ReportTable from "@/components/molecules/report-table";
 import { useQuery } from "@tanstack/react-query";
 import { ReportData } from "@/lib/agregatePopulationData";
-import { fetchLatestReport } from "@/lib/firestore/report";
+import { fetchLatestReport, fetchLatestReportKK } from "@/lib/firestore/report";
 import LoadingView from "@/components/atoms/loading-view";
 import { PieChartAll } from "@/components/charts/pie-chart";
 import { formatWitaDate } from "@/lib/utils";
@@ -45,6 +45,15 @@ export default function ReportView() {
     queryFn: fetchLatestReport,
   });
 
+  const {
+    data: reportKK,
+    isLoading: isLoadingKK,
+    error: errorKK,
+  } = useQuery({
+    queryKey: ["latestReportKK"],
+    queryFn: fetchLatestReportKK,
+  });
+
   const wilayahData = report?.data.find((item) => item.category === "wilayah");
   const totalGroup = wilayahData?.groups.find(
     (group) => group.name === "Total"
@@ -56,6 +65,7 @@ export default function ReportView() {
   return (
     <div>
       {isLoading && <LoadingView />}
+      {JSON.stringify(reportKK)}
       {report && (
         <>
           {/* Kartu Statistik */}
@@ -136,7 +146,7 @@ export default function ReportView() {
                   <div key={item.key}>
                     <Button
                       size={"sm"}
-                      className="flex justify-start w-full text-start"
+                      className="flex justify-start w-full dark:text-white text-start"
                       variant={condition === item.key ? "default" : "outline"}
                       onClick={() => setCondition(item.key)}>
                       {item.label}

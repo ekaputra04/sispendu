@@ -24,13 +24,14 @@ export default function Page() {
     },
     onSuccess: () => {
       toast.success("Laporan baru berhasil dibuat");
+      // Invalidasi kedua query key untuk memicu pembaruan
       queryClient.invalidateQueries({ queryKey: ["latestReport"] });
+      queryClient.invalidateQueries({ queryKey: ["latestReportKK"] });
     },
     onError: (error: any) => {
       toast.error("Gagal membuat laporan: " + error.message);
     },
   });
-
   return (
     <div>
       <div className="flex flex-wrap justify-between items-center gap-y-2 mb-4">
@@ -45,9 +46,10 @@ export default function Page() {
               Memproses...
             </>
           ) : (
-            <>
-              <RefreshCw /> Perbarui Laporan
-            </>
+            <div className="flex justify-between items-center gap-2 dark:text-white">
+              <RefreshCw />
+              <span>Perbarui Laporan</span>
+            </div>
           )}
         </Button>
       </div>

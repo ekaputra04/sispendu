@@ -68,7 +68,7 @@ export function RegisterForm() {
       await setDoc(doc(db, "users", user.uid), {
         userId: user.uid,
         nama: values.name,
-        email: values.password,
+        email: values.email,
         role: "user",
         createdAt: new Date(),
         updatedAt: new Date(),

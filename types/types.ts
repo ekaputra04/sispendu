@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export type TJenisKelamin = "Laki-laki" | "Perempuan";
 export type TStatusHubunganDalamKeluarga =
   | "Kepala Keluarga"
@@ -141,4 +143,14 @@ export interface IDecryptedSession {
   nama: string;
   role: string;
   userId: string;
+}
+
+export interface IReportKK {
+  category: string;
+  groups: {
+    name: string;
+    totalKK: { count: number; percentage: number };
+    totalAnggota: { count: number; percentage: number };
+  }[];
+  createdAt: Timestamp;
 }

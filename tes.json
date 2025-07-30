@@ -1,47 +1,622 @@
 {
-  "groups": [
+  "createdAt": {
+    "type": "firestore/timestamp/1.0",
+    "seconds": 1753853725,
+    "nanoseconds": 701000000
+  },
+  "data": [
     {
-      "male": { "percentage": 0, "count": 0 },
-      "total": { "percentage": 50, "count": 1 },
-      "female": { "percentage": 50, "count": 1 },
-      "name": "Bebalang"
+      "category": "all",
+      "groups": [
+        {
+          "total": { "percentage": 100, "count": 1 },
+          "name": "Total",
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 1, "percentage": 100 }
+        }
+      ]
     },
     {
-      "male": { "count": 0, "percentage": 0 },
-      "total": { "percentage": 0, "count": 0 },
-      "female": { "count": 0, "percentage": 0 },
-      "name": "Tegal"
+      "groups": [
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "0-5",
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "name": "6-12",
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "13-18",
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "19-30"
+        },
+        {
+          "name": "31-50",
+          "total": { "percentage": 100, "count": 1 },
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 100, "count": 1 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "51+",
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 1, "percentage": 100 },
+          "male": { "count": 1, "percentage": 100 },
+          "name": "Total"
+        }
+      ],
+      "category": "rentang-umur"
     },
     {
-      "total": { "percentage": 0, "count": 0 },
-      "male": { "percentage": 0, "count": 0 },
-      "name": "Sedit",
-      "female": { "percentage": 0, "count": 0 }
+      "category": "kategori-umur",
+      "groups": [
+        {
+          "name": "Anak",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Remaja"
+        },
+        {
+          "total": { "count": 1, "percentage": 100 },
+          "male": { "count": 1, "percentage": 100 },
+          "name": "Dewasa",
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Lansia",
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Total",
+          "total": { "count": 1, "percentage": 100 },
+          "male": { "count": 1, "percentage": 100 }
+        }
+      ]
     },
     {
-      "name": "Gancan",
-      "male": { "count": 1, "percentage": 50 },
-      "total": { "percentage": 50, "count": 1 },
-      "female": { "percentage": 0, "count": 0 }
+      "groups": [
+        {
+          "name": "Tidak / Belum Sekolah",
+          "total": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Belum Tamat SD / Sederajat",
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "name": "Tamat SD / Sederajat",
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "name": "SLTP / Sederajat",
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "total": { "percentage": 100, "count": 1 },
+          "male": { "percentage": 100, "count": 1 },
+          "name": "SLTA / Sederajat",
+          "female": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Diploma I / II",
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Akademi / Diploma III / S. Muda",
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Diploma IV / Strata I"
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Strata II",
+          "male": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Strata III",
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 1, "percentage": 100 },
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 100, "count": 1 },
+          "name": "Total"
+        }
+      ],
+      "category": "pendidikan"
     },
     {
-      "female": { "percentage": 0, "count": 0 },
-      "total": { "percentage": 0, "count": 0 },
-      "name": "Sembung",
-      "male": { "count": 0, "percentage": 0 }
+      "category": "pekerjaan",
+      "groups": [
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Belum / Tidak Bekerja"
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "name": "Buruh Harian Lepas",
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Buruh Tani / Perkebunan",
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Guru",
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Karyawan Swasta",
+          "female": { "percentage": 0, "count": 0 }
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "Kepolisian RI (POLRI)"
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Mengurus Rumah Tangga",
+          "total": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "Pedagang"
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "Pegawai Negeri Sipil (PNS)"
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 1, "percentage": 100 },
+          "name": "Pelajar / Mahasiswa",
+          "male": { "count": 1, "percentage": 100 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Pensiunan"
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Perangkat Desa"
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Perdagangan",
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "Petani / Pekebun",
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Wiraswasta"
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Lainnya",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 1, "percentage": 100 },
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "percentage": 100, "count": 1 },
+          "name": "Total"
+        }
+      ]
     },
     {
-      "male": { "percentage": 0, "count": 0 },
-      "total": { "count": 0, "percentage": 0 },
-      "female": { "percentage": 0, "count": 0 },
-      "name": "Petak"
+      "category": "agama",
+      "groups": [
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Islam",
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "Kristen",
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Katolik",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Hindu"
+        },
+        {
+          "name": "Budha",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 1, "percentage": 100 },
+          "male": { "percentage": 100, "count": 1 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Konghucu",
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Kepercayaan Terhadap Tuhan YME / Lainnya",
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "name": "Total",
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 1, "percentage": 100 },
+          "male": { "percentage": 100, "count": 1 }
+        }
+      ]
     },
     {
-      "total": { "percentage": 100, "count": 2 },
-      "male": { "percentage": 50, "count": 1 },
-      "female": { "count": 1, "percentage": 50 },
-      "name": "Total"
+      "groups": [
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 1, "percentage": 100 },
+          "total": { "count": 1, "percentage": 100 },
+          "name": "Kepala Keluarga"
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Istri"
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "Suami",
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "Anak",
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Orang Tua",
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Mertua"
+        },
+        {
+          "name": "Menantu",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "name": "Cucu",
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Pembantu",
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Famili Lain",
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "total": { "count": 1, "percentage": 100 },
+          "name": "Total",
+          "female": { "count": 0, "percentage": 0 },
+          "male": { "count": 1, "percentage": 100 }
+        }
+      ],
+      "category": "hubungan-dalam-kk"
+    },
+    {
+      "category": "status-perkawinan",
+      "groups": [
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Belum Kawin",
+          "female": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Kawin",
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 100, "count": 1 },
+          "male": { "percentage": 100, "count": 1 },
+          "name": "Cerai Hidup"
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Cerai Mati"
+        },
+        {
+          "name": "Total",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 100, "count": 1 },
+          "male": { "percentage": 100, "count": 1 }
+        }
+      ]
+    },
+    {
+      "groups": [
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "A",
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "B",
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "AB",
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "name": "O",
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "A+",
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "A-"
+        },
+        {
+          "total": { "count": 1, "percentage": 100 },
+          "male": { "count": 1, "percentage": 100 },
+          "name": "B+",
+          "female": { "count": 0, "percentage": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "B-"
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "AB+"
+        },
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "AB-",
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "percentage": 0, "count": 0 },
+          "name": "O+",
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "O-"
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 100, "count": 1 },
+          "male": { "percentage": 100, "count": 1 },
+          "name": "Total"
+        }
+      ],
+      "category": "golongan-darah"
+    },
+    {
+      "groups": [
+        {
+          "total": { "percentage": 100, "count": 1 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Tidak Cacat",
+          "male": { "percentage": 100, "count": 1 }
+        },
+        {
+          "name": "Cacat Fisik",
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Cacat Netra / Buta"
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Cacat Rungu / Wicara",
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Cacat Mental / Jiwa",
+          "male": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "male": { "count": 0, "percentage": 0 },
+          "name": "Cacat Fisik dan Mental"
+        },
+        {
+          "name": "Cacat Lainnya",
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 }
+        },
+        {
+          "total": { "count": 1, "percentage": 100 },
+          "female": { "percentage": 0, "count": 0 },
+          "name": "Total",
+          "male": { "count": 1, "percentage": 100 }
+        }
+      ],
+      "category": "penyandang-cacat"
+    },
+    {
+      "category": "wilayah",
+      "groups": [
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Bebalang",
+          "total": { "percentage": 0, "count": 0 }
+        },
+        {
+          "name": "Tegal",
+          "male": { "percentage": 100, "count": 1 },
+          "female": { "percentage": 0, "count": 0 },
+          "total": { "count": 1, "percentage": 100 }
+        },
+        {
+          "total": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "name": "Sedit",
+          "female": { "percentage": 0, "count": 0 }
+        },
+        {
+          "female": { "percentage": 0, "count": 0 },
+          "male": { "percentage": 0, "count": 0 },
+          "total": { "percentage": 0, "count": 0 },
+          "name": "Gancan"
+        },
+        {
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Sembung",
+          "male": { "count": 0, "percentage": 0 }
+        },
+        {
+          "male": { "count": 0, "percentage": 0 },
+          "female": { "count": 0, "percentage": 0 },
+          "total": { "count": 0, "percentage": 0 },
+          "name": "Petak"
+        },
+        {
+          "male": { "percentage": 100, "count": 1 },
+          "total": { "percentage": 100, "count": 1 },
+          "female": { "count": 0, "percentage": 0 },
+          "name": "Total"
+        }
+      ]
     }
-  ],
-  "category": "wilayah"
+  ]
 }

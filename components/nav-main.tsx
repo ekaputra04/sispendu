@@ -30,7 +30,7 @@ export function NavMain({
             <SidebarMenuItem className="flex items-center gap-2">
               <SidebarMenuButton
                 tooltip="Tambah data penduduk"
-                className="bg-primary hover:bg-primary/90 active:bg-primary/90 min-w-8 text-primary-foreground hover:text-primary-foreground active:text-primary-foreground duration-200 ease-linear hover:cursor-pointer">
+                className="bg-primary hover:bg-primary/90 active:bg-primary/90 min-w-8 text-primary-foreground hover:text-primary-foreground active:text-primary-foreground dark:text-white duration-200 ease-linear hover:cursor-pointer">
                 <IconCirclePlus />
                 <span>Tambah Data Penduduk</span>
               </SidebarMenuButton>

@@ -133,6 +133,8 @@ export default function DetailKartuKeluargaPage({
                   <TableHead>Status Hubungan Keluarga</TableHead>
                   <TableHead>Nama</TableHead>
                   <TableHead>Jenis Kelamin</TableHead>
+                  <TableHead>Nama Ayah</TableHead>
+                  <TableHead>Nama Ibu</TableHead>
                   <TableHead>Aksi</TableHead>
                 </TableRow>
               </TableHeader>
@@ -162,6 +164,8 @@ export default function DetailKartuKeluargaPage({
                         </TableCell>
                         <TableCell>{pendudukDetail.nama}</TableCell>
                         <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
+                        <TableCell>{pendudukDetail.namaAyah}</TableCell>
+                        <TableCell>{pendudukDetail.namaIbu}</TableCell>
                         <TableCell className="flex gap-2">
                           <Link
                             href={`/dashboard/penduduk/detail/${pendudukDetail.id}`}>

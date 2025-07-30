@@ -24,9 +24,9 @@ export default function Page() {
         <Heading1 text="Data Kartu Keluarga" />
 
         <Link href={"/dashboard/kartu-keluarga/add"}>
-          <Button>
+          <Button className="flex items-center gap-2 text-white">
             <PlusCircle />
-            Tambah Kartu Keluarga
+            <span>Tambah Kartu Keluarga</span>
           </Button>
         </Link>
       </div>

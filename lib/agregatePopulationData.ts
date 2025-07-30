@@ -12,6 +12,8 @@ import {
   StatusHubunganDalamKeluarga,
   StatusPerkawinan,
 } from "@/consts/dataDefinitions";
+import { checkAuth } from "./auth";
+import { generateKKReport } from "./generateKKReport";
 
 export interface IReport {
   createdAt: Timestamp;
@@ -30,6 +32,9 @@ export interface ReportData {
 
 export async function aggregateReportData(): Promise<ReportData[]> {
   try {
+    await checkAuth();
+    await generateKKReport();
+
     const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
     const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map((doc) => {
       const data = doc.data();

@@ -42,7 +42,9 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
       const penduduk: IDataPenduduk = row.original;
 
       return (
-        <Badge variant={penduduk.kkRef ? "default" : "destructive"}>
+        <Badge
+          variant={penduduk.kkRef ? "default" : "destructive"}
+          className="text-white">
           {penduduk.kkRef ? "Ya" : "Tidak"}
         </Badge>
       );

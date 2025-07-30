@@ -24,9 +24,9 @@ export default function Page() {
       <div className="flex justify-between items-center mb-2">
         <Heading1 text="Data Penduduk" />
         <Link href={"/dashboard/penduduk/add"}>
-          <Button>
+          <Button className="flex justify-between items-center gap-2 text-white">
             <PlusCircle />
-            Tambah Data Penduduk
+            <span>Tambah Data Penduduk</span>
           </Button>
         </Link>
       </div>

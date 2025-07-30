@@ -1,4 +1,4 @@
-import { FirestoreResponse } from "@/types/types";
+import { FirestoreResponse, IReportKK } from "@/types/types";
 import { IReport, ReportData } from "../agregatePopulationData";
 import { checkAuth } from "../auth";
 import {
@@ -49,3 +49,45 @@ export const fetchLatestReport = async (): Promise<IReport> => {
   }
   return {} as IReport;
 };
+
+export async function fetchLatestReportKK(): Promise<
+  FirestoreResponse<IReportKK>
+> {
+  try {
+    // Verifikasi autentikasi
+    await checkAuth();
+
+    // Buat query untuk mengambil laporan terbaru berdasarkan createdAt
+    const q = query(
+      collection(db, "report-kk"),
+      orderBy("createdAt", "desc"),
+      limit(1)
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return {
+        success: false,
+        message: "Tidak ada laporan kartu keluarga ditemukan",
+        errorCode: "no-data",
+      };
+    }
+
+    // Ambil dokumen terbaru
+    const doc = querySnapshot.docs[0];
+    const data = { ...doc.data() } as IReportKK;
+
+    return {
+      success: true,
+      message: "Berhasil mengambil laporan kartu keluarga terbaru",
+      data,
+    };
+  } catch (error: any) {
+    console.error("Gagal mengambil laporan kartu keluarga:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal mengambil laporan kartu keluarga",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
