@@ -5,16 +5,23 @@ import { auth } from "@/config/firebase-init";
 import { decrypt } from "@/lib/utils";
 import { useSessionStore } from "@/store/useSession";
 import { useUserStore } from "@/store/useUserStore";
-import { IconDashboard } from "@tabler/icons-react";
 import axios from "axios";
 import { signOut } from "firebase/auth";
-import { LayoutDashboard, LogIn, LogOut } from "lucide-react";
+import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
 import LoadingIcon from "../atoms/loading-icon";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface NavbarProps {
   isInHeroView?: boolean;
@@ -88,7 +95,109 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
               </p>
             </div>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="md:hidden block">
+            <Sheet>
+              <SheetTrigger className={`${isInHeroView && "text-white"}`}>
+                <Menu />
+              </SheetTrigger>
+              <SheetContent side="left">
+                <SheetHeader>
+                  <SheetTitle>Sispendu Bebalang</SheetTitle>
+                  <SheetDescription></SheetDescription>
+                </SheetHeader>
+                <div className="px-8">
+                  <div>
+                    <h4 className="font-medium text-md text-primary">Tautan</h4>
+                    <ul className="space-y-2 mt-2 text-sm">
+                      <li>
+                        <Link
+                          href="/"
+                          className="hover:text-primary transition-colors">
+                          Beranda
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/about"
+                          className="hover:text-primary transition-colors">
+                          Tentang
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/sekapur-sirih"
+                          className="hover:text-primary transition-colors">
+                          Sekapur Sirih
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/contact"
+                          className="hover:text-primary transition-colors">
+                          Kontak
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href="/privacy"
+                          className="hover:text-primary transition-colors">
+                          Kebijakan Privasi
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div className="px-8">
+                  {session ? (
+                    <div className="flex flex-col gap-2">
+                      <Link href={isAdmin ? "/dashboard" : "/preview"}>
+                        <Button className="flex items-center gap-2 w-full dark:text-white">
+                          <>
+                            <LayoutDashboard className="w-4 h-4" />
+                            {isAdmin ? "Dashboard" : "Data Saya"}
+                          </>
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="outline"
+                        className={`bg-transparent hover:bg-white/10 text-primary w-full ${
+                          isInHeroView
+                            ? "text-white hover:text-white"
+                            : "text-gray-900 dark:text-white hover:text-gray-900"
+                        }`}
+                        onClick={handleLogout}
+                        disabled={isLoading}>
+                        {isLoading ? (
+                          <div className="flex items-center gap-2">
+                            <LoadingIcon />
+                            <span>Logging out...</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <LogOut className="w-4 h-4" />
+                            Logout
+                          </div>
+                        )}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Link href="/login">
+                      <Button
+                        variant="outline"
+                        className="flex justify-center items-center bg-transparent hover:bg-white/10 w-full dark:hover:text-white dark:text-white">
+                        <LogIn className="w-4 h-4" />
+                        <p>Login</p>
+                      </Button>
+                    </Link>
+                  )}
+                  <div className="mt-2">
+                    <ModeToggle />
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+          <div className="hidden md:flex md:flex-row flex-col items-center gap-4">
             {session ? (
               <>
                 <Link href={isAdmin ? "/dashboard" : "/preview"}>
