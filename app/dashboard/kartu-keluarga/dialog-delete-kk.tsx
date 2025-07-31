@@ -64,7 +64,10 @@ export default function DialogDeleteKK() {
           <AlertDialogCancel onClick={handleCancel} disabled={isPending}>
             Batal
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteKK} disabled={isPending}>
+          <AlertDialogAction
+            onClick={handleDeleteKK}
+            disabled={isPending}
+            className="text-white">
             {isPending ? (
               <>
                 <LoadingIcon />

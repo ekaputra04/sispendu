@@ -77,17 +77,17 @@ export default function PreviewPage() {
           </Breadcrumb>
         </div>
         <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
-          <h1 className="mb-6 font-bold text-gray-900 text-2xl">
+          <h1 className="mb-6 font-bold text-primary text-2xl">
             Data yang Dibuat oleh Anda
           </h1>
 
           <section className="mb-12">
             <div className="flex justify-between items-center mb-2">
-              <h2 className="mb-4 font-semibold text-gray-800 text-xl">
+              <h2 className="mb-4 font-semibold text-xl text-accent-foreground">
                 Kartu Keluarga
               </h2>
               <Link href="/preview/kartu-keluarga/add">
-                <Button>
+                <Button className="text-white">
                   <PlusCircle className="w-4 h-4" />
                   Tambah Data Kartu Keluarga
                 </Button>
@@ -127,7 +127,7 @@ export default function PreviewPage() {
                         href={`/preview/kartu-keluarga/detail/${kk.id}`}
                         className="group">
                         <div className="flex items-center gap-2">
-                          <CardTitle className="font-semibold text-gray-900 text-lg group-hover:underline">
+                          <CardTitle className="font-semibold text-lg group-hover:underline">
                             Kartu Keluarga
                           </CardTitle>
                           <Button variant={"ghost"} size={"icon"}>
@@ -151,17 +151,17 @@ export default function PreviewPage() {
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-2 -mt-4">
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         <span className="font-medium">Kepala Keluarga:</span>{" "}
                         {kk.namaKepalaKeluarga}
                       </p>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         <span className="font-medium">Alamat:</span> {kk.alamat}
                       </p>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         <span className="font-medium">Banjar:</span> {kk.banjar}
                       </p>
-                      <p className="text-gray-600 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         <span className="font-medium">Tanggal Penerbitan:</span>{" "}
                         {kk.tanggalPenerbitan}
                       </p>
@@ -174,11 +174,11 @@ export default function PreviewPage() {
 
           <section>
             <div className="flex justify-between items-center mb-2">
-              <h2 className="mb-4 font-semibold text-gray-800 text-xl">
+              <h2 className="mb-4 font-semibold text-xl text-accent-foreground">
                 Penduduk
               </h2>
               <Link href="/preview/penduduk/add">
-                <Button>
+                <Button className="text-white">
                   <PlusCircle className="w-4 h-4" />
                   Tambah Data Penduduk
                 </Button>

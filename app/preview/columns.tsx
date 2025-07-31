@@ -51,7 +51,16 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
 
       return (
         <Badge variant={penduduk.kkRef ? "default" : "destructive"}>
-          {penduduk.kkRef ? "Ya" : "Tidak"}
+          {penduduk.kkRef ? (
+            <Link href={`/preview/kartu-keluarga/detail/${penduduk.kkRef}`}>
+              <div className="flex items-center gap-2 text-white">
+                <p>Ya</p>
+                <Eye className="w-4 h-4" />
+              </div>
+            </Link>
+          ) : (
+            "Tidak"
+          )}
         </Badge>
       );
     },

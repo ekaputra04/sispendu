@@ -60,7 +60,10 @@ export default function DialogDeletePenduduk() {
           <AlertDialogCancel onClick={handleCancel} disabled={isPending}>
             Batal
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={isPending}
+            className="text-white">
             {isPending ? (
               <>
                 <LoadingIcon />
