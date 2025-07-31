@@ -85,27 +85,51 @@ export async function getPendudukByName(
   nama: string
 ): Promise<FirestoreResponse<IDataPenduduk[] | null>> {
   try {
-    if (!nama) {
-      throw new Error("Nama diperlukan");
+    if (!nama || nama.trim().length < 2) {
+      throw new Error("Nama pencarian harus diisi minimal 2 karakter");
     }
 
     await checkAuth();
 
-    const q = query(
-      collection(db, "penduduk"),
-      where("namaLowerCase", ">=", nama.toLowerCase()),
-      where("namaLowerCase", "<=", nama.toLowerCase() + "\uf8ff")
+    // Ubah input ke huruf kecil dan pecah menjadi kata-kata
+    const searchTerms = nama
+      .toLowerCase()
+      .split(" ")
+      .filter((term) => term.length >= 2);
+
+    // Buat query untuk setiap kata pencarian menggunakan array-contains
+    const queries = searchTerms.map((term) =>
+      query(
+        collection(db, "penduduk"),
+        where("namaKeywords", "array-contains", term)
+      )
     );
-    const querySnapshot = await getDocs(q);
-    const pendudukList = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+
+    // Jalankan semua query dan gabungkan hasilnya
+    const results: IDataPenduduk[] = [];
+    const uniqueIds = new Set<string>();
+
+    for (const q of queries) {
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        if (!uniqueIds.has(doc.id)) {
+          uniqueIds.add(doc.id);
+          results.push({
+            id: doc.id,
+            ...doc.data(),
+          } as IDataPenduduk);
+        }
+      });
+    }
+
+    console.log(
+      `Ditemukan ${results.length} penduduk untuk pencarian: ${nama}`
+    );
 
     return {
       success: true,
-      data: pendudukList as IDataPenduduk[],
-      message: pendudukList.length
+      data: results,
+      message: results.length
         ? "Berhasil menemukan penduduk"
         : "Tidak ada penduduk ditemukan",
     };
@@ -113,7 +137,7 @@ export async function getPendudukByName(
     console.error("Gagal mencari penduduk:", error);
     return {
       success: false,
-      message: error.message || "Gagal mencari penduduk",
+      message: error.message || "Gagal mencari penduduk. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
@@ -170,13 +194,22 @@ export async function createPenduduk({
       throw new Error("Semua field wajib diisi");
     }
 
+    const namaLowerCase = penduduk.nama.toLowerCase();
+    const namaKeywords = namaLowerCase
+      .split(" ")
+      .filter((word) => word.length > 2);
+    const pendudukData = {
+      ...penduduk,
+      namaLowerCase,
+      namaKeywords,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
     const docRef = doc(db, "penduduk", penduduk.id);
 
     await setDoc(docRef, {
-      ...penduduk,
-      namaLowerCase: penduduk.nama.toLowerCase(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      ...pendudukData,
     });
 
     return {
@@ -222,12 +255,21 @@ export async function updatePenduduk({
       throw new Error("Penduduk tidak ditemukan");
     }
 
+    const namaLowerCase = penduduk?.nama?.toLowerCase();
+    const namaKeywords = namaLowerCase
+      ? namaLowerCase.split(" ").filter((word) => word.length > 2)
+      : [];
+    const pendudukData = {
+      ...penduduk,
+      namaLowerCase,
+      namaKeywords,
+      updatedAt: new Date(),
+    };
+
     await setDoc(
       docRef,
       {
-        ...penduduk,
-        namaLowerCase: penduduk.nama ? penduduk.nama.toLowerCase() : undefined,
-        updatedAt: new Date(),
+        ...pendudukData,
       },
       { merge: true }
     );

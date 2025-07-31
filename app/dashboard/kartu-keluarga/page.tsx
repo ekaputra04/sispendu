@@ -20,7 +20,7 @@ export default function Page() {
   return (
     <div className="">
       {isLoading && <LoadingView />}
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center">
         <Heading1 text="Data Kartu Keluarga" />
 
         <Link href={"/dashboard/kartu-keluarga/add"}>
@@ -30,6 +30,8 @@ export default function Page() {
           </Button>
         </Link>
       </div>
+      <hr className="my-4" />
+
       <div className="mx-auto container">
         {!isLoading && <DataTable columns={columns} data={data?.data || []} />}
       </div>

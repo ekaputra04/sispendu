@@ -55,7 +55,7 @@ export default function ReportView() {
     queryFn: fetchLatestReportKK,
   });
 
-  const wilayahData = report?.data.find((item) => item.category === "wilayah");
+  const wilayahData = report?.data?.find((item) => item.category === "wilayah");
   const totalGroup = wilayahData?.groups.find(
     (group) => group.name === "Total"
   );

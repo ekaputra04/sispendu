@@ -41,10 +41,10 @@ export default function Page() {
           onClick={() => generateReportMutation.mutate()}
           disabled={generateReportMutation.isPending}>
           {generateReportMutation.isPending ? (
-            <>
+            <div className="flex justify-between items-center gap-2 dark:text-white">
               <LoadingIcon />
               Memproses...
-            </>
+            </div>
           ) : (
             <div className="flex justify-between items-center gap-2 dark:text-white">
               <RefreshCw />
@@ -53,6 +53,8 @@ export default function Page() {
           )}
         </Button>
       </div>
+      <hr className="my-4" />
+
       <ReportView />
     </div>
   );

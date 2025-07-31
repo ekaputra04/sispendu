@@ -21,7 +21,7 @@ export default function Page() {
   return (
     <div className="">
       {isLoading && <LoadingView />}
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center">
         <Heading1 text="Data Penduduk" />
         <Link href={"/dashboard/penduduk/add"}>
           <Button className="flex justify-between items-center gap-2 text-white">
@@ -30,6 +30,8 @@ export default function Page() {
           </Button>
         </Link>
       </div>
+      <hr className="my-4" />
+
       <div className="relative w-full">
         {!isLoading && (
           <DataTable

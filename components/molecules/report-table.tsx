@@ -27,7 +27,7 @@ export default function ReportTable({ condition }: ReportTableProps) {
     queryFn: fetchLatestReport,
   });
 
-  const filteredReport = report?.data.find((r) => r.category === condition);
+  const filteredReport = report?.data?.find((r) => r.category === condition);
 
   return (
     <div className="mx-auto container">

@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="">
-      <div className="flex items-center py-4">
+      <div className="flex items-center pb-4">
         <Input
           placeholder="Filter kartu keluarga..."
           value={

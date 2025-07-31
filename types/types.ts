@@ -113,6 +113,8 @@ export interface IDataPenduduk {
   kkRef?: string;
   createdBy?: string;
   editedBy?: string;
+  namaKeywords?: string[];
+  namaLowerCase?: string;
 }
 
 export interface IDataPengguna {

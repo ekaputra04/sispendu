@@ -25,8 +25,8 @@ interface PieChartAllProps {
 export function PieChartAll({ data }: PieChartAllProps) {
   let chartData: { name: string; visitors: number; fill: string }[] = [];
 
-  if (data.category === "all") {
-    const totalGroup = data.groups.find((group) => group.name === "Total");
+  if (data?.category === "all") {
+    const totalGroup = data?.groups.find((group) => group.name === "Total");
     if (totalGroup) {
       chartData = [
         {
@@ -42,7 +42,7 @@ export function PieChartAll({ data }: PieChartAllProps) {
       ];
     }
   } else {
-    chartData = data.groups
+    chartData = data?.groups
       .filter((group) => group.name !== "Total")
       .map((group) => ({
         name: group.name,
@@ -55,12 +55,12 @@ export function PieChartAll({ data }: PieChartAllProps) {
     visitors: {
       label: "Jumlah",
     },
-    ...(data.category === "all"
+    ...(data?.category === "all"
       ? {
           "laki-laki": { label: "Laki-laki", color: "var(--chart-1)" },
           perempuan: { label: "Perempuan", color: "var(--chart-2)" },
         }
-      : data.groups
+      : data?.groups
           .filter((group) => group.name !== "Total")
           .reduce((config, group, index) => {
             config[group.name.toLowerCase().replace(/\s+/g, "-")] = {
@@ -71,15 +71,15 @@ export function PieChartAll({ data }: PieChartAllProps) {
           }, {} as Record<string, { label: string; color: string }>)),
   };
 
-  const hasData = chartData.some((item) => item.visitors > 0);
+  const hasData = chartData?.some((item) => item.visitors > 0);
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
         <CardTitle>
           {ReportConditions.find(
-            (c: ReportCondition) => c.key === data.category
-          )?.label || data.category}
+            (c: ReportCondition) => c.key === data?.category
+          )?.label || data?.category}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
