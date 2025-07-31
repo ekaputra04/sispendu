@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/molecules/navbar";
 import { getKKByCreatedBy } from "@/lib/firestore/kartu-keluarga";
 import { useUserStore } from "@/store/useUserStore";
-import { AlertCircle, Pencil, PlusCircle, Trash2 } from "lucide-react";
+import { AlertCircle, Eye, Pencil, PlusCircle, Trash2 } from "lucide-react";
 import { getPendudukByCreatedBy } from "@/lib/firestore/penduduk";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -123,10 +123,17 @@ export default function PreviewPage() {
                     key={kk.id}
                     className="shadow-sm hover:shadow-md transition-shadow">
                     <CardHeader className="flex justify-between items-center">
-                      <Link href={`/preview/kartu-keluarga/detail/${kk.id}`}>
-                        <CardTitle className="font-semibold text-gray-900 text-lg hover:underline">
-                          Kartu Keluarga
-                        </CardTitle>
+                      <Link
+                        href={`/preview/kartu-keluarga/detail/${kk.id}`}
+                        className="group">
+                        <div className="flex items-center gap-2">
+                          <CardTitle className="font-semibold text-gray-900 text-lg group-hover:underline">
+                            Kartu Keluarga
+                          </CardTitle>
+                          <Button variant={"ghost"} size={"icon"}>
+                            <Eye />
+                          </Button>
+                        </div>
                       </Link>
                       <div className="flex gap-2">
                         <Link href={`/preview/kartu-keluarga/edit/${kk.id}`}>

@@ -74,7 +74,7 @@ export default function SheetAddPendudukToKK({
     queryKey: ["pendudukByName", searchQuery],
     queryFn: () => getPendudukByName(searchQuery),
     enabled: !!searchQuery,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 3 * 60 * 1000,
   });
 
   useEffect(() => {
@@ -95,6 +95,16 @@ export default function SheetAddPendudukToKK({
       }
 
       try {
+        const selectedPenduduk = searchPenduduk?.find(
+          (penduduk) => penduduk.id === pendudukId
+        );
+        const isInKK = selectedPenduduk?.kkRef;
+
+        if (isInKK) {
+          toast.error("Penduduk sudah terdaftar di KK");
+          return;
+        }
+
         const result = await addAnggotaToKK({
           kkId: kkId,
           pendudukId: pendudukId,

@@ -58,7 +58,7 @@ export default async function middleware(req: NextRequest) {
     session?.userId &&
     !authorizedRoles.includes(session?.role as string)
   ) {
-    return NextResponse.redirect(new URL("/?error=unauthorized", req.nextUrl));
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
   // Jika pengguna terautentikasi dengan role yang tidak diizinkan untuk rute preview
@@ -67,7 +67,7 @@ export default async function middleware(req: NextRequest) {
     session?.userId &&
     !previewAuthorizedRoles.includes(session?.role as string)
   ) {
-    return NextResponse.redirect(new URL("/?error=unauthorized", req.nextUrl));
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
   // Jika pengguna terautentikasi dan mencoba mengakses rute autentikasi (/login atau /register)
