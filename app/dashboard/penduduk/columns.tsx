@@ -1,13 +1,21 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, Pencil, Trash } from "lucide-react";
+import { Eye, Filter, Pencil, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IDataPenduduk } from "@/types/types";
 import Link from "next/link";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Banjar, JenisPekerjaan } from "@/consts/dataDefinitions";
 
 export const columns: ColumnDef<IDataPenduduk>[] = [
   {
@@ -29,27 +37,110 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
   },
   {
     accessorKey: "banjar",
-    header: "Banjar",
+    header: ({ column }) => (
+      <div className="flex flex-col justify-start items-start gap-2 p-2">
+        <span className="text-start">Banjar</span>
+        <Select
+          onValueChange={(value) => {
+            column.setFilterValue(value === "all" ? undefined : value);
+          }}>
+          <SelectTrigger className="w-[120px] h-7 text-sm">
+            <SelectValue placeholder="Pilih" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua</SelectItem>
+            {Banjar.map((banjar) => (
+              <SelectItem key={banjar} value={banjar}>
+                {banjar}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    ),
+    filterFn: (row, id, filterValue) => {
+      if (!filterValue) return true;
+      return (
+        row.getValue(id)?.toString().toLowerCase() === filterValue.toLowerCase()
+      );
+    },
   },
   {
     accessorKey: "jenisPekerjaan",
-    header: "Pekerjaan",
+    header: ({ column }) => (
+      <div className="flex flex-col justify-start items-start gap-2 p-2">
+        <span className="text-start">Pekerjaan</span>
+        <Select
+          onValueChange={(value) => {
+            column.setFilterValue(value === "all" ? undefined : value);
+          }}>
+          <SelectTrigger className="w-[120px] h-7 text-sm">
+            <SelectValue placeholder="Pilih" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua</SelectItem>
+            {JenisPekerjaan.map((pekerjaan) => (
+              <SelectItem key={pekerjaan} value={pekerjaan}>
+                {pekerjaan}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    ),
+    filterFn: (row, id, filterValue) => {
+      if (!filterValue) return true;
+      return (
+        row.getValue(id)?.toString().toLowerCase() === filterValue.toLowerCase()
+      );
+    },
   },
   {
     accessorKey: "kkRef",
-    header: "Terdaftar di KK",
+    header: ({ column }) => (
+      <div className="flex flex-col justify-start items-start gap-2 p-2">
+        <span className="text-start">Terdaftar di KK</span>
+        <Select
+          onValueChange={(value) => {
+            column.setFilterValue(value === "all" ? undefined : value);
+          }}>
+          <SelectTrigger className="w-[120px] h-7 text-sm">
+            <SelectValue placeholder="Pilih" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua</SelectItem>
+            <SelectItem value="true">Ya</SelectItem>
+            <SelectItem value="false">Tidak</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    ),
     cell: ({ row }) => {
       const penduduk: IDataPenduduk = row.original;
-
       return (
         <Badge
           variant={penduduk.kkRef ? "default" : "destructive"}
           className="text-white">
-          {penduduk.kkRef ? "Ya" : "Tidak"}
+          {penduduk.kkRef ? (
+            <Link href={`/dashboard/kartu-keluarga/detail/${penduduk.kkRef}`}>
+              <div className="flex items-center gap-2">
+                <p>Ya</p>
+                <Eye className="w-4 h-4" />
+              </div>
+            </Link>
+          ) : (
+            "Tidak"
+          )}
         </Badge>
       );
     },
+    filterFn: (row, id, filterValue) => {
+      const hasKK = !!row.getValue(id);
+      if (!filterValue) return true;
+      return hasKK === (filterValue === "true");
+    },
   },
+
   {
     id: "Aksi",
     header: "Aksi",

@@ -34,10 +34,10 @@ export default function Page() {
           {/* Header */}
           <div className="mb-12 text-center">
             <h1 className="font-bold text-primary text-3xl md:text-4xl">
-              Sekapur Sirih dari Lurah Bebalang
+              Sekapur Sirih
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg text-accent-foreground">
-              Sambutan hangat dari Lurah Bebalang untuk menyapa warga dan
+              Sambutan hangat dari Lurah Bebalang untuk menyapa masyarakat dan
               pengguna Sistem Data Kependudukan, mengusung semangat keramahan
               dan gotong royong.
             </p>
@@ -53,10 +53,10 @@ export default function Page() {
                   <br />
                   Dengan penuh rasa syukur, kami memperkenalkan Sistem Data
                   Kependudukan yang dirancang untuk mempermudah pengelolaan data
-                  warga Kelurahan Bebalang. Kami senantiasa berkomitmen untuk
-                  menjaga keakuratan data penduduk. Semangat gotong royong dan
-                  keramahan, sebagaimana disimbolkan oleh tradisi sekapur sirih,
-                  menjadi landasan kami dalam melayani masyarakat.
+                  masyarakat Kelurahan Bebalang. Kami senantiasa berkomitmen
+                  untuk menjaga keakuratan data penduduk. Semangat gotong royong
+                  dan keramahan, sebagaimana disimbolkan oleh tradisi sekapur
+                  sirih, menjadi landasan kami dalam melayani masyarakat.
                   <br />
                   <br />
                   Sistem ini memungkinkan pengelolaan data yang efisien, laporan

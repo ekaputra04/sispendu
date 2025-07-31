@@ -124,14 +124,14 @@ export default function ContactPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="w-5 h-5" />
-                  <p>Jl. Bebalang No. 1, Kelurahan Bebalang, Bali</p>
+                  <p>Jl. Merdeka, Kelurahan Bebalang, Kabupaten Bangli, Bali</p>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Mail className="w-5 h-5" />
                   <a
-                    href="mailto:info@bebalang.desa.id"
+                    href="mailto:sispendubebalang@gmail.com"
                     className="hover:text-blue-600 transition-colors">
-                    info@bebalang.desa.id
+                    sispendubebalang@gmail.com
                   </a>
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">

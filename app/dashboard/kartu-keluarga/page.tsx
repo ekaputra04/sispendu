@@ -35,6 +35,13 @@ export default function Page() {
       <div className="mx-auto container">
         {!isLoading && <DataTable columns={columns} data={data?.data || []} />}
       </div>
+
+      {!isLoading && (
+        <p className="text-muted-foreground text-sm">
+          {data && data.data?.length} Data Kartu Keluarga Ditemukan
+        </p>
+      )}
+
       <DialogDeleteKK />
     </div>
   );
