@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import {
   Table,
@@ -15,11 +14,13 @@ import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
-import { Copy, Eye, Pencil } from "lucide-react";
+import { Copy, Edit, Eye, Pencil } from "lucide-react";
 import { calculateAge, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { getPendudukById } from "@/lib/firestore/penduduk";
 import { useEffect, useState } from "react";
+import SheetAddEmailToEditedBy from "../../../../../components/molecules/sheet-add-email-to-penduduk";
+import { Badge } from "@/components/ui/badge";
 
 interface DetailPendudukPageProps {
   uuid: string;
@@ -79,6 +80,18 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() => handleCopy(data?.data?.nama as string)}>
+                    <Copy />
+                  </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Banjar</TableCell>
+                <TableCell>{data?.data?.banjar}</TableCell>
+                <TableCell>
+                  <Button
+                    size={"sm"}
+                    variant={"ghost"}
+                    onClick={() => handleCopy(data?.data?.banjar as string)}>
                     <Copy />
                   </Button>
                 </TableCell>
@@ -258,15 +271,29 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="font-medium">Banjar</TableCell>
-                <TableCell>{data?.data?.banjar}</TableCell>
+                <TableCell className="font-medium">Dibuat Oleh</TableCell>
                 <TableCell>
-                  <Button
-                    size={"sm"}
-                    variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.banjar as string)}>
-                    <Copy />
-                  </Button>
+                  {data?.data?.createdBy?.map((item) => (
+                    <Badge key={item} variant={"outline"}>
+                      {item}
+                    </Badge>
+                  ))}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">Pemilik Akses</TableCell>
+                <TableCell className="flex flex-col gap-2">
+                  {data?.data?.editedBy?.map((item, i) => (
+                    <div className="font-normal" key={i}>
+                      <Badge variant={"outline"}>{item}</Badge>
+                    </div>
+                  ))}
+                </TableCell>
+                <TableCell>
+                  <SheetAddEmailToEditedBy
+                    pendudukId={data.data?.id}
+                    emails={data?.data?.editedBy}
+                  />
                 </TableCell>
               </TableRow>
             </TableBody>

@@ -9,6 +9,9 @@ import {
   deleteDoc,
   query,
   where,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
 
@@ -91,13 +94,11 @@ export async function getPendudukByName(
 
     await checkAuth();
 
-    // Ubah input ke huruf kecil dan pecah menjadi kata-kata
     const searchTerms = nama
       .toLowerCase()
       .split(" ")
       .filter((term) => term.length >= 2);
 
-    // Buat query untuk setiap kata pencarian menggunakan array-contains
     const queries = searchTerms.map((term) =>
       query(
         collection(db, "penduduk"),
@@ -105,7 +106,6 @@ export async function getPendudukByName(
       )
     );
 
-    // Jalankan semua query dan gabungkan hasilnya
     const results: IDataPenduduk[] = [];
     const uniqueIds = new Set<string>();
 
@@ -147,25 +147,37 @@ export async function getPendudukByCreatedBy(
   email: string
 ): Promise<FirestoreResponse<IDataPenduduk[]>> {
   try {
+    if (!email) {
+      throw new Error("Email wajib diisi");
+    }
+
+    await checkAuth();
+
     const q = query(
       collection(db, "penduduk"),
-      where("createdBy", "==", email)
+      where("editedBy", "array-contains", email)
     );
     const querySnapshot = await getDocs(q);
     const data: IDataPenduduk[] = [];
     querySnapshot.forEach((doc) => {
       data.push({ id: doc.id, ...doc.data() } as IDataPenduduk);
     });
+
+    console.log(`Mengambil ${data.length} data penduduk untuk email: ${email}`);
+
     return {
       success: true,
-      message: "Berhasil mengambil data penduduk berdasarkan pembuat",
+      message: data.length
+        ? "Berhasil mengambil data penduduk berdasarkan pembuat"
+        : "Tidak ada data penduduk ditemukan",
       data,
     };
   } catch (error: any) {
     console.error("Gagal mengambil data penduduk:", error);
     return {
       success: false,
-      message: error.message || "Gagal mengambil data penduduk",
+      message:
+        error.message || "Gagal mengambil data penduduk. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
@@ -175,7 +187,7 @@ export async function createPenduduk({
   penduduk,
 }: {
   penduduk: IDataPenduduk;
-}) {
+}): Promise<FirestoreResponse<{ penduduk: IDataPenduduk }>> {
   try {
     await checkAuth();
 
@@ -202,8 +214,8 @@ export async function createPenduduk({
       ...penduduk,
       namaLowerCase,
       namaKeywords,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     const docRef = doc(db, "penduduk", penduduk.id);
@@ -214,14 +226,14 @@ export async function createPenduduk({
 
     return {
       success: true,
-      data: { penduduk },
+      data: { penduduk: pendudukData },
       message: "Penduduk berhasil ditambahkan",
     };
   } catch (error: any) {
     console.error("Gagal membuat penduduk:", error);
     return {
       success: false,
-      message: error.message || "Gagal membuat penduduk",
+      message: error.message || "Gagal membuat penduduk. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
@@ -323,6 +335,94 @@ export async function deletePenduduk(id: string) {
     return {
       success: false,
       message: error.message || "Gagal menghapus penduduk",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
+export async function addToEditedBy(
+  pendudukId: string,
+  email: string
+): Promise<FirestoreResponse<null>> {
+  try {
+    if (!pendudukId || !email) {
+      throw new Error("ID penduduk dan email wajib diisi");
+    }
+
+    await checkAuth();
+
+    const pendudukRef = doc(db, "penduduk", pendudukId);
+    const pendudukSnap = await getDoc(pendudukRef);
+
+    if (!pendudukSnap.exists()) {
+      throw new Error("Data penduduk tidak ditemukan");
+    }
+
+    await updateDoc(pendudukRef, {
+      editedBy: arrayUnion(email),
+      updatedAt: new Date().toISOString(),
+    });
+
+    console.log(
+      `Berhasil menambahkan ${email} ke editedBy untuk penduduk ${pendudukId}`
+    );
+
+    return {
+      success: true,
+      message: `Email ${email} berhasil ditambahkan ke daftar editedBy`,
+      data: null,
+    };
+  } catch (error: any) {
+    console.error("Gagal menambahkan email ke editedBy:", error);
+    return {
+      success: false,
+      message:
+        error.message ||
+        "Gagal menambahkan email ke editedBy. Silakan coba lagi.",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
+export async function removeFromEditedBy(
+  pendudukId: string,
+  email: string
+): Promise<FirestoreResponse<null>> {
+  try {
+    if (!pendudukId || !email) {
+      throw new Error("ID penduduk dan email wajib diisi");
+    }
+
+    await checkAuth();
+
+    const pendudukRef = doc(db, "penduduk", pendudukId);
+    const pendudukSnap = await getDoc(pendudukRef);
+
+    if (!pendudukSnap.exists()) {
+      throw new Error("Data penduduk tidak ditemukan");
+    }
+
+    await updateDoc(pendudukRef, {
+      editedBy: arrayRemove(email),
+      updatedAt: new Date().toISOString(),
+    });
+
+    console.log(
+      `Berhasil menghapus ${email} dari editedBy untuk penduduk ${pendudukId}`
+    );
+
+    return {
+      success: true,
+      message: `Email ${email} berhasil dihapus dari daftar editedBy`,
+      data: null,
+    };
+  } catch (error: any) {
+    console.error("Gagal menghapus email dari editedBy:", error);
+    return {
+      success: false,
+      message:
+        error.message ||
+        "Gagal menghapus email dari editedBy. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }

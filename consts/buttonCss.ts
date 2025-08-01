@@ -24,4 +24,5 @@ export const ButtonLinkCSS =
   ButtonCSS + "text-primary underline-offset-4 hover:underline";
 
 export const ButtonOutlineGreen =
+  ButtonCSS +
   "bg-green-100 hover:bg-green-200 border border-green-500 text-green-600 hover:text-green-700";

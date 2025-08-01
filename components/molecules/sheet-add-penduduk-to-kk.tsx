@@ -112,7 +112,6 @@ export default function SheetAddPendudukToKK({
         });
 
         if (result.success) {
-          toast.success("Berhasil menambahkan anggota keluarga");
           router.refresh();
         }
       } catch (error) {

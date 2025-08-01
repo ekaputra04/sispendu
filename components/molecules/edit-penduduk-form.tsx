@@ -179,7 +179,7 @@ export default function EditPendudukForm({
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
       banjar: values.banjar,
-      editedBy: user.email,
+      editedBy: [user.email],
     };
     mutate(dataSubmit);
   }

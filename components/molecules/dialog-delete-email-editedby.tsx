@@ -13,30 +13,37 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ButtonDestructiveCSS } from "@/consts/buttonCss";
 import { deleteAnggotaFromKK } from "@/lib/firestore/kartu-keluarga";
+import { removeFromEditedBy } from "@/lib/firestore/penduduk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
 
-interface DialogDeleteUserFromKKProps {
-  kkId: string;
+interface DialogDeleteEmailEditedByProps {
   pendudukId: string;
+  email: string;
 }
 
-export default function DialogDeleteUserFromKK({
-  kkId,
+export default function DialogDeleteEmailEditedBy({
   pendudukId,
-}: DialogDeleteUserFromKKProps) {
+  email,
+}: DialogDeleteEmailEditedByProps) {
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async () => deleteAnggotaFromKK({ kkId, pendudukId }),
-    onSuccess: () => {
-      toast.success("Berhasil menghapus data anggota keluarga");
+  if (!pendudukId || !email) {
+    return;
+  }
 
-      queryClient.invalidateQueries({ queryKey: ["kartu-keluarga", kkId] });
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => removeFromEditedBy(pendudukId, email),
+    onSuccess: () => {
+      toast.success("Berhasil menghapus akses email dari data penduduk");
+
+      queryClient.invalidateQueries({ queryKey: ["penduduk", pendudukId] });
     },
     onError: (error: any) => {
-      toast.error(error.message || "Gagal menghapus data anggota keluarga");
+      toast.error(
+        error.message || "Gagal menghapus akses email dari data penduduk"
+      );
     },
   });
 
@@ -51,15 +58,15 @@ export default function DialogDeleteUserFromKK({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Hapus Data Anggota Keluarga</AlertDialogTitle>
+          <AlertDialogTitle>Hapus Akses Email</AlertDialogTitle>
           <AlertDialogDescription>
-            Apakah Anda yakin ingin menghapus data anggota keluarga ini?
+            Apakah Anda yakin ingin menghapus akses email ini?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Batal</AlertDialogCancel>
           <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-            Hapus
+            {isPending ? "Menghapus..." : "Hapus"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

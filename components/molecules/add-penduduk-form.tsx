@@ -170,7 +170,8 @@ export default function AddPendudukForm({
       namaAyah: values.namaAyah,
       namaIbu: values.namaIbu,
       banjar: values.banjar,
-      createdBy: user.email,
+      createdBy: [user.email],
+      editedBy: [user.email],
     };
     mutate(data);
   }

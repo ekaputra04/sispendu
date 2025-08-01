@@ -112,8 +112,8 @@ export interface IDataPenduduk {
   namaIbu: string;
   banjar: TBanjar;
   kkRef?: string;
-  createdBy?: string;
-  editedBy?: string;
+  createdBy?: string[];
+  editedBy?: string[];
   namaKeywords?: string[];
   namaLowerCase?: string;
 }
