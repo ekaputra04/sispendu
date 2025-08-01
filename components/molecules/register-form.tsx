@@ -28,12 +28,34 @@ import { encrypt } from "@/lib/utils";
 import { useSessionStore } from "@/store/useSession";
 import { LogIn } from "lucide-react";
 
-const formSchema = z.object({
-  name: z.string().min(2).max(255),
-  email: z.string().min(2).max(255).email(),
-  password: z.string().min(6).max(100),
-  passwordConfirm: z.string().min(6).max(100),
-});
+const formSchema = z
+  .object({
+    name: z
+      .string({ required_error: "Nama wajib diisi" })
+      .min(2, { message: "Nama harus memiliki minimal 2 karakter" })
+      .max(255, { message: "Nama tidak boleh melebihi 255 karakter" }),
+    email: z
+      .string({ required_error: "Email wajib diisi" })
+      .min(2, { message: "Email harus memiliki minimal 2 karakter" })
+      .max(255, { message: "Email tidak boleh melebihi 255 karakter" })
+      .email({ message: "Format email tidak valid" }),
+    password: z
+      .string({ required_error: "Kata sandi wajib diisi" })
+      .min(6, { message: "Kata sandi harus memiliki minimal 6 karakter" })
+      .max(100, { message: "Kata sandi tidak boleh melebihi 100 karakter" }),
+    passwordConfirm: z
+      .string({ required_error: "Konfirmasi kata sandi wajib diisi" })
+      .min(6, {
+        message: "Konfirmasi kata sandi harus memiliki minimal 6 karakter",
+      })
+      .max(100, {
+        message: "Konfirmasi kata sandi tidak boleh melebihi 100 karakter",
+      }),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "Konfirmasi kata sandi tidak cocok dengan kata sandi",
+    path: ["passwordConfirm"],
+  });
 
 export function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);

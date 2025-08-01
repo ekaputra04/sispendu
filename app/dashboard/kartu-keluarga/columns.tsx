@@ -7,6 +7,14 @@ import { IKartuKeluarga } from "@/types/types";
 import Link from "next/link";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Banjar } from "@/consts/dataDefinitions";
 
 export const columns: ColumnDef<IKartuKeluarga>[] = [
   {
@@ -23,8 +31,34 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
   },
 
   {
-    accessorKey: "alamat",
-    header: "Alamat",
+    accessorKey: "banjar",
+    header: ({ column }) => (
+      <div className="flex flex-col justify-start items-start gap-2 p-2">
+        <span className="text-start">Banjar</span>
+        <Select
+          onValueChange={(value) => {
+            column.setFilterValue(value === "all" ? undefined : value);
+          }}>
+          <SelectTrigger className="w-[120px] h-7 text-sm">
+            <SelectValue placeholder="Pilih" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua</SelectItem>
+            {Banjar.map((banjar) => (
+              <SelectItem key={banjar} value={banjar}>
+                {banjar}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    ),
+    filterFn: (row, id, filterValue) => {
+      if (!filterValue) return true;
+      return (
+        row.getValue(id)?.toString().toLowerCase() === filterValue.toLowerCase()
+      );
+    },
   },
   {
     accessorKey: "tanggalPenerbitan",
@@ -34,7 +68,7 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
     accessorKey: "anggota",
     header: "Jumlah Anggota",
     cell: ({ row }) => {
-      return <p>{JSON.stringify(row.original.jumlahAnggota)}</p>;
+      return <p>{row.original.jumlahAnggota || 0}</p>;
     },
   },
   {

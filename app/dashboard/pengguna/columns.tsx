@@ -1,13 +1,18 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IDataPengguna } from "@/types/types";
-import Link from "next/link";
-import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { Badge } from "@/components/ui/badge";
 import { usePenggunaSelectedForUpdate } from "@/store/usePenggunaSelectedForUpdate";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const columns: ColumnDef<IDataPengguna>[] = [
   {
@@ -17,7 +22,6 @@ export const columns: ColumnDef<IDataPengguna>[] = [
       return <p>{row.index + 1}</p>;
     },
   },
-
   {
     accessorKey: "nama",
     header: "Nama Lengkap",
@@ -28,15 +32,40 @@ export const columns: ColumnDef<IDataPengguna>[] = [
   },
   {
     accessorKey: "role",
-    header: "Role",
+    header: ({ column }) => (
+      <div className="flex items-center gap-2">
+        <span>Role</span>
+        <Select
+          onValueChange={(value) => {
+            column.setFilterValue(value === "all" ? undefined : value);
+          }}>
+          <SelectTrigger className="w-[120px] h-8 text-sm">
+            <SelectValue placeholder="Pilih Role" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua</SelectItem>
+            <SelectItem value="admin">Admin</SelectItem>
+            <SelectItem value="petugas">Petugas</SelectItem>
+            <SelectItem value="user">User</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    ),
     cell: ({ row }) => {
       const pengguna: IDataPengguna = row.original;
-
-      if (pengguna.role === "admin") {
-        return <Badge className="text-white">Admin</Badge>;
-      } else {
-        return <Badge variant={"outline"}>{pengguna.role}</Badge>;
-      }
+      return (
+        <Badge
+          variant={pengguna.role === "admin" ? "default" : "outline"}
+          className={pengguna.role === "admin" ? "text-white" : ""}>
+          {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
+        </Badge>
+      );
+    },
+    filterFn: (row, id, filterValue) => {
+      if (!filterValue) return true;
+      return (
+        row.getValue(id)?.toString().toLowerCase() === filterValue.toLowerCase()
+      );
     },
   },
   {

@@ -29,8 +29,15 @@ import { useUserStore } from "@/store/useUserStore";
 import { LogIn } from "lucide-react";
 
 const formSchema = z.object({
-  email: z.string().min(2).max(255).email(),
-  password: z.string().min(6).max(100),
+  email: z
+    .string({ required_error: "Email wajib diisi" })
+    .min(2, { message: "Email harus memiliki minimal 2 karakter" })
+    .max(255, { message: "Email tidak boleh melebihi 255 karakter" })
+    .email({ message: "Format email tidak valid" }),
+  password: z
+    .string({ required_error: "Kata sandi wajib diisi" })
+    .min(6, { message: "Kata sandi harus memiliki minimal 6 karakter" })
+    .max(100, { message: "Kata sandi tidak boleh melebihi 100 karakter" }),
 });
 
 export function LoginForm() {
