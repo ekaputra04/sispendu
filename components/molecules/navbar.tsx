@@ -246,7 +246,9 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
               <Link href="/login">
                 <Button
                   variant="outline"
-                  className="flex justify-center items-center bg-transparent hover:bg-white/10 hover:text-white dark:text-white">
+                  className={`flex justify-center items-center bg-transparent hover:bg-white/10 hover:text-white dark:text-white ${
+                    isInHeroView && "text-white"
+                  }`}>
                   <LogIn className="w-4 h-4" />
                   <p>Login</p>
                 </Button>

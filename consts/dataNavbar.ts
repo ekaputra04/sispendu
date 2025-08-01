@@ -8,6 +8,7 @@ import {
   IconFileDescription,
   IconFileWord,
   IconHelp,
+  IconPhone,
   IconReport,
   IconSearch,
   IconSettings,
@@ -41,6 +42,11 @@ export const dataNavbar = {
       title: "Pengguna",
       url: "/dashboard/pengguna",
       icon: IconUserCircle,
+    },
+    {
+      title: "Kontak",
+      url: "/dashboard/contact",
+      icon: IconPhone,
     },
   ],
   navClouds: [

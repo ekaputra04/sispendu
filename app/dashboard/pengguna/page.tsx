@@ -28,6 +28,11 @@ export default function Page() {
           />
         )}
       </div>
+      {!isLoading && (
+        <p className="text-muted-foreground text-sm">
+          {data && data.data?.length} Data Pengguna Ditemukan
+        </p>
+      )}
       <DialogEditPengguna />
     </div>
   );

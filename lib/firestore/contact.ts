@@ -7,12 +7,13 @@ import {
   collection,
   doc,
   Timestamp,
+  query,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "@/config/firebase-init";
 import { checkAuth } from "@/lib/auth";
 import { FirestoreResponse, IContact } from "@/types/types";
 
-// Create: Menambahkan dokumen kontak baru
 export async function createContact(
   data: Omit<IContact, "id" | "createdAt" | "updatedAt">
 ): Promise<FirestoreResponse<IContact>> {
@@ -45,12 +46,12 @@ export async function createContact(
   }
 }
 
-// Read: Mengambil semua dokumen kontak
 export async function getAllContacts(): Promise<FirestoreResponse<IContact[]>> {
   try {
     await checkAuth();
 
-    const querySnapshot = await getDocs(collection(db, "contact"));
+    const q = query(collection(db, "contact"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
     const contacts: IContact[] = querySnapshot.docs.map(
       (doc) =>
         ({
@@ -63,20 +64,22 @@ export async function getAllContacts(): Promise<FirestoreResponse<IContact[]>> {
 
     return {
       success: true,
-      message: "Berhasil mengambil daftar pesan kontak",
+      message: contacts.length
+        ? "Berhasil mengambil daftar pesan kontak"
+        : "Tidak ada pesan kontak ditemukan",
       data: contacts,
     };
   } catch (error: any) {
     console.error("Gagal mengambil dokumen kontak:", error);
     return {
       success: false,
-      message: "Gagal mengambil daftar pesan. Silakan coba lagi.",
+      message:
+        error.message || "Gagal mengambil daftar pesan. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
 }
 
-// Read: Mengambil dokumen kontak berdasarkan ID
 export async function getContactById(
   id: string
 ): Promise<FirestoreResponse<IContact>> {
@@ -116,7 +119,6 @@ export async function getContactById(
   }
 }
 
-// Update: Memperbarui dokumen kontak berdasarkan ID
 export async function updateContact(
   id: string,
   data: Partial<Omit<IContact, "id" | "createdAt">>
@@ -164,7 +166,6 @@ export async function updateContact(
   }
 }
 
-// Delete: Menghapus dokumen kontak berdasarkan ID
 export async function deleteContact(
   id: string
 ): Promise<FirestoreResponse<null>> {
