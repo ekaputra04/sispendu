@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { auth } from "@/config/firebase-init";
-import { decrypt } from "@/lib/utils";
 import { useSessionStore } from "@/store/useSession";
 import { useUserStore } from "@/store/useUserStore";
 import axios from "axios";
@@ -10,7 +9,7 @@ import { signOut } from "firebase/auth";
 import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { ModeToggle } from "./mode-toggle";
 import LoadingIcon from "../atoms/loading-icon";
@@ -22,6 +21,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/lib/firestore/users";
+import LoadingView from "../atoms/loading-view";
 
 interface NavbarProps {
   isInHeroView?: boolean;
@@ -29,10 +31,18 @@ interface NavbarProps {
 
 export default function Navbar({ isInHeroView = false }: NavbarProps) {
   const router = useRouter();
-  const { session, clearSession } = useSessionStore();
+  const { clearSession } = useSessionStore();
   const { clearUser } = useUserStore();
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const {
+    data: userLogin,
+    isLoading: isGetUserLoading,
+    error,
+  } = useQuery({
+    queryKey: ["user-login"],
+    queryFn: getCurrentUser,
+  });
 
   async function handleLogout() {
     setIsLoading(true);
@@ -56,25 +66,9 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
     }
   }
 
-  useEffect(() => {
-    async function checkAdminStatus() {
-      const sessionDecrypted = await decrypt(session);
-
-      if (
-        sessionDecrypted?.role == "admin" ||
-        sessionDecrypted?.role == "petugas"
-      ) {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
-    }
-
-    checkAdminStatus();
-  }, [session]);
-
   return (
     <div className="">
+      {isGetUserLoading && <LoadingView />}
       <nav
         className={`${
           isInHeroView
@@ -148,13 +142,22 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                   </div>
                 </div>
                 <div className="px-8">
-                  {session ? (
+                  {!isGetUserLoading && userLogin?.data ? (
                     <div className="flex flex-col gap-2">
-                      <Link href={isAdmin ? "/dashboard" : "/preview"}>
+                      <Link
+                        href={
+                          userLogin?.data?.role == "admin" ||
+                          userLogin?.data?.role == "petugas"
+                            ? "/dashboard"
+                            : "/preview"
+                        }>
                         <Button className="flex items-center gap-2 w-full dark:text-white">
                           <>
                             <LayoutDashboard className="w-4 h-4" />
-                            {isAdmin ? "Dashboard" : "Data Saya"}
+                            {userLogin?.data?.role == "admin" ||
+                            userLogin?.data?.role == "petugas"
+                              ? "Dashboard"
+                              : "Data Saya"}
                           </>
                         </Button>
                       </Link>
@@ -198,13 +201,22 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
             </Sheet>
           </div>
           <div className="hidden md:flex md:flex-row flex-col items-center gap-4">
-            {session ? (
+            {!isGetUserLoading && userLogin?.success ? (
               <>
-                <Link href={isAdmin ? "/dashboard" : "/preview"}>
+                <Link
+                  href={
+                    userLogin?.data?.role == "admin" ||
+                    userLogin?.data?.role == "petugas"
+                      ? "/dashboard"
+                      : "/preview"
+                  }>
                   <Button className="flex items-center gap-2 dark:text-white">
                     <>
                       <LayoutDashboard className="w-4 h-4" />
-                      {isAdmin ? "Dashboard" : "Data Saya"}
+                      {userLogin?.data?.role == "admin" ||
+                      userLogin?.data?.role == "petugas"
+                        ? "Dashboard"
+                        : "Data Saya"}
                     </>
                   </Button>
                 </Link>
@@ -234,7 +246,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
               <Link href="/login">
                 <Button
                   variant="outline"
-                  className="flex justify-center items-center bg-transparent hover:bg-white/10 text-white hover:text-white">
+                  className="flex justify-center items-center bg-transparent hover:bg-white/10 hover:text-white dark:text-white">
                   <LogIn className="w-4 h-4" />
                   <p>Login</p>
                 </Button>

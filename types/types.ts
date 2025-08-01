@@ -92,6 +92,7 @@ export interface IKartuKeluarga {
   anggota?: IAnggotaKeluarga[];
   createdBy?: string;
   editedBy?: string;
+  jumlahAnggota?: number;
 }
 
 export interface IDataPenduduk {

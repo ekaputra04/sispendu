@@ -16,27 +16,12 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
       return <p>{row.index + 1}</p>;
     },
   },
-  // {
-  //   accessorKey: "noKK",
-  //   header: "No Kartu Keluarga",
-  // },
+
   {
     accessorKey: "namaKepalaKeluarga",
     header: "Nama Kepala Keluarga",
   },
-  // {
-  //   accessorKey: "namaKepalaKeluarga",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-  //         Nama Kepala KK
-  //         <ArrowUpDown className="ml-2 w-4 h-4" />
-  //       </Button>
-  //     );
-  //   },
-  // },
+
   {
     accessorKey: "alamat",
     header: "Alamat",
@@ -44,6 +29,13 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
   {
     accessorKey: "tanggalPenerbitan",
     header: "Tanggal Penerbitan",
+  },
+  {
+    accessorKey: "anggota",
+    header: "Jumlah Anggota",
+    cell: ({ row }) => {
+      return <p>{JSON.stringify(row.original.jumlahAnggota)}</p>;
+    },
   },
   {
     id: "actions",

@@ -15,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ExternalLink, Mail } from "lucide-react";
 
 export default function Page() {
   return (
@@ -30,7 +29,7 @@ export default function Page() {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Sekapur Sirih</BreadcrumbPage>
+                <BreadcrumbPage>Kebijakan Privasi</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

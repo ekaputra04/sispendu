@@ -11,12 +11,29 @@ import LoadingView from "@/components/atoms/loading-view";
 import { IDataPenduduk } from "@/types/types";
 import DialogDeletePenduduk from "./dialog-delete-penduduk";
 import { Heading1 } from "@/components/atoms/heading";
+import { useRouter } from "next/navigation";
+import { getCurrentUser } from "@/lib/firestore/users";
 
 export default function Page() {
+  const router = useRouter();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["penduduk"],
     queryFn: getAllPenduduk,
   });
+
+  const { data: userLogin, isLoading: isGetUserLoading } = useQuery({
+    queryKey: ["user-login"],
+    queryFn: getCurrentUser,
+  });
+
+  if (
+    !isGetUserLoading &&
+    userLogin?.success === false &&
+    userLogin.data?.role in ["admin", "petugas"]
+  ) {
+    router.push("/login");
+  }
 
   return (
     <div className="">

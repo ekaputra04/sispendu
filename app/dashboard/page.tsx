@@ -2,16 +2,36 @@
 
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { aggregateReportData } from "@/lib/agregatePopulationData";
 import { saveReport } from "@/lib/firestore/report";
 import { toast } from "sonner";
 import LoadingIcon from "@/components/atoms/loading-icon";
 import { Heading1 } from "@/components/atoms/heading";
 import ReportView from "@/components/molecules/report-view";
+import { getCurrentUser } from "@/lib/firestore/users";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const {
+    data: userLogin,
+    isLoading: isGetUserLoading,
+    error,
+  } = useQuery({
+    queryKey: ["user-login"],
+    queryFn: getCurrentUser,
+  });
+
+  if (
+    !isGetUserLoading &&
+    userLogin?.success === false &&
+    userLogin.data?.role in ["admin", "petugas"]
+  ) {
+    router.push("/login");
+  }
 
   const generateReportMutation = useMutation({
     mutationFn: async () => {
@@ -24,7 +44,7 @@ export default function Page() {
     },
     onSuccess: () => {
       toast.success("Laporan baru berhasil dibuat");
-      // Invalidasi kedua query key untuk memicu pembaruan
+
       queryClient.invalidateQueries({ queryKey: ["latestReport"] });
       queryClient.invalidateQueries({ queryKey: ["latestReportKK"] });
     },

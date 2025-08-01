@@ -165,6 +165,12 @@ export default function PreviewPage() {
                         <span className="font-medium">Tanggal Penerbitan:</span>{" "}
                         {kk.tanggalPenerbitan}
                       </p>
+                      <p className="text-muted-foreground text-sm">
+                        <span className="font-medium">
+                          Jumlah Anggota Keluarga:
+                        </span>{" "}
+                        {kk.anggota?.length || 0}
+                      </p>
                     </CardContent>
                   </Card>
                 ))}

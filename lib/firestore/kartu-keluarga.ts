@@ -24,21 +24,62 @@ import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
 export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
   try {
     await checkAuth();
+
     const querySnapshot = await getDocs(collection(db, "kartu-keluarga"));
     const data: IKartuKeluarga[] = [];
-    querySnapshot.forEach((doc) => {
-      data.push({ id: doc.id, ...doc.data() } as IKartuKeluarga);
-    });
+
+    for (const docSnap of querySnapshot.docs) {
+      const kkData = docSnap.data();
+      const kkId = docSnap.id;
+
+      const anggotaSnapshot = await getDocs(
+        collection(db, "kartu-keluarga", kkId, "anggota")
+      );
+      const anggota: IAnggotaKeluarga[] = [];
+
+      for (const anggotaDoc of anggotaSnapshot.docs) {
+        const anggotaData = anggotaDoc.data();
+        const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
+        const pendudukDocSnap = await getDoc(pendudukDocRef);
+
+        if (pendudukDocSnap.exists()) {
+          anggota.push({
+            pendudukId: anggotaData.pendudukId,
+            statusHubunganDalamKeluarga:
+              anggotaData.statusHubunganDalamKeluarga,
+            detail: pendudukDocSnap.data() as IDataPenduduk,
+          });
+        } else {
+          console.warn(
+            `Penduduk dengan ID ${anggotaData.pendudukId} tidak ditemukan`
+          );
+        }
+      }
+
+      data.push({
+        id: kkId,
+        ...kkData,
+        anggota,
+        jumlahAnggota: anggotaSnapshot.size,
+      } as IKartuKeluarga);
+    }
+
+    console.log(`Ditemukan ${data.length} kartu keluarga`);
+
     return {
       success: true,
-      message: "Berhasil mengambil data kartu keluarga",
+      message: data.length
+        ? "Berhasil mengambil data kartu keluarga"
+        : "Tidak ada kartu keluarga ditemukan",
       data,
     };
   } catch (error: any) {
     console.error("Gagal mengambil data kartu keluarga:", error);
     return {
       success: false,
-      message: error.message || "Gagal mengambil data kartu keluarga",
+      message:
+        error.message ||
+        "Gagal mengambil data kartu keluarga. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
@@ -116,26 +157,73 @@ export async function getKKByCreatedBy(
   createdBy: string
 ): Promise<FirestoreResponse<IKartuKeluarga[]>> {
   try {
+    if (!createdBy) {
+      throw new Error("createdBy diperlukan");
+    }
+
     await checkAuth();
+
     const q = query(
       collection(db, "kartu-keluarga"),
       where("createdBy", "==", createdBy)
     );
     const querySnapshot = await getDocs(q);
     const data: IKartuKeluarga[] = [];
-    querySnapshot.forEach((doc) => {
-      data.push({ id: doc.id, ...doc.data() } as IKartuKeluarga);
-    });
+
+    for (const docSnap of querySnapshot.docs) {
+      const kkData = docSnap.data();
+      const kkId = docSnap.id;
+
+      const anggotaSnapshot = await getDocs(
+        collection(db, "kartu-keluarga", kkId, "anggota")
+      );
+      const anggota: IAnggotaKeluarga[] = [];
+
+      for (const anggotaDoc of anggotaSnapshot.docs) {
+        const anggotaData = anggotaDoc.data();
+
+        const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
+        const pendudukDocSnap = await getDoc(pendudukDocRef);
+
+        if (pendudukDocSnap.exists()) {
+          anggota.push({
+            pendudukId: anggotaData.pendudukId,
+            statusHubunganDalamKeluarga:
+              anggotaData.statusHubunganDalamKeluarga,
+            detail: pendudukDocSnap.data() as IDataPenduduk,
+          });
+        } else {
+          console.warn(
+            `Penduduk dengan ID ${anggotaData.pendudukId} tidak ditemukan`
+          );
+        }
+      }
+
+      data.push({
+        id: kkId,
+        ...kkData,
+        anggota,
+      } as IKartuKeluarga);
+    }
+
+    console.log(
+      `Ditemukan ${data.length} kartu keluarga untuk createdBy: ${createdBy}`
+    );
+
     return {
       success: true,
-      message: "Berhasil mengambil data kartu keluarga berdasarkan pembuat",
+      message: data.length
+        ? "Berhasil mengambil data kartu keluarga berdasarkan pembuat"
+        : "Tidak ada kartu keluarga ditemukan",
       data,
     };
   } catch (error: any) {
     console.error("Gagal mengambil data kartu keluarga:", error);
     return {
       success: false,
-      message: error.message || "Gagal mengambil data kartu keluarga",
+      message:
+        error.message ||
+        "Gagal mengambil data kartu keluarga. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }

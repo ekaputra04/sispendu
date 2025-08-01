@@ -1,4 +1,4 @@
-import { db } from "@/config/firebase-init";
+import { app, db } from "@/config/firebase-init";
 import { FirestoreResponse, IDataPengguna } from "@/types/types";
 import {
   addDoc,
@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
+import { getAuth } from "firebase/auth";
 
 export async function getAllUsers(): Promise<
   FirestoreResponse<IDataPengguna[] | null>
@@ -95,5 +96,42 @@ export async function updateUserRole(
       message: error.message || "Gagal memperbarui role pengguna",
       errorCode: error.code || "unknown",
     };
+  }
+}
+
+export async function getCurrentUser() {
+  const auth = getAuth(app);
+  const user = auth.currentUser;
+
+  if (user) {
+    const userData = await getUserById(user.uid);
+    if (userData) {
+      return {
+        success: true,
+        message: "Berhasil mengambil data pengguna",
+        data: userData,
+      };
+    }
+  }
+  return {
+    success: false,
+    message: "Pengguna tidak terautentikasi",
+  };
+}
+
+export async function getUserRole(): Promise<string | null> {
+  const auth = getAuth(app);
+  const user = auth.currentUser;
+
+  if (!user) {
+    return null;
+  }
+
+  try {
+    const idTokenResult = await user.getIdTokenResult();
+    return (idTokenResult.claims.role as string) || null;
+  } catch (error) {
+    console.error("Gagal mengambil role pengguna:", error);
+    return null;
   }
 }

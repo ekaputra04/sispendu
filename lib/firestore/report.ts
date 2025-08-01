@@ -54,10 +54,6 @@ export async function fetchLatestReportKK(): Promise<
   FirestoreResponse<IReportKK>
 > {
   try {
-    // Verifikasi autentikasi
-    await checkAuth();
-
-    // Buat query untuk mengambil laporan terbaru berdasarkan createdAt
     const q = query(
       collection(db, "report-kk"),
       orderBy("createdAt", "desc"),
@@ -73,7 +69,6 @@ export async function fetchLatestReportKK(): Promise<
       };
     }
 
-    // Ambil dokumen terbaru
     const doc = querySnapshot.docs[0];
     const data = { ...doc.data() } as IReportKK;
 
