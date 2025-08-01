@@ -164,7 +164,7 @@ export default function ReportView() {
                         <Badge
                           className="bg-green-100 border-green-600 text-green-600 text-sm"
                           variant={"outline"}>
-                          {banjarKK ? banjarKK.totalKK.count : 0} - Kartu
+                          {banjarKK ? banjarKK.totalKK.count : 0} - Kepala
                           Keluarga
                         </Badge>
                         <Badge
