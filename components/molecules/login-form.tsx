@@ -89,7 +89,11 @@ export function LoginForm() {
 
       form.reset();
       toast.success("Berhasil login");
-      router.push("/dashboard");
+      if (userDoc.role in ["admin", "petugas"]) {
+        router.push("/dashboard");
+      } else {
+        router.push("/preview");
+      }
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || "Gagal login";
       if (error.response?.status === 401) {
