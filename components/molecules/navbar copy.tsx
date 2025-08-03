@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { auth } from "@/config/firebase-init";
-import { decrypt } from "@/lib/utils";
 import { useSessionStore } from "@/store/useSession";
 import { useUserStore } from "@/store/useUserStore";
 import axios from "axios";
@@ -10,8 +9,10 @@ import { signOut } from "firebase/auth";
 import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { ModeToggle } from "./mode-toggle";
+import LoadingIcon from "../atoms/loading-icon";
 import {
   Sheet,
   SheetContent,
@@ -19,9 +20,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../ui/sheet";
-import LoadingIcon from "../atoms/loading-icon";
-import { ModeToggle } from "./mode-toggle";
+} from "@/components/ui/sheet";
+import { useQuery } from "@tanstack/react-query";
+import { getCurrentUser } from "@/lib/firestore/users";
+import LoadingView from "../atoms/loading-view";
 
 interface NavbarProps {
   isInHeroView?: boolean;
@@ -29,12 +31,21 @@ interface NavbarProps {
 
 export default function Navbar({ isInHeroView = false }: NavbarProps) {
   const router = useRouter();
-  const { session, clearSession } = useSessionStore();
+  const { clearSession } = useSessionStore();
   const { clearUser } = useUserStore();
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const {
+    data: userLogin,
+    isLoading: isGetUserLoading,
+    error,
+  } = useQuery({
+    queryKey: ["user-login"],
+    queryFn: getCurrentUser,
+  });
+
   async function handleLogout() {
+    setIsLoading(true);
     try {
       await signOut(auth);
       const response = await axios.post("/api/logout");
@@ -50,28 +61,14 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
     } catch (error) {
       toast.error("Gagal logout");
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  useEffect(() => {
-    async function checkAdminStatus() {
-      const sessionDecrypted = await decrypt(session);
-
-      if (
-        sessionDecrypted?.role == "admin" ||
-        sessionDecrypted?.role == "petugas"
-      ) {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
-    }
-
-    checkAdminStatus();
-  }, [session]);
-
   return (
     <div className="">
+      {isGetUserLoading && <LoadingView />}
       <nav
         className={`${
           isInHeroView
@@ -145,47 +142,34 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                   </div>
                 </div>
                 <div className="px-8">
-                  {session ? (
+                  {!isGetUserLoading && userLogin?.data ? (
                     <div className="flex flex-col gap-2">
-                      <Link href={isAdmin ? "/dashboard" : "/preview"}>
+                      <Link
+                        href={
+                          userLogin?.data?.role == "admin" ||
+                          userLogin?.data?.role == "petugas"
+                            ? "/dashboard"
+                            : "/preview"
+                        }>
                         <Button className="flex items-center gap-2 w-full dark:text-white">
                           <>
                             <LayoutDashboard className="w-4 h-4" />
-                            {isAdmin ? "Dashboard" : "Data Saya"}
+                            {userLogin?.data?.role == "admin" ||
+                            userLogin?.data?.role == "petugas"
+                              ? "Dashboard"
+                              : "Data Saya"}
                           </>
                         </Button>
                       </Link>
                       <Button
                         variant="outline"
+                        className={`bg-transparent hover:bg-white/10 text-primary w-full ${
+                          isInHeroView
+                            ? "text-white hover:text-white"
+                            : "text-gray-900 dark:text-white hover:text-gray-900"
+                        }`}
                         onClick={handleLogout}
                         disabled={isLoading}>
-                        {isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <LoadingIcon />
-                            <span>Logging out...</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            {isLoading ? (
-                              <div className="flex items-center gap-2">
-                                <LoadingIcon />
-                                <span>Logging out...</span>
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-2">
-                                <LogOut className="w-4 h-4" />
-                                Logout
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </Button>
-                    </div>
-                  ) : (
-                    <Link href="/login">
-                      <Button
-                        variant="outline"
-                        className="flex justify-center items-center bg-transparent hover:bg-white/10 w-full dark:hover:text-white dark:text-white">
                         {isLoading ? (
                           <div className="flex items-center gap-2">
                             <LoadingIcon />
@@ -198,6 +182,15 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                           </div>
                         )}
                       </Button>
+                    </div>
+                  ) : (
+                    <Link href="/login">
+                      <Button
+                        variant="outline"
+                        className="flex justify-center items-center bg-transparent hover:bg-white/10 w-full dark:hover:text-white dark:text-white">
+                        <LogIn className="w-4 h-4" />
+                        <p>Login</p>
+                      </Button>
                     </Link>
                   )}
                   <div className="mt-2">
@@ -207,43 +200,61 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
               </SheetContent>
             </Sheet>
           </div>
-          <div className="hidden md:flex items-center gap-4">
-            {session ? (
+          <div className="hidden md:flex md:flex-row flex-col items-center gap-4">
+            {!isGetUserLoading && userLogin?.success ? (
               <>
-                <Link href={isAdmin ? "/dashboard" : "/preview"}>
-                  <Button className="flex items-center gap-2 w-full dark:text-white">
+                <Link
+                  href={
+                    userLogin?.data?.role == "admin" ||
+                    userLogin?.data?.role == "petugas"
+                      ? "/dashboard"
+                      : "/preview"
+                  }>
+                  <Button className="flex items-center gap-2 dark:text-white">
                     <>
                       <LayoutDashboard className="w-4 h-4" />
-                      {isAdmin ? "Dashboard" : "Data Saya"}
+                      {userLogin?.data?.role == "admin" ||
+                      userLogin?.data?.role == "petugas"
+                        ? "Dashboard"
+                        : "Data Saya"}
                     </>
                   </Button>
                 </Link>
                 <Button
                   variant="outline"
-                  className={`bg-transparent hover:bg-white/10 ${
+                  className={`bg-transparent hover:bg-white/10 text-primary ${
                     isInHeroView
                       ? "text-white hover:text-white"
-                      : "text-gray-900 hover:text-gray-900 dark:text-white"
+                      : "text-gray-900 dark:text-white hover:text-gray-900"
                   }`}
-                  onClick={handleLogout}>
-                  <LogOut className="w-4 h-4" />
-                  Logout
+                  onClick={handleLogout}
+                  disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <LoadingIcon />
+                      <span>Logging out...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </div>
+                  )}
                 </Button>
-                <ModeToggle />
               </>
             ) : (
-              <>
-                <Link href="/login">
-                  <Button
-                    variant="outline"
-                    className="flex justify-center items-center bg-transparent hover:bg-white/10 text-white hover:text-white">
-                    <LogIn className="w-4 h-4" />
-                    <p>Login</p>
-                  </Button>
-                </Link>
-                <ModeToggle />
-              </>
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  className={`flex justify-center items-center bg-transparent hover:bg-white/10 hover:text-white dark:text-white ${
+                    isInHeroView && "text-white"
+                  }`}>
+                  <LogIn className="w-4 h-4" />
+                  <p>Login</p>
+                </Button>
+              </Link>
             )}
+            <ModeToggle />
           </div>
         </div>
       </nav>

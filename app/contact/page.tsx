@@ -214,12 +214,12 @@ export default function ContactPage() {
                     />
                     <Button type="submit" disabled={isLoading}>
                       {isLoading ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-white">
                           <LoadingIcon />
                           <p>Mengirim...</p>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 text-white">
                           <Send />
                           <p>Kirim</p>
                         </div>

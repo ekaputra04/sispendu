@@ -1,3 +1,4 @@
+import { Heading1 } from "@/components/atoms/heading";
 import AddKKForm from "@/components/molecules/add-kk-form";
 import Navbar from "@/components/molecules/navbar";
 import {
@@ -31,9 +32,8 @@ export default function Page() {
         </Breadcrumb>
       </div>
       <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
-        <h1 className="mb-6 font-bold text-gray-900 text-2xl">
-          Tambah Data Kartu Keluarga
-        </h1>
+        <Heading1 text="Tambah Data Kartu Keluarga" />
+        <hr className="my-4" />
         <AddKKForm redirectTo="preview" />
       </div>
     </div>

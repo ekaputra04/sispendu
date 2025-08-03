@@ -28,6 +28,7 @@ import { columns } from "./columns";
 import DialogDeletePenduduk from "./dialog-delete-penduduk";
 import LoadingView from "@/components/atoms/loading-view";
 import Footer from "@/components/atoms/footer";
+import { Heading1 } from "@/components/atoms/heading";
 
 export default function PreviewPage() {
   const { user } = useUserStore();
@@ -77,9 +78,8 @@ export default function PreviewPage() {
           </Breadcrumb>
         </div>
         <div className="mx-auto px-8 md:px-16 lg:px-32 py-8">
-          <h1 className="mb-6 font-bold text-primary text-2xl">
-            Data yang Dibuat oleh Anda
-          </h1>
+          <Heading1 text="Data yang Anda Buat" />
+          <hr className="my-4" />
 
           <section className="mb-12">
             <div className="flex justify-between items-center mb-2">
