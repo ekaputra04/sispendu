@@ -97,8 +97,6 @@ export default function AddKKForm({
 
   return (
     <div className="">
-      <Heading1 text="Tambah Data Kartu Keluarga" />
-      <hr className="my-4" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">

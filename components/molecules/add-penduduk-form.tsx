@@ -179,8 +179,6 @@ export default function AddPendudukForm({
 
   return (
     <div className="">
-      <Heading1 text="Tambah Data Penduduk" />
-      <hr className="my-4" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
