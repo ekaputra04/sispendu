@@ -39,6 +39,7 @@ import {
 } from "@/consts/dataDefinitions";
 import { useUserStore } from "@/store/useUserStore";
 import { Save } from "lucide-react";
+import { Heading1 } from "../atoms/heading";
 
 const formSchema = z.object({
   nama: z.string().min(2, { message: "Nama harus diisi minimal 2 karakter" }),
@@ -178,6 +179,8 @@ export default function AddPendudukForm({
 
   return (
     <div className="">
+      <Heading1 text="Tambah Data Penduduk" />
+      <hr className="my-4" />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <div className="gap-4 grid grid-cols-1 md:grid-cols-2">

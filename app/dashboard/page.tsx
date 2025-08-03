@@ -16,22 +16,22 @@ export default function Page() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const {
-    data: userLogin,
-    isLoading: isGetUserLoading,
-    error,
-  } = useQuery({
-    queryKey: ["user-login"],
-    queryFn: getCurrentUser,
-  });
+  // const {
+  //   data: userLogin,
+  //   isLoading: isGetUserLoading,
+  //   error,
+  // } = useQuery({
+  //   queryKey: ["user-login"],
+  //   queryFn: getCurrentUser,
+  // });
 
-  if (
-    !isGetUserLoading &&
-    userLogin?.success === false &&
-    userLogin.data?.role in ["admin", "petugas"]
-  ) {
-    router.push("/login");
-  }
+  // if (
+  //   !isGetUserLoading &&
+  //   userLogin?.success === false &&
+  //   userLogin.data?.role in ["admin", "petugas"]
+  // ) {
+  //   router.push("/login");
+  // }
 
   const generateReportMutation = useMutation({
     mutationFn: async () => {
