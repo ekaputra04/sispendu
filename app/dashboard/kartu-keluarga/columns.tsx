@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Banjar } from "@/consts/dataDefinitions";
+import { capitalizeWords } from "@/lib/utils";
 
 export const columns: ColumnDef<IKartuKeluarga>[] = [
   {
@@ -28,8 +29,15 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
   {
     accessorKey: "namaKepalaKeluarga",
     header: "Nama Kepala Keluarga",
+    cell: ({ row }) => {
+      const kartuKeluarga: IKartuKeluarga = row.original;
+      return (
+        <div className="">
+          <p>{capitalizeWords(kartuKeluarga.namaKepalaKeluarga) || "-"}</p>
+        </div>
+      );
+    },
   },
-
   {
     accessorKey: "banjar",
     header: ({ column }) => (

@@ -38,6 +38,7 @@ import { addAnggotaToKK } from "@/lib/firestore/kartu-keluarga";
 import { toast } from "sonner";
 import LoadingIcon from "../atoms/loading-icon";
 import { useRouter } from "next/navigation";
+import { capitalizeWords } from "@/lib/utils";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -204,7 +205,7 @@ export default function SheetAddPendudukToKK({
           {searchPenduduk?.length === 0 ? (
             <p className="text-sm">Tidak ada penduduk yang cocok</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2 pb-8">
               <hr />
               <p className="font-semibold text-sm">Hasil pencarian</p>
               {searchPenduduk &&
@@ -213,7 +214,7 @@ export default function SheetAddPendudukToKK({
                     className="flex justify-between items-center shadow-sm px-4 py-2 border rounded-md"
                     key={item.id}>
                     <p className="text-sm">
-                      {item.nama} - ({item.banjar})
+                      {capitalizeWords(item.nama)} - (Br. {item.banjar})
                     </p>
                     {item.kkRef != null ? (
                       <p className="text-green-600 text-sm">

@@ -1,6 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 
-export type TJenisKelamin = "Laki-laki" | "Perempuan";
+export type TJenisKelamin = "Laki-laki" | "Perempuan" | "";
+
 export type TStatusHubunganDalamKeluarga =
   | "Kepala Keluarga"
   | "Suami"
@@ -11,13 +12,18 @@ export type TStatusHubunganDalamKeluarga =
   | "Menantu"
   | "Cucu"
   | "Pembantu"
-  | "Famili Lain";
+  | "Famili Lain"
+  | "";
+
 export type TStatusPerkawinan =
   | "Belum Kawin"
   | "Kawin"
   | "Cerai Hidup"
-  | "Cerai Mati";
+  | "Cerai Mati"
+  | "";
+
 export type TKewarganegaraan = "WNI" | "WNA";
+
 export type TGolonganDarah =
   | "A"
   | "B"
@@ -30,7 +36,9 @@ export type TGolonganDarah =
   | "AB+"
   | "AB-"
   | "O+"
-  | "O-";
+  | "O-"
+  | "";
+
 export type TPenyandangCacat =
   | "Tidak Cacat"
   | "Cacat Fisik"
@@ -39,6 +47,7 @@ export type TPenyandangCacat =
   | "Cacat Mental / Jiwa"
   | "Cacat Fisik dan Mental"
   | "Cacat Lainnya";
+
 export type TAgama =
   | "Islam"
   | "Kristen"
@@ -47,6 +56,7 @@ export type TAgama =
   | "Budha"
   | "Konghucu"
   | "Kepercayaan Terhadap Tuhan YME / Lainnya";
+
 export type TPendidikan =
   | "Tidak / Belum Sekolah"
   | "Belum Tamat SD / Sederajat"
@@ -57,7 +67,9 @@ export type TPendidikan =
   | "Akademi / Diploma III / S. Muda"
   | "Diploma IV / Strata I"
   | "Strata II"
-  | "Strata III";
+  | "Strata III"
+  | "";
+
 export type TJenisPekerjaan =
   | "Belum / Tidak Bekerja"
   | "Buruh Harian Lepas"
@@ -74,7 +86,40 @@ export type TJenisPekerjaan =
   | "Perdagangan"
   | "Petani / Pekebun"
   | "Wiraswasta"
-  | "Lainnya";
+  | "Karyawan Honorer"
+  | "Perawat"
+  | "Bidan"
+  | "Karyawan BUMN"
+  | "Mekanik"
+  | "Tukang Batu"
+  | "Karyawan BUMD"
+  | "Pendeta"
+  | "Peternak"
+  | "Konsultan"
+  | "Arsitek"
+  | "Tukang Kayu"
+  | "Sopir"
+  | "Tukang Jahit"
+  | "Pelaut"
+  | "Buruh Peternakan"
+  | "Konstruksi"
+  | "Tentara Nasional Indonesia (TNI)"
+  | "Seniman"
+  | "Tukang Las / Pandai Besi"
+  | "Pembantu Rumah Tangga"
+  | "Penata Rias"
+  | "Anggota DPRD Kab./Kota"
+  | "Transportasi"
+  | "Dosen"
+  | "Dokter"
+  | "Tukang Gigi"
+  | "Penterjemah"
+  | "Paranoid"
+  | "Tukang Sol Sepatu"
+  | "Tukang Cukur"
+  | "Lainnya"
+  | "";
+
 export type TBanjar =
   | "Bebalang"
   | "Tegal"

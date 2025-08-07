@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Edit, Eye, Pencil } from "lucide-react";
-import { calculateAge, handleCopy } from "@/lib/utils";
+import { calculateAge, capitalizeWords, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { getPendudukById } from "@/lib/firestore/penduduk";
 import { useEffect, useState } from "react";
@@ -74,12 +74,18 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">Nama Lengkap</TableCell>
-                <TableCell>{data?.data?.nama}</TableCell>
+                <TableCell>
+                  {capitalizeWords(data?.data?.nama as string) || "-"}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.nama as string)}>
+                    onClick={() =>
+                      handleCopy(
+                        capitalizeWords(data?.data?.nama as string) || "-"
+                      )
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>
@@ -91,7 +97,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.banjar as string)}>
+                    onClick={() =>
+                      handleCopy((data?.data?.banjar as string) || "-")
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>
@@ -112,13 +120,18 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Tempat Lahir</TableCell>
-                <TableCell>{data?.data?.tempatLahir}</TableCell>
+                <TableCell>
+                  {capitalizeWords(data?.data?.tempatLahir) || "-"}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.tempatLahir as string)
+                      handleCopy(
+                        capitalizeWords(data?.data?.tempatLahir as string) ||
+                          "-"
+                      )
                     }>
                     <Copy />
                   </Button>
@@ -126,13 +139,13 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Tanggal Lahir</TableCell>
-                <TableCell>{data?.data?.tanggalLahir}</TableCell>
+                <TableCell>{data?.data?.tanggalLahir || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.tanggalLahir as string)
+                      handleCopy(data?.data?.tanggalLahir as string) || "-"
                     }>
                     <Copy />
                   </Button>
@@ -140,37 +153,39 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Usia</TableCell>
-                <TableCell>{age}</TableCell>
+                <TableCell>{age || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(age)}>
+                    onClick={() => handleCopy(age || "-")}>
                     <Copy />
                   </Button>
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Agama</TableCell>
-                <TableCell>{data?.data?.agama}</TableCell>
+                <TableCell>{data?.data?.agama || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.agama as string)}>
+                    onClick={() =>
+                      handleCopy((data?.data?.agama as string) || "-")
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Pendidikan</TableCell>
-                <TableCell>{data?.data?.pendidikan}</TableCell>
+                <TableCell>{data?.data?.pendidikan || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.pendidikan as string)
+                      handleCopy((data?.data?.pendidikan as string) || "-")
                     }>
                     <Copy />
                   </Button>
@@ -178,13 +193,13 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Jenis Pekerjaan</TableCell>
-                <TableCell>{data?.data?.jenisPekerjaan}</TableCell>
+                <TableCell>{data?.data?.jenisPekerjaan || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.jenisPekerjaan as string)
+                      handleCopy((data?.data?.jenisPekerjaan as string) || "-")
                     }>
                     <Copy />
                   </Button>
@@ -192,13 +207,15 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Status Perkawinan</TableCell>
-                <TableCell>{data?.data?.statusPerkawinan}</TableCell>
+                <TableCell>{data?.data?.statusPerkawinan || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.statusPerkawinan as string)
+                      handleCopy(
+                        (data?.data?.statusPerkawinan as string) || "-"
+                      )
                     }>
                     <Copy />
                   </Button>
@@ -206,13 +223,13 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Kewarganegaraan</TableCell>
-                <TableCell>{data?.data?.kewarganegaraan}</TableCell>
+                <TableCell>{data?.data?.kewarganegaraan || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.kewarganegaraan as string)
+                      handleCopy((data?.data?.kewarganegaraan as string) || "-")
                     }>
                     <Copy />
                   </Button>
@@ -220,13 +237,13 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Golongan Darah</TableCell>
-                <TableCell>{data?.data?.golonganDarah}</TableCell>
+                <TableCell>{data?.data?.golonganDarah || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.golonganDarah as string)
+                      handleCopy((data?.data?.golonganDarah as string) || "-")
                     }>
                     <Copy />
                   </Button>
@@ -234,13 +251,13 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Penyandang Cacat</TableCell>
-                <TableCell>{data?.data?.penyandangCacat}</TableCell>
+                <TableCell>{data?.data?.penyandangCacat || "-"}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.penyandangCacat as string)
+                      handleCopy((data?.data?.penyandangCacat as string) || "-")
                     }>
                     <Copy />
                   </Button>
@@ -248,24 +265,36 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Nama Ayah</TableCell>
-                <TableCell>{data?.data?.namaAyah}</TableCell>
+                <TableCell>
+                  {capitalizeWords(data?.data?.namaAyah) || "-"}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.namaAyah as string)}>
+                    onClick={() =>
+                      handleCopy(
+                        capitalizeWords(data?.data?.namaAyah as string) || "-"
+                      )
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Nama Ibu</TableCell>
-                <TableCell>{data?.data?.namaIbu}</TableCell>
+                <TableCell>
+                  {capitalizeWords(data?.data?.namaIbu) || "-"}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.namaIbu as string)}>
+                    onClick={() =>
+                      handleCopy(
+                        capitalizeWords(data?.data?.namaIbu as string) || "-"
+                      )
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>

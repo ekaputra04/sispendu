@@ -24,8 +24,8 @@ export default function DialogDeleteKK() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (id: string) => deleteKK(id),
     onSuccess: () => {
-      toast.success("Berhasil menghapus data kartu keluarga");
       queryClient.invalidateQueries({ queryKey: ["kartu-keluarga"] });
+      toast.success("Berhasil menghapus data kartu keluarga");
       setIsOpen(false);
     },
 
@@ -55,7 +55,7 @@ export default function DialogDeleteKK() {
             Aksi ini akan menghapus data kartu keluarga dengan nama kepala
             keluarga{" "}
             <span className="font-bold">
-              {kartuKeluarga?.namaKepalaKeluarga}
+              {kartuKeluarga?.namaKepalaKeluarga.toUpperCase()}
             </span>
             .
           </AlertDialogDescription>

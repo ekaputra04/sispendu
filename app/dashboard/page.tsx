@@ -11,10 +11,15 @@ import { Heading1 } from "@/components/atoms/heading";
 import ReportView from "@/components/molecules/report-view";
 import { getCurrentUser } from "@/lib/firestore/users";
 import { useRouter } from "next/navigation";
+import { saveDataToFirestore } from "@/lib/firestore/import-data";
+import { useState } from "react";
+import LoadingView from "@/components/atoms/loading-view";
 
 export default function Page() {
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   // const {
   //   data: userLogin,
@@ -52,6 +57,20 @@ export default function Page() {
       toast.error("Gagal membuat laporan: " + error.message);
     },
   });
+  async function handleImportData() {
+    setIsLoading(true);
+    try {
+      const response = await saveDataToFirestore();
+      if (response.success) {
+        alert("Data berhasil diimport");
+      }
+    } catch (error) {
+      alert("Gagal mengimport data");
+      console.error("Error importing data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   return (
     <div>
       <div className="flex flex-wrap justify-between items-center gap-y-2 mb-4">
@@ -74,6 +93,9 @@ export default function Page() {
         </Button>
       </div>
       <hr className="my-4" />
+      {isLoading && <LoadingView />}
+
+      <Button onClick={handleImportData}>Import Data</Button>
 
       <ReportView />
     </div>

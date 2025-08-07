@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Banjar, JenisPekerjaan } from "@/consts/dataDefinitions";
+import { calculateAge, capitalizeWords } from "@/lib/utils";
 
 export const columns: ColumnDef<IDataPenduduk>[] = [
   {
@@ -29,11 +30,31 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
   {
     accessorKey: "nama",
     header: "Nama Lengkap",
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+      return (
+        <div className="">
+          <p>{capitalizeWords(penduduk.nama)}</p>
+        </div>
+      );
+    },
   },
-
   {
     accessorKey: "tanggalLahir",
     header: "Tanggal Lahir",
+  },
+  {
+    accessorKey: "usia",
+    header: "Usia",
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+      const { years } = calculateAge(penduduk.tanggalLahir);
+      return (
+        <div className="">
+          <p>{penduduk.tanggalLahir && years}</p>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "banjar",

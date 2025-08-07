@@ -24,8 +24,8 @@ export default function DialogDeletePenduduk() {
   const { mutate, isPending } = useMutation({
     mutationFn: async (id: string) => deletePenduduk(id),
     onSuccess: () => {
-      toast.success("Berhasil menghapus data penduduk");
       queryClient.invalidateQueries({ queryKey: ["penduduk"] });
+      toast.success("Berhasil menghapus data penduduk");
       handleCancel();
     },
 
@@ -53,14 +53,17 @@ export default function DialogDeletePenduduk() {
           <AlertDialogTitle>Apakah Anda yakin?</AlertDialogTitle>
           <AlertDialogDescription>
             Aksi ini akan menghapus data penduduk dengan nama{" "}
-            <span className="font-bold"> {penduduk?.nama}</span>.
+            <span className="font-bold"> {penduduk?.nama.toUpperCase()}</span>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleCancel} disabled={isPending}>
             Batal
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={isPending}
+            className="text-white">
             {isPending ? (
               <>
                 <LoadingIcon />

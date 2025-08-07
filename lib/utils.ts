@@ -91,3 +91,13 @@ export const formatWitaDate = (timestamp?: Timestamp): string => {
   const date = timestamp.toDate();
   return format(date, "d MMMM yyyy, HH:mm", { locale: id }) + " WITA";
 };
+
+export function capitalizeWords(sentence: string): string {
+  if (!sentence) return "";
+
+  return sentence
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}

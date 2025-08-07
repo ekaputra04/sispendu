@@ -16,7 +16,7 @@ import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Eye, Pencil } from "lucide-react";
 import DialogDeleteUserFromKK from "../../../../../components/molecules/dialog-delete-user-from-kk";
-import { handleCopy } from "@/lib/utils";
+import { capitalizeWords, handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
@@ -64,13 +64,19 @@ export default function DetailKartuKeluargaPage({
                 <TableCell className="font-medium">
                   Nama Kepala Keluarga
                 </TableCell>
-                <TableCell>{data?.data?.namaKepalaKeluarga}</TableCell>
+                <TableCell>
+                  {capitalizeWords(data?.data?.namaKepalaKeluarga) || "-"}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
                     onClick={() =>
-                      handleCopy(data?.data?.namaKepalaKeluarga as string)
+                      handleCopy(
+                        capitalizeWords(
+                          data?.data?.namaKepalaKeluarga as string
+                        ) || "-"
+                      )
                     }>
                     <Copy />
                   </Button>
@@ -78,12 +84,18 @@ export default function DetailKartuKeluargaPage({
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Alamat</TableCell>
-                <TableCell>{data?.data?.alamat}</TableCell>
+                <TableCell>
+                  {capitalizeWords(data?.data?.alamat) || "-"}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.alamat as string)}>
+                    onClick={() =>
+                      handleCopy(
+                        capitalizeWords(data?.data?.alamat as string) || "-"
+                      )
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>
@@ -161,10 +173,16 @@ export default function DetailKartuKeluargaPage({
                         <TableCell>
                           {penduduk.statusHubunganDalamKeluarga}
                         </TableCell>
-                        <TableCell>{pendudukDetail.nama}</TableCell>
+                        <TableCell>
+                          {capitalizeWords(pendudukDetail.nama)}
+                        </TableCell>
                         <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
-                        <TableCell>{pendudukDetail.namaAyah}</TableCell>
-                        <TableCell>{pendudukDetail.namaIbu}</TableCell>
+                        <TableCell>
+                          {capitalizeWords(pendudukDetail.namaAyah)}
+                        </TableCell>
+                        <TableCell>
+                          {capitalizeWords(pendudukDetail.namaIbu)}
+                        </TableCell>
                         <TableCell className="flex gap-2">
                           <Link
                             href={`/dashboard/penduduk/detail/${pendudukDetail.id}`}>
