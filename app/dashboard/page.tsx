@@ -9,9 +9,7 @@ import { toast } from "sonner";
 import LoadingIcon from "@/components/atoms/loading-icon";
 import { Heading1 } from "@/components/atoms/heading";
 import ReportView from "@/components/molecules/report-view";
-import { getCurrentUser } from "@/lib/firestore/users";
 import { useRouter } from "next/navigation";
-import { saveDataToFirestore } from "@/lib/firestore/import-data";
 import { useState } from "react";
 import LoadingView from "@/components/atoms/loading-view";
 

@@ -1,4 +1,3 @@
-// import { ExampleData } from "@/consts/data-example";
 // import {
 //   FirestoreResponse,
 //   IAnggotaKeluarga,
