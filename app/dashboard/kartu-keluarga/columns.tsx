@@ -72,13 +72,13 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
     accessorKey: "tanggalPenerbitan",
     header: "Tanggal Penerbitan",
   },
-  {
-    accessorKey: "anggota",
-    header: "Jumlah Anggota",
-    cell: ({ row }) => {
-      return <p>{row.original.jumlahAnggota || 0}</p>;
-    },
-  },
+  // {
+  //   accessorKey: "anggota",
+  //   header: "Jumlah Anggota",
+  //   cell: ({ row }) => {
+  //     return <p>{row.original.jumlahAnggota || 0}</p>;
+  //   },
+  // },
   {
     id: "actions",
     header: "Aksi",

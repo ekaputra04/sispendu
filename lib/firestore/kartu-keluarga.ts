@@ -32,35 +32,35 @@ export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
       const kkData = docSnap.data();
       const kkId = docSnap.id;
 
-      const anggotaSnapshot = await getDocs(
-        collection(db, "kartu-keluarga", kkId, "anggota")
-      );
-      const anggota: IAnggotaKeluarga[] = [];
+      // const anggotaSnapshot = await getDocs(
+      //   collection(db, "kartu-keluarga", kkId, "anggota")
+      // );
+      // const anggota: IAnggotaKeluarga[] = [];
 
-      for (const anggotaDoc of anggotaSnapshot.docs) {
-        const anggotaData = anggotaDoc.data();
-        const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
-        const pendudukDocSnap = await getDoc(pendudukDocRef);
+      // for (const anggotaDoc of anggotaSnapshot.docs) {
+      //   const anggotaData = anggotaDoc.data();
+      //   const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
+      //   const pendudukDocSnap = await getDoc(pendudukDocRef);
 
-        if (pendudukDocSnap.exists()) {
-          anggota.push({
-            pendudukId: anggotaData.pendudukId,
-            statusHubunganDalamKeluarga:
-              anggotaData.statusHubunganDalamKeluarga,
-            detail: pendudukDocSnap.data() as IDataPenduduk,
-          });
-        } else {
-          console.warn(
-            `Penduduk dengan ID ${anggotaData.pendudukId} tidak ditemukan`
-          );
-        }
-      }
+      //   if (pendudukDocSnap.exists()) {
+      //     anggota.push({
+      //       pendudukId: anggotaData.pendudukId,
+      //       statusHubunganDalamKeluarga:
+      //         anggotaData.statusHubunganDalamKeluarga,
+      //       detail: pendudukDocSnap.data() as IDataPenduduk,
+      //     });
+      //   } else {
+      //     console.warn(
+      //       `Penduduk dengan ID ${anggotaData.pendudukId} tidak ditemukan`
+      //     );
+      //   }
+      // }
 
       data.push({
         id: kkId,
         ...kkData,
-        anggota,
-        jumlahAnggota: anggotaSnapshot.size,
+        // anggota,
+        // jumlahAnggota: anggotaSnapshot.size,
       } as IKartuKeluarga);
     }
 
