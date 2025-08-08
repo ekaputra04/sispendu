@@ -29,7 +29,6 @@ import {
 import { Banjar } from "@/consts/dataDefinitions";
 import { Save } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
-import { Heading1 } from "../atoms/heading";
 
 const formSchema = z.object({
   namaKepalaKeluarga: z

@@ -19,6 +19,7 @@ export const Agama: TAgama[] = [
   "Budha",
   "Konghucu",
   "Kepercayaan Terhadap Tuhan YME / Lainnya",
+  "Tidak Tau",
 ];
 
 export const JenisKelamin: TJenisKelamin[] = ["Laki-laki", "Perempuan"];
@@ -34,6 +35,7 @@ export const Pendidikan: TPendidikan[] = [
   "Diploma IV / Strata I",
   "Strata II",
   "Strata III",
+  "Tidak Tau",
 ];
 
 export const JenisPekerjaan: TJenisPekerjaan[] = [
@@ -84,7 +86,7 @@ export const JenisPekerjaan: TJenisPekerjaan[] = [
   "Tukang Sol Sepatu",
   "Tukang Cukur",
   "Lainnya",
-  "",
+  "Tidak Tau",
 ];
 
 export const StatusPerkawinan: TStatusPerkawinan[] = [
@@ -92,6 +94,7 @@ export const StatusPerkawinan: TStatusPerkawinan[] = [
   "Kawin",
   "Cerai Hidup",
   "Cerai Mati",
+  "Tidak Tau",
 ];
 
 export const StatusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga[] = [
@@ -105,6 +108,7 @@ export const StatusHubunganDalamKeluarga: TStatusHubunganDalamKeluarga[] = [
   "Cucu",
   "Pembantu",
   "Famili Lain",
+  "Tidak Tau",
 ];
 
 export const Kewarganegaraan: TKewarganegaraan[] = ["WNI", "WNA"];
@@ -122,6 +126,7 @@ export const GolonganDarah: TGolonganDarah[] = [
   "AB-",
   "O+",
   "O-",
+  "Tidak Tau",
 ];
 
 export const PenyandangCacat: TPenyandangCacat[] = [
@@ -132,6 +137,7 @@ export const PenyandangCacat: TPenyandangCacat[] = [
   "Cacat Mental / Jiwa",
   "Cacat Fisik dan Mental",
   "Cacat Lainnya",
+  "Tidak Tau",
 ];
 
 export const Banjar: TBanjar[] = [
@@ -141,6 +147,7 @@ export const Banjar: TBanjar[] = [
   "Gancan",
   "Sembung",
   "Petak",
+  "Tidak Tau",
 ];
 
 export const ReportConditions = [

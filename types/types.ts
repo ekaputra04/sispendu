@@ -13,14 +13,14 @@ export type TStatusHubunganDalamKeluarga =
   | "Cucu"
   | "Pembantu"
   | "Famili Lain"
-  | "";
+  | "Tidak Tau";
 
 export type TStatusPerkawinan =
   | "Belum Kawin"
   | "Kawin"
   | "Cerai Hidup"
   | "Cerai Mati"
-  | "";
+  | "Tidak Tau";
 
 export type TKewarganegaraan = "WNI" | "WNA";
 
@@ -37,7 +37,7 @@ export type TGolonganDarah =
   | "AB-"
   | "O+"
   | "O-"
-  | "";
+  | "Tidak Tau";
 
 export type TPenyandangCacat =
   | "Tidak Cacat"
@@ -46,7 +46,8 @@ export type TPenyandangCacat =
   | "Cacat Rungu / Wicara"
   | "Cacat Mental / Jiwa"
   | "Cacat Fisik dan Mental"
-  | "Cacat Lainnya";
+  | "Cacat Lainnya"
+  | "Tidak Tau";
 
 export type TAgama =
   | "Islam"
@@ -55,7 +56,8 @@ export type TAgama =
   | "Hindu"
   | "Budha"
   | "Konghucu"
-  | "Kepercayaan Terhadap Tuhan YME / Lainnya";
+  | "Kepercayaan Terhadap Tuhan YME / Lainnya"
+  | "Tidak Tau";
 
 export type TPendidikan =
   | "Tidak / Belum Sekolah"
@@ -68,7 +70,7 @@ export type TPendidikan =
   | "Diploma IV / Strata I"
   | "Strata II"
   | "Strata III"
-  | "";
+  | "Tidak Tau";
 
 export type TJenisPekerjaan =
   | "Belum / Tidak Bekerja"
@@ -118,7 +120,7 @@ export type TJenisPekerjaan =
   | "Tukang Sol Sepatu"
   | "Tukang Cukur"
   | "Lainnya"
-  | "";
+  | "Tidak Tau";
 
 export type TBanjar =
   | "Bebalang"
@@ -126,7 +128,8 @@ export type TBanjar =
   | "Sedit"
   | "Gancan"
   | "Sembung"
-  | "Petak";
+  | "Petak"
+  | "Tidak Tau";
 
 export interface IKartuKeluarga {
   id: string;
