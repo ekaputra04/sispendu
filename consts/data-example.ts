@@ -1,1 +1,1 @@
-export const ExampleData = [];
+export const ExampleData = []

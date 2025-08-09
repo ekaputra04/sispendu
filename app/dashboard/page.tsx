@@ -12,10 +12,10 @@ import ReportView from "@/components/molecules/report-view";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoadingView from "@/components/atoms/loading-view";
+// import { saveDataToFirestore } from "@/lib/firestore/import-data";
 
 export default function Page() {
   const queryClient = useQueryClient();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const generateReportMutation = useMutation({
@@ -36,6 +36,22 @@ export default function Page() {
       toast.error("Gagal membuat laporan: " + error.message);
     },
   });
+
+  // async function handleAddData() {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await saveDataToFirestore();
+  //     if (response.success) {
+  //       toast.success("Data berhasil diimport");
+  //     } else {
+  //       toast.error("Gagal mengimport data");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Gagal mengimport data");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
 
   return (
     <div>
@@ -59,6 +75,12 @@ export default function Page() {
         </Button>
       </div>
       <hr className="my-4" />
+      {/* <Button onClick={handleAddData} disabled={isLoading}>
+        <div className="flex justify-between items-center gap-2 dark:text-white">
+          <RefreshCw />
+          <span>Import Data Penduduk</span>
+        </div>
+      </Button> */}
       {isLoading && <LoadingView />}
 
       <ReportView />

@@ -308,7 +308,7 @@ export async function aggregateReportData(): Promise<ReportData[]> {
             key = mapToEnum(
               value as string,
               Banjar,
-              "Bebalang",
+              "Tidak Tau",
               category.category,
               p.id
             );

@@ -37,9 +37,12 @@ const formSchema = z.object({
   alamat: z
     .string()
     .min(2, { message: "Alamat harus diisi minimal 2 karakter" }),
-  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"], {
-    message: "Banjar harus dipilih dari opsi yang tersedia",
-  }),
+  banjar: z.enum(
+    ["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak", "Tidak Tau"],
+    {
+      message: "Banjar harus dipilih dari opsi yang tersedia",
+    }
+  ),
   tanggalPenerbitan: z.string().min(2, {
     message: "Tanggal penerbitan harus diisi dengan format yang valid",
   }),

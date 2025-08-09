@@ -3,7 +3,15 @@ import { db } from "@/config/firebase-init";
 import { checkAuth } from "@/lib/auth";
 import { FirestoreResponse, IReportKK } from "@/types/types";
 
-const banjars = ["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"];
+const banjars = [
+  "Bebalang",
+  "Tegal",
+  "Sedit",
+  "Gancan",
+  "Sembung",
+  "Petak",
+  "Tidak Tau",
+];
 
 export async function generateKKReport(): Promise<
   FirestoreResponse<IReportKK>

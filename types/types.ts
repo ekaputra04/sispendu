@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export type TJenisKelamin = "Laki-laki" | "Perempuan" | "";
+export type TJenisKelamin = "Laki-laki" | "Perempuan" | "Tidak Tau";
 
 export type TStatusHubunganDalamKeluarga =
   | "Kepala Keluarga"
@@ -141,6 +141,8 @@ export interface IKartuKeluarga {
   createdBy?: string;
   editedBy?: string;
   jumlahAnggota?: number;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface IDataPenduduk {
@@ -164,6 +166,8 @@ export interface IDataPenduduk {
   editedBy?: string[];
   namaKeywords?: string[];
   namaLowerCase?: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface IDataPengguna {

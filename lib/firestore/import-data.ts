@@ -1,3 +1,4 @@
+// import { ExampleData } from "@/consts/data-example";
 // import {
 //   FirestoreResponse,
 //   IAnggotaKeluarga,
@@ -12,7 +13,14 @@
 //   TStatusHubunganDalamKeluarga,
 //   TStatusPerkawinan,
 // } from "@/types/types";
-// import { getFirestore, collection, doc, writeBatch } from "firebase/firestore";
+
+// import {
+//   getFirestore,
+//   collection,
+//   doc,
+//   writeBatch,
+//   Timestamp,
+// } from "firebase/firestore";
 
 // export async function saveDataToFirestore(): Promise<FirestoreResponse<void>> {
 //   const db = getFirestore();
@@ -30,6 +38,8 @@
 //         banjar: kartuKeluarga.banjar as TBanjar,
 //         createdBy: kartuKeluarga.createdBy,
 //         editedBy: kartuKeluarga.editedBy,
+//         createdAt: Timestamp.now(),
+//         updatedAt: Timestamp.now(),
 //       };
 
 //       const kartuKeluargaRef = doc(
@@ -75,6 +85,8 @@
 //           editedBy: anggota.detail.editedBy,
 //           namaKeywords: anggota.detail.namaKeywords,
 //           namaLowerCase: anggota.detail.namaLowerCase,
+//           createdAt: Timestamp.now(),
+//           updatedAt: Timestamp.now(),
 //         };
 
 //         const pendudukRef = doc(collection(db, "penduduk"), anggota.detail.id);

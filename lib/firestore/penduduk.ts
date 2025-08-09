@@ -12,6 +12,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  Timestamp,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
 
@@ -214,8 +215,8 @@ export async function createPenduduk({
       ...penduduk,
       namaLowerCase,
       namaKeywords,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     };
 
     const docRef = doc(db, "penduduk", penduduk.id);
@@ -275,7 +276,7 @@ export async function updatePenduduk({
       ...penduduk,
       namaLowerCase,
       namaKeywords,
-      updatedAt: new Date(),
+      updatedAt: Timestamp.now(),
     };
 
     await setDoc(
