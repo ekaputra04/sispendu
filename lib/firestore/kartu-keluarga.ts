@@ -17,6 +17,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
 import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
@@ -431,6 +432,75 @@ export async function deleteAnggotaFromKK({
     return {
       success: false,
       message: error.message || "Gagal menghapus anggota dari kartu keluarga",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
+export async function deleteAllKartuKeluarga(): Promise<
+  FirestoreResponse<void>
+> {
+  try {
+    // Verifikasi autentikasi
+    await checkAuth();
+
+    // Ambil semua dokumen dari koleksi kartu-keluarga
+    const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
+
+    // Jika koleksi kosong, kembalikan respons sukses
+    if (kkSnapshot.empty) {
+      return {
+        success: true,
+        message: "Koleksi kartu-keluarga sudah kosong",
+      };
+    }
+
+    // Gunakan batch untuk menghapus dokumen dan subkoleksi
+    const batchSize = 500; // Batas maksimum operasi per batch di Firestore
+    let batch = writeBatch(db);
+    let operationCount = 0;
+    let kartuKeluargaCount = 0;
+
+    for (const doc of kkSnapshot.docs) {
+      // Hapus dokumen kartu-keluarga
+      batch.delete(doc.ref);
+      console.log(`Menghapus kartu-keluarga ${kartuKeluargaCount}`);
+      kartuKeluargaCount++;
+
+      operationCount++;
+
+      // Ambil dan hapus semua dokumen di subkoleksi anggota
+      const anggotaSnapshot = await getDocs(
+        collection(db, "kartu-keluarga", doc.id, "anggota")
+      );
+      for (const anggotaDoc of anggotaSnapshot.docs) {
+        batch.delete(anggotaDoc.ref);
+        operationCount++;
+
+        // Jika mencapai batas batch, commit dan buat batch baru
+        if (operationCount >= batchSize) {
+          await batch.commit();
+          batch = writeBatch(db);
+          operationCount = 0;
+        }
+      }
+    }
+
+    // Commit batch terakhir jika ada operasi yang tersisa
+    if (operationCount > 0) {
+      await batch.commit();
+    }
+
+    return {
+      success: true,
+      message:
+        "Berhasil menghapus semua data dalam koleksi kartu-keluarga beserta subkoleksi anggota",
+    };
+  } catch (error: any) {
+    console.error("Gagal menghapus data kartu-keluarga:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal menghapus data kartu-keluarga",
       errorCode: error.code || "unknown",
     };
   }

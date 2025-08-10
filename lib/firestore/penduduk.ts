@@ -13,6 +13,7 @@ import {
   arrayUnion,
   arrayRemove,
   Timestamp,
+  writeBatch,
 } from "firebase/firestore";
 import { checkAuth } from "../auth";
 
@@ -424,6 +425,60 @@ export async function removeFromEditedBy(
       message:
         error.message ||
         "Gagal menghapus email dari editedBy. Silakan coba lagi.",
+      errorCode: error.code || "unknown",
+    };
+  }
+}
+
+export async function deleteAllPenduduk(): Promise<FirestoreResponse<void>> {
+  try {
+    // Verifikasi autentikasi
+    await checkAuth();
+
+    // Ambil semua dokumen dari koleksi penduduk
+    const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
+
+    // Jika koleksi kosong, kembalikan respons sukses
+    if (pendudukSnapshot.empty) {
+      return {
+        success: true,
+        message: "Koleksi penduduk sudah kosong",
+      };
+    }
+
+    // Gunakan batch untuk menghapus dokumen
+    const batchSize = 500; // Batas maksimum operasi per batch di Firestore
+    let batch = writeBatch(db);
+    let operationCount = 0;
+
+    for (const doc of pendudukSnapshot.docs) {
+      batch.delete(doc.ref);
+      console.log(`Menghapus penduduk ${operationCount}`);
+
+      operationCount++;
+
+      // Jika mencapai batas batch, commit dan buat batch baru
+      if (operationCount >= batchSize) {
+        await batch.commit();
+        batch = writeBatch(db);
+        operationCount = 0;
+      }
+    }
+
+    // Commit batch terakhir jika ada operasi yang tersisa
+    if (operationCount > 0) {
+      await batch.commit();
+    }
+
+    return {
+      success: true,
+      message: "Berhasil menghapus semua data dalam koleksi penduduk",
+    };
+  } catch (error: any) {
+    console.error("Gagal menghapus data penduduk:", error);
+    return {
+      success: false,
+      message: error.message || "Gagal menghapus data penduduk",
       errorCode: error.code || "unknown",
     };
   }

@@ -6,13 +6,15 @@ import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
-import { getAllPenduduk } from "@/lib/firestore/penduduk";
+import { deleteAllPenduduk, getAllPenduduk } from "@/lib/firestore/penduduk";
 import LoadingView from "@/components/atoms/loading-view";
 import { IDataPenduduk } from "@/types/types";
 import DialogDeletePenduduk from "./dialog-delete-penduduk";
 import { Heading1 } from "@/components/atoms/heading";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@/lib/firestore/users";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export default function Page() {
   const router = useRouter();

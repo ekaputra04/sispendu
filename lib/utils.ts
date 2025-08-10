@@ -74,7 +74,7 @@ export function calculateAge(birthDate: string): {
   };
 
   if (!birthDate) {
-    throw new Error("Tanggal lahir tidak boleh kosong");
+    return { years: 0, months: 0, days: 0 };
   }
 
   const birth = parseDate(birthDate);

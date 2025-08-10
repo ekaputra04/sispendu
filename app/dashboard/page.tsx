@@ -12,11 +12,14 @@ import ReportView from "@/components/molecules/report-view";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoadingView from "@/components/atoms/loading-view";
+import { deleteAllPenduduk } from "@/lib/firestore/penduduk";
+import { deleteAllKartuKeluarga } from "@/lib/firestore/kartu-keluarga";
 // import { saveDataToFirestore } from "@/lib/firestore/import-data";
 
 export default function Page() {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
 
   const generateReportMutation = useMutation({
     mutationFn: async () => {
@@ -36,6 +39,38 @@ export default function Page() {
       toast.error("Gagal membuat laporan: " + error.message);
     },
   });
+
+  async function handleDeleteAllPenduduk() {
+    setIsLoadingDelete(true);
+    try {
+      const response = await deleteAllPenduduk();
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error(error as string);
+    } finally {
+      setIsLoadingDelete(false);
+    }
+  }
+
+  async function handleDeleteAllKartuKeluarga() {
+    setIsLoadingDelete(true);
+    try {
+      const response = await deleteAllKartuKeluarga();
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error(error as string);
+    } finally {
+      setIsLoadingDelete(false);
+    }
+  }
 
   // async function handleAddData() {
   //   setIsLoading(true);
@@ -81,6 +116,15 @@ export default function Page() {
           <span>Import Data Penduduk</span>
         </div>
       </Button> */}
+
+      <Button onClick={handleDeleteAllPenduduk}>
+        {isLoadingDelete ? "Menghapus..." : "Hapus Semua Data Penduduk"}
+      </Button>
+      <Button onClick={handleDeleteAllKartuKeluarga}>
+        {isLoadingDelete ? "Menghapus..." : "Hapus Semua Data Kartu Keluarga"}
+      </Button>
+      {isLoadingDelete && <LoadingView />}
+
       {isLoading && <LoadingView />}
 
       <ReportView />

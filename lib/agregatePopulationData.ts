@@ -26,7 +26,6 @@ import {
   StatusPerkawinan,
 } from "@/consts/dataDefinitions";
 import { checkAuth } from "./auth";
-// import { generateKKReport } from "./generateKKReport";
 
 export interface IReport {
   createdAt: Timestamp;
@@ -46,11 +45,59 @@ export interface ReportData {
 export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
   try {
     await checkAuth();
-    // await generateKKReport();
+
+    // Ambil data kartu keluarga sekali untuk digunakan di kedua laporan
+    const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
+    const kkList: IKartuKeluarga[] = kkSnapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        if (
+          !data.namaKepalaKeluarga ||
+          !data.alamat ||
+          !data.tanggalPenerbitan ||
+          !data.banjar
+        ) {
+          console.warn(`Dokumen kartu-keluarga ${doc.id} tidak lengkap:`, data);
+          return null;
+        }
+        return {
+          id: doc.id,
+          namaKepalaKeluarga: data.namaKepalaKeluarga,
+          alamat: data.alamat,
+          tanggalPenerbitan: data.tanggalPenerbitan,
+          banjar: data.banjar,
+          anggota: [],
+        } as IKartuKeluarga;
+      })
+      .filter((item): item is IKartuKeluarga => item !== null);
+
+    // Cache data anggota untuk setiap KK
+    const anggotaCache: Record<string, IAnggotaKeluarga[]> = {};
+    for (const kk of kkList) {
+      const anggotaSnapshot = await getDocs(
+        collection(db, "kartu-keluarga", kk.id, "anggota")
+      );
+      anggotaCache[kk.id] = anggotaSnapshot.docs
+        .map((doc) => {
+          const anggotaData = doc.data();
+          if (!anggotaData.statusHubunganDalamKeluarga) {
+            console.warn(
+              `Dokumen anggota ${doc.id} tidak memiliki statusHubunganDalamKeluarga:`,
+              anggotaData
+            );
+            return null;
+          }
+          return {
+            pendudukId: doc.id,
+            statusHubunganDalamKeluarga:
+              anggotaData.statusHubunganDalamKeluarga,
+          } as IAnggotaKeluarga;
+        })
+        .filter((item): item is IAnggotaKeluarga => item !== null);
+      kk.anggota = anggotaCache[kk.id];
+    }
 
     // REPORT KK
-    const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
-
     const reportData: {
       [key: string]: { totalKK: number; totalAnggota: number };
     } = {};
@@ -59,18 +106,18 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
     });
     reportData["Total"] = { totalKK: 0, totalAnggota: 0 };
 
+    let countKKData = 0;
+
     for (const doc of kkSnapshot.docs) {
       const data = doc.data();
       const banjar = data.banjar as string;
-
-      const anggotaSnapshot = await getDocs(
-        collection(db, "kartu-keluarga", doc.id, "anggota")
-      );
-      const anggotaCount = anggotaSnapshot.size;
+      const anggotaCount = anggotaCache[doc.id].length;
 
       console.log(
-        `Dokumen ${doc.id}: banjar=${banjar}, anggotaCount=${anggotaCount}`
+        `${countKKData} - Dokumen ${doc.id}: banjar=${banjar}, anggotaCount=${anggotaCount}`
       );
+
+      countKKData++;
 
       if (Banjar.includes(banjar as TBanjar)) {
         reportData[banjar].totalKK += 1;
@@ -100,16 +147,13 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       })
     );
 
-    const reportKK: IReportKK = {
+    await addDoc(collection(db, "report-kk"), {
       category: "banjar",
       groups,
-      createdAt: Timestamp.now(),
-    };
-
-    await addDoc(collection(db, "report-kk"), reportKK);
+      createdAt: serverTimestamp(),
+    });
 
     // REPORT PENDUDUK
-
     const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
     const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map((doc) => {
       const data = doc.data();
@@ -118,53 +162,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
         ...data,
       } as IDataPenduduk;
     });
-
-    const kkList: IKartuKeluarga[] = kkSnapshot.docs
-      .map((doc) => {
-        const data = doc.data();
-        if (
-          !data.namaKepalaKeluarga ||
-          !data.alamat ||
-          !data.tanggalPenerbitan ||
-          !data.banjar
-        ) {
-          console.warn(`Dokumen kartu-keluarga ${doc.id} tidak lengkap:`, data);
-          return null;
-        }
-        return {
-          id: doc.id,
-          namaKepalaKeluarga: data.namaKepalaKeluarga,
-          alamat: data.alamat,
-          tanggalPenerbitan: data.tanggalPenerbitan,
-          banjar: data.banjar,
-          anggota: [],
-        } as IKartuKeluarga;
-      })
-      .filter((item): item is IKartuKeluarga => item !== null);
-
-    for (const kk of kkList) {
-      const anggotaSnapshot = await getDocs(
-        collection(db, "kartu-keluarga", kk.id, "anggota")
-      );
-      kk.anggota = anggotaSnapshot.docs
-        .map((doc) => {
-          const anggotaData = doc.data();
-          if (!anggotaData.statusHubunganDalamKeluarga) {
-            console.warn(
-              `Dokumen anggota ${doc.id} tidak memiliki statusHubunganDalamKeluarga:`,
-              anggotaData
-            );
-            return null;
-          }
-          return {
-            pendudukId: doc.id,
-            statusHubunganDalamKeluarga:
-              anggotaData.statusHubunganDalamKeluarga,
-            detail: pendudukList.find((p) => p.id === doc.id),
-          } as IAnggotaKeluarga;
-        })
-        .filter((item): item is IAnggotaKeluarga => item !== null);
-    }
 
     const totalPopulation = pendudukList.length;
 
@@ -185,7 +182,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
     const ageRanges = ["0-5", "6-12", "13-18", "19-30", "31-50", "51+"];
     const ageCategories = ["Anak", "Remaja", "Dewasa", "Lansia"];
 
-    // Inisialisasi semua counter groups
     const counters: Record<
       string,
       Record<string, { total: number; male: number; female: number }>
@@ -261,17 +257,28 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       return matchedEnum;
     };
 
-    // Loop sekali melalui pendudukList untuk update semua counter
-    pendudukList.forEach((p) => {
-      const age = calculateAge(p.tanggalLahir).years;
-      const gender = p.jenisKelamin; // "Laki-laki" atau "Perempuan" (asumsi "Laki-laki" untuk male)
+    let countPendudukData = 0;
 
-      // Update "all"
+    pendudukList.forEach((p) => {
+      console.log(`Processing penduduk ${p.id}`);
+
+      countPendudukData++;
+
+      let age: number;
+      try {
+        age = calculateAge(p.tanggalLahir).years;
+      } catch (error) {
+        console.warn(
+          `Gagal menghitung umur untuk penduduk ${p.id}, tanggalLahir: ${p.tanggalLahir}, menggunakan umur 0`
+        );
+        age = 0;
+      }
+      const gender = p.jenisKelamin;
+
       counters["all"]["Total"].total++;
       if (gender === "Laki-laki") counters["all"]["Total"].male++;
       else if (gender === "Perempuan") counters["all"]["Total"].female++;
 
-      // Update "rentang-umur"
       let range = "";
       if (age <= 5) range = "0-5";
       else if (age <= 12) range = "6-12";
@@ -283,7 +290,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       if (gender === "Laki-laki") counters["rentang-umur"][range].male++;
       else if (gender === "Perempuan") counters["rentang-umur"][range].female++;
 
-      // Update "kategori-umur"
       let cat = "";
       if (age < 13) cat = "Anak";
       else if (age < 19) cat = "Remaja";
@@ -293,7 +299,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       if (gender === "Laki-laki") counters["kategori-umur"][cat].male++;
       else if (gender === "Perempuan") counters["kategori-umur"][cat].female++;
 
-      // Update "pendidikan"
       const pendidikanKey = mapToEnum(
         p.pendidikan,
         Pendidikan,
@@ -306,7 +311,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       else if (gender === "Perempuan")
         counters["pendidikan"][pendidikanKey].female++;
 
-      // Update "pekerjaan"
       const pekerjaanKey = mapToEnum(
         p.jenisPekerjaan,
         JenisPekerjaan,
@@ -319,7 +323,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       else if (gender === "Perempuan")
         counters["pekerjaan"][pekerjaanKey].female++;
 
-      // Update "agama"
       const agamaKey = mapToEnum(
         p.agama,
         Agama,
@@ -331,10 +334,11 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       if (gender === "Laki-laki") counters["agama"][agamaKey].male++;
       else if (gender === "Perempuan") counters["agama"][agamaKey].female++;
 
-      // Update "hubungan-dalam-kk"
-      const anggota = kkList
-        .flatMap((kk) => kk.anggota || [])
-        .find((a) => a.pendudukId === p.id);
+      const anggota = anggotaCache[
+        Object.keys(anggotaCache).find((kkId) =>
+          anggotaCache[kkId].some((a) => a.pendudukId === p.id)
+        ) || ""
+      ]?.find((a) => a.pendudukId === p.id);
       if (anggota?.statusHubunganDalamKeluarga) {
         const hubunganKey = mapToEnum(
           anggota.statusHubunganDalamKeluarga,
@@ -350,7 +354,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
           counters["hubungan-dalam-kk"][hubunganKey].female++;
       }
 
-      // Update "status-perkawinan"
       const perkawinanKey = mapToEnum(
         p.statusPerkawinan,
         StatusPerkawinan,
@@ -364,7 +367,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       else if (gender === "Perempuan")
         counters["status-perkawinan"][perkawinanKey].female++;
 
-      // Update "golongan-darah"
       const darahKey = mapToEnum(
         p.golonganDarah,
         GolonganDarah,
@@ -377,7 +379,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       else if (gender === "Perempuan")
         counters["golongan-darah"][darahKey].female++;
 
-      // Update "penyandang-cacat"
       const cacatKey = mapToEnum(
         p.penyandangCacat,
         PenyandangCacat,
@@ -390,7 +391,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       else if (gender === "Perempuan")
         counters["penyandang-cacat"][cacatKey].female++;
 
-      // Update "wilayah"
       const banjarKey = mapToEnum(
         p.banjar,
         Banjar,
@@ -403,7 +403,6 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       else if (gender === "Perempuan") counters["wilayah"][banjarKey].female++;
     });
 
-    // Bangun report.groups dari counters dan hitung percentage
     report.forEach((category) => {
       const categoryCounters = counters[category.category];
 
@@ -521,6 +520,10 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
     };
   } catch (error: any) {
     console.error("Gagal mengagregasi data laporan:", error);
-    throw new Error("Gagal mengagregasi data laporan: " + error.message);
+    return {
+      success: false,
+      message: error.message || "Gagal mengagregasi data laporan",
+      errorCode: error.code || "unknown",
+    };
   }
 }
