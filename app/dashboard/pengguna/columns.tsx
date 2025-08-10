@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserStore } from "@/store/useUserStore";
 
 export const columns: ColumnDef<IDataPengguna>[] = [
   {
@@ -54,11 +55,21 @@ export const columns: ColumnDef<IDataPengguna>[] = [
     cell: ({ row }) => {
       const pengguna: IDataPengguna = row.original;
       return (
-        <Badge
-          variant={pengguna.role === "admin" ? "default" : "outline"}
-          className={pengguna.role === "admin" ? "text-white" : ""}>
-          {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
-        </Badge>
+        <>
+          {pengguna.role == "admin" ? (
+            <Badge>
+              {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
+            </Badge>
+          ) : pengguna.role == "petugas" ? (
+            <Badge className="bg-blue-600">
+              {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
+            </Badge>
+          ) : (
+            <Badge variant={"outline"}>
+              {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
+            </Badge>
+          )}
+        </>
       );
     },
     filterFn: (row, id, filterValue) => {
@@ -74,6 +85,8 @@ export const columns: ColumnDef<IDataPengguna>[] = [
     cell: ({ row }) => {
       const pengguna: IDataPengguna = row.original;
 
+      const { user } = useUserStore();
+
       const { setPengguna, setIsOpen } = usePenggunaSelectedForUpdate();
 
       async function handleOpenDialog() {
@@ -82,11 +95,18 @@ export const columns: ColumnDef<IDataPengguna>[] = [
       }
 
       return (
-        <div className="flex gap-2">
-          <Button size={"sm"} variant={"outline"} onClick={handleOpenDialog}>
-            <Pencil />
-          </Button>
-        </div>
+        <>
+          {pengguna.email != user.email && (
+            <div className="flex gap-2">
+              <Button
+                size={"sm"}
+                variant={"outline"}
+                onClick={handleOpenDialog}>
+                <Pencil />
+              </Button>
+            </div>
+          )}
+        </>
       );
     },
   },

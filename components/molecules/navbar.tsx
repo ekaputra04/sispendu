@@ -35,6 +35,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleLogout() {
+    setIsLoading(true);
     try {
       await signOut(auth);
       const response = await axios.post("/api/logout");
@@ -50,6 +51,8 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
     } catch (error) {
       toast.error("Gagal logout");
       console.error("Error:", error);
+    } finally {
+      setIsLoading(false);
     }
   }
 

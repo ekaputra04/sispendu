@@ -75,6 +75,10 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
+  if (session?.role !== "admin" && path === "/dashboard/pengguna") {
+    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+  }
+
   // Lanjutkan ke rute berikutnya
   return NextResponse.next();
 }

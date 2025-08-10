@@ -89,7 +89,7 @@ export function LoginForm() {
 
       form.reset();
       toast.success("Berhasil login");
-      if (userDoc.role in ["admin", "petugas"]) {
+      if (userDoc.role == "admin" || userDoc.role == "petugas") {
         router.push("/dashboard");
       } else {
         router.push("/preview");

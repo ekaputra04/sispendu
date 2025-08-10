@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -14,8 +13,67 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { dataNavbar } from "@/consts/dataNavbar";
+import { useSessionStore } from "@/store/useSession";
+import { useEffect, useState } from "react";
+import { decrypt } from "@/lib/utils";
+import {
+  IconChartBar,
+  IconDashboard,
+  IconPhone,
+  IconUserCircle,
+  IconUsers,
+} from "@tabler/icons-react";
+
+const navMain = [
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: IconDashboard,
+  },
+  {
+    title: "Penduduk",
+    url: "/dashboard/penduduk",
+    icon: IconUsers,
+  },
+  {
+    title: "Kartu Keluarga",
+    url: "/dashboard/kartu-keluarga",
+    icon: IconChartBar,
+  },
+  {
+    title: "Kontak",
+    url: "/dashboard/contact",
+    icon: IconPhone,
+  },
+];
+
+const navMainAdmin = [
+  ...navMain,
+  {
+    title: "Pengguna",
+    url: "/dashboard/pengguna",
+    icon: IconUserCircle,
+  },
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { session } = useSessionStore();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    async function checkAdminStatus() {
+      const sessionDecrypted = await decrypt(session);
+
+      if (sessionDecrypted?.role == "admin") {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+
+    checkAdminStatus();
+  }, [session]);
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -39,7 +97,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={dataNavbar.navMain} />
+        {isAdmin ? (
+          <NavMain items={navMainAdmin} />
+        ) : (
+          <NavMain items={navMain} />
+        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
