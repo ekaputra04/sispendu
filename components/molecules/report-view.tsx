@@ -156,7 +156,7 @@ export default function ReportView() {
                         </Badge>
                       </CardDescription>
                       <CardTitle className="flex justify-between items-center font-semibold text-2xl @[250px]/card:text-3xl">
-                        {item.total.count}
+                        {banjarKK ? banjarKK.totalAnggota.count : 0}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="-mt-2">
@@ -166,12 +166,6 @@ export default function ReportView() {
                           variant={"outline"}>
                           {banjarKK ? banjarKK.totalKK.count : 0} - Kepala
                           Keluarga
-                        </Badge>
-                        <Badge
-                          className="bg-blue-100 border-blue-600 text-blue-600 text-sm"
-                          variant={"outline"}>
-                          {banjarKK ? banjarKK.totalAnggota.count : 0} -
-                          Penduduk
                         </Badge>
                       </div>
                     </CardContent>
