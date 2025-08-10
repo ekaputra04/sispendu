@@ -52,17 +52,38 @@ export function calculateAge(birthDate: string): {
   months: number;
   days: number;
 } {
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(birthDate)) {
-    throw new Error("Format tanggal lahir harus YYYY-MM-DD");
+  // Fungsi untuk mem-parsing tanggal dari berbagai format
+  const parseDate = (dateStr: string): Date => {
+    // Coba format YYYY-MM-DD
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (dateRegex.test(dateStr)) {
+      return new Date(dateStr);
+    }
+
+    // Coba format DD/MM/YYYY atau DD-MM-YYYY
+    const altRegex = /^(\d{2})[/-](\d{2})[/-](\d{4})$/;
+    const match = dateStr.match(altRegex);
+    if (match) {
+      // Ubah ke format YYYY-MM-DD
+      const reformatted = `${match[3]}-${match[2]}-${match[1]}`;
+      return new Date(reformatted);
+    }
+
+    // Coba parsing langsung dengan Date (untuk format lain yang didukung browser)
+    return new Date(dateStr);
+  };
+
+  if (!birthDate) {
+    throw new Error("Tanggal lahir tidak boleh kosong");
   }
 
-  const birth = new Date(birthDate);
-  const today = new Date();
+  const birth = parseDate(birthDate);
 
   if (isNaN(birth.getTime())) {
     throw new Error("Tanggal lahir tidak valid");
   }
+
+  const today = new Date();
 
   if (birth > today) {
     throw new Error("Tanggal lahir tidak boleh di masa depan");

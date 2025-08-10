@@ -20,12 +20,12 @@ export default function Page() {
 
   const generateReportMutation = useMutation({
     mutationFn: async () => {
-      const reportData = await aggregateReportData();
-      const result = await saveReport(reportData);
-      if (!result.success) {
-        throw new Error(result.message);
+      const response = await aggregateReportData();
+      // const result = await saveReport(reportData);
+      if (!response.success) {
+        toast.error(response.message);
+        throw new Error(response.message);
       }
-      return reportData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["latestReport"] });
