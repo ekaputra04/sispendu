@@ -33,35 +33,9 @@ export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
       const kkData = docSnap.data();
       const kkId = docSnap.id;
 
-      // const anggotaSnapshot = await getDocs(
-      //   collection(db, "kartu-keluarga", kkId, "anggota")
-      // );
-      // const anggota: IAnggotaKeluarga[] = [];
-
-      // for (const anggotaDoc of anggotaSnapshot.docs) {
-      //   const anggotaData = anggotaDoc.data();
-      //   const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
-      //   const pendudukDocSnap = await getDoc(pendudukDocRef);
-
-      //   if (pendudukDocSnap.exists()) {
-      //     anggota.push({
-      //       pendudukId: anggotaData.pendudukId,
-      //       statusHubunganDalamKeluarga:
-      //         anggotaData.statusHubunganDalamKeluarga,
-      //       detail: pendudukDocSnap.data() as IDataPenduduk,
-      //     });
-      //   } else {
-      //     console.warn(
-      //       `Penduduk dengan ID ${anggotaData.pendudukId} tidak ditemukan`
-      //     );
-      //   }
-      // }
-
       data.push({
         id: kkId,
         ...kkData,
-        // anggota,
-        // jumlahAnggota: anggotaSnapshot.size,
       } as IKartuKeluarga);
     }
 
@@ -175,35 +149,9 @@ export async function getKKByCreatedBy(
       const kkData = docSnap.data();
       const kkId = docSnap.id;
 
-      // const anggotaSnapshot = await getDocs(
-      //   collection(db, "kartu-keluarga", kkId, "anggota")
-      // );
-      // const anggota: IAnggotaKeluarga[] = [];
-
-      // for (const anggotaDoc of anggotaSnapshot.docs) {
-      //   const anggotaData = anggotaDoc.data();
-
-      //   const pendudukDocRef = doc(db, "penduduk", anggotaData.pendudukId);
-      //   const pendudukDocSnap = await getDoc(pendudukDocRef);
-
-      //   if (pendudukDocSnap.exists()) {
-      //     anggota.push({
-      //       pendudukId: anggotaData.pendudukId,
-      //       statusHubunganDalamKeluarga:
-      //         anggotaData.statusHubunganDalamKeluarga,
-      //       detail: pendudukDocSnap.data() as IDataPenduduk,
-      //     });
-      //   } else {
-      //     console.warn(
-      //       `Penduduk dengan ID ${anggotaData.pendudukId} tidak ditemukan`
-      //     );
-      //   }
-      // }
-
       data.push({
         id: kkId,
         ...kkData,
-        // anggota,
       } as IKartuKeluarga);
     }
 
@@ -285,9 +233,48 @@ export async function deleteKK(kkId: string): Promise<FirestoreResponse<void>> {
     if (!kkId) {
       throw new Error("ID kartu keluarga diperlukan");
     }
+
     await checkAuth();
-    const docRef = doc(db, "kartu-keluarga", kkId);
-    await deleteDoc(docRef);
+
+    const kkRef = doc(db, "kartu-keluarga", kkId);
+    const kkSnap = await getDoc(kkRef);
+
+    if (!kkSnap.exists()) {
+      throw new Error("Kartu keluarga tidak ditemukan");
+    }
+
+    const anggotaSnapshot = await getDocs(
+      collection(db, "kartu-keluarga", kkId, "anggota")
+    );
+    const anggotaIds: string[] = [];
+
+    anggotaSnapshot.forEach((anggotaDoc) => {
+      const anggotaData = anggotaDoc.data();
+      if (anggotaData.pendudukId) {
+        anggotaIds.push(anggotaData.pendudukId);
+      }
+    });
+
+    for (const pendudukId of anggotaIds) {
+      const pendudukRef = doc(db, "penduduk", pendudukId);
+      const pendudukSnap = await getDoc(pendudukRef);
+      if (pendudukSnap.exists()) {
+        await updateDoc(pendudukRef, {
+          kkRef: deleteField(),
+          updatedAt: new Date().toISOString(),
+        });
+        console.log(`Berhasil menghapus kkRef dari penduduk ${pendudukId}`);
+      } else {
+        console.warn(`Penduduk ${pendudukId} tidak ditemukan`);
+      }
+    }
+
+    await deleteDoc(kkRef);
+
+    console.log(
+      `Berhasil menghapus kartu keluarga ${kkId} dengan ${anggotaIds.length} anggota`
+    );
+
     return {
       success: true,
       message: "Kartu keluarga berhasil dihapus",
@@ -296,7 +283,8 @@ export async function deleteKK(kkId: string): Promise<FirestoreResponse<void>> {
     console.error("Gagal menghapus kartu keluarga:", error);
     return {
       success: false,
-      message: error.message || "Gagal menghapus kartu keluarga",
+      message:
+        error.message || "Gagal menghapus kartu keluarga. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
@@ -441,13 +429,10 @@ export async function deleteAllKartuKeluarga(): Promise<
   FirestoreResponse<void>
 > {
   try {
-    // Verifikasi autentikasi
     await checkAuth();
 
-    // Ambil semua dokumen dari koleksi kartu-keluarga
     const kkSnapshot = await getDocs(collection(db, "kartu-keluarga"));
 
-    // Jika koleksi kosong, kembalikan respons sukses
     if (kkSnapshot.empty) {
       return {
         success: true,
@@ -455,21 +440,18 @@ export async function deleteAllKartuKeluarga(): Promise<
       };
     }
 
-    // Gunakan batch untuk menghapus dokumen dan subkoleksi
-    const batchSize = 500; // Batas maksimum operasi per batch di Firestore
+    const batchSize = 500;
     let batch = writeBatch(db);
     let operationCount = 0;
     let kartuKeluargaCount = 0;
 
     for (const doc of kkSnapshot.docs) {
-      // Hapus dokumen kartu-keluarga
       batch.delete(doc.ref);
       console.log(`Menghapus kartu-keluarga ${kartuKeluargaCount}`);
       kartuKeluargaCount++;
 
       operationCount++;
 
-      // Ambil dan hapus semua dokumen di subkoleksi anggota
       const anggotaSnapshot = await getDocs(
         collection(db, "kartu-keluarga", doc.id, "anggota")
       );
@@ -477,7 +459,6 @@ export async function deleteAllKartuKeluarga(): Promise<
         batch.delete(anggotaDoc.ref);
         operationCount++;
 
-        // Jika mencapai batas batch, commit dan buat batch baru
         if (operationCount >= batchSize) {
           await batch.commit();
           batch = writeBatch(db);
@@ -486,7 +467,6 @@ export async function deleteAllKartuKeluarga(): Promise<
       }
     }
 
-    // Commit batch terakhir jika ada operasi yang tersisa
     if (operationCount > 0) {
       await batch.commit();
     }

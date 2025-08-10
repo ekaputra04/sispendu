@@ -85,9 +85,9 @@ export function calculateAge(birthDate: string): {
 
   const today = new Date();
 
-  if (birth > today) {
-    throw new Error("Tanggal lahir tidak boleh di masa depan");
-  }
+  // if (birth > today) {
+  //   throw new Error("Tanggal lahir tidak boleh di masa depan");
+  // }
 
   let years = today.getFullYear() - birth.getFullYear();
   let months = today.getMonth() - birth.getMonth();

@@ -303,7 +303,9 @@ export async function updatePenduduk({
   }
 }
 
-export async function deletePenduduk(id: string) {
+export async function deletePenduduk(
+  id: string
+): Promise<FirestoreResponse<{ id: string }>> {
   try {
     await checkAuth();
 
@@ -319,13 +321,34 @@ export async function deletePenduduk(id: string) {
       throw new Error("ID tidak valid");
     }
 
-    const docRef = doc(db, "penduduk", id);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) {
+    const pendudukRef = doc(db, "penduduk", id);
+    const pendudukSnap = await getDoc(pendudukRef);
+
+    if (!pendudukSnap.exists()) {
       throw new Error("Penduduk tidak ditemukan");
     }
 
-    await deleteDoc(docRef);
+    const pendudukData = pendudukSnap.data();
+    const kkRef = pendudukData.kkRef;
+
+    if (kkRef) {
+      const anggotaRef = doc(db, "kartu-keluarga", kkRef, "anggota", id);
+      const anggotaSnap = await getDoc(anggotaRef);
+      if (anggotaSnap.exists()) {
+        await deleteDoc(anggotaRef);
+        console.log(
+          `Berhasil menghapus anggota ${id} dari kartu-keluarga ${kkRef}`
+        );
+      } else {
+        console.warn(
+          `Anggota ${id} tidak ditemukan di kartu-keluarga ${kkRef}`
+        );
+      }
+    }
+
+    await deleteDoc(pendudukRef);
+
+    console.log(`Berhasil menghapus penduduk ${id}`);
 
     return {
       success: true,
@@ -336,7 +359,7 @@ export async function deletePenduduk(id: string) {
     console.error("Gagal menghapus penduduk:", error);
     return {
       success: false,
-      message: error.message || "Gagal menghapus penduduk",
+      message: error.message || "Gagal menghapus penduduk. Silakan coba lagi.",
       errorCode: error.code || "unknown",
     };
   }
@@ -432,13 +455,10 @@ export async function removeFromEditedBy(
 
 export async function deleteAllPenduduk(): Promise<FirestoreResponse<void>> {
   try {
-    // Verifikasi autentikasi
     await checkAuth();
 
-    // Ambil semua dokumen dari koleksi penduduk
     const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
 
-    // Jika koleksi kosong, kembalikan respons sukses
     if (pendudukSnapshot.empty) {
       return {
         success: true,
@@ -446,8 +466,7 @@ export async function deleteAllPenduduk(): Promise<FirestoreResponse<void>> {
       };
     }
 
-    // Gunakan batch untuk menghapus dokumen
-    const batchSize = 500; // Batas maksimum operasi per batch di Firestore
+    const batchSize = 500;
     let batch = writeBatch(db);
     let operationCount = 0;
 
@@ -457,7 +476,6 @@ export async function deleteAllPenduduk(): Promise<FirestoreResponse<void>> {
 
       operationCount++;
 
-      // Jika mencapai batas batch, commit dan buat batch baru
       if (operationCount >= batchSize) {
         await batch.commit();
         batch = writeBatch(db);
@@ -465,7 +483,6 @@ export async function deleteAllPenduduk(): Promise<FirestoreResponse<void>> {
       }
     }
 
-    // Commit batch terakhir jika ada operasi yang tersisa
     if (operationCount > 0) {
       await batch.commit();
     }

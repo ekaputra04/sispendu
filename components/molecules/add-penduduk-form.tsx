@@ -43,7 +43,7 @@ import { Heading1 } from "../atoms/heading";
 
 const formSchema = z.object({
   nama: z.string().min(2, { message: "Nama harus diisi minimal 2 karakter" }),
-  jenisKelamin: z.enum(["Laki-laki", "Perempuan"], {
+  jenisKelamin: z.enum(["Laki-laki", "Perempuan", "Tidak Tau"], {
     message: "Jenis kelamin harus dipilih (Laki-laki atau Perempuan)",
   }),
   tempatLahir: z
@@ -61,6 +61,7 @@ const formSchema = z.object({
       "Budha",
       "Konghucu",
       "Kepercayaan Terhadap Tuhan YME / Lainnya",
+      "Tidak Tau",
     ],
     {
       message: "Agama harus dipilih dari opsi yang tersedia",
@@ -73,7 +74,7 @@ const formSchema = z.object({
     .string()
     .min(2, { message: "Jenis pekerjaan harus diisi minimal 2 karakter" }),
   statusPerkawinan: z.enum(
-    ["Kawin", "Belum Kawin", "Cerai Hidup", "Cerai Mati"],
+    ["Kawin", "Belum Kawin", "Cerai Hidup", "Cerai Mati", "Tidak Tau"],
     {
       message: "Status perkawinan harus dipilih dari opsi yang tersedia",
     }
@@ -82,7 +83,21 @@ const formSchema = z.object({
     message: "Kewarganegaraan harus dipilih (WNI atau WNA)",
   }),
   golonganDarah: z.enum(
-    ["A", "B", "AB", "O", "A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
+    [
+      "A",
+      "B",
+      "AB",
+      "O",
+      "A+",
+      "A-",
+      "B+",
+      "B-",
+      "AB+",
+      "AB-",
+      "O+",
+      "O-",
+      "Tidak Tau",
+    ],
     {
       message: "Golongan darah harus dipilih dari opsi yang tersedia",
     }
@@ -96,14 +111,18 @@ const formSchema = z.object({
       "Cacat Mental / Jiwa",
       "Cacat Fisik dan Mental",
       "Cacat Lainnya",
+      "Tidak Tau",
     ],
     {
       message: "Status penyandang cacat harus dipilih dari opsi yang tersedia",
     }
   ),
-  banjar: z.enum(["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak"], {
-    message: "Banjar harus dipilih dari opsi yang tersedia",
-  }),
+  banjar: z.enum(
+    ["Bebalang", "Tegal", "Sedit", "Gancan", "Sembung", "Petak", "Tidak Tau"],
+    {
+      message: "Banjar harus dipilih dari opsi yang tersedia",
+    }
+  ),
   namaAyah: z
     .string()
     .min(2, { message: "Nama ayah harus diisi minimal 2 karakter" }),
