@@ -40,37 +40,37 @@ export default function Page() {
     },
   });
 
-  async function handleDeleteAllPenduduk() {
-    setIsLoadingDelete(true);
-    try {
-      const response = await deleteAllPenduduk();
-      if (response.success) {
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(error as string);
-    } finally {
-      setIsLoadingDelete(false);
-    }
-  }
+  // async function handleDeleteAllPenduduk() {
+  //   setIsLoadingDelete(true);
+  //   try {
+  //     const response = await deleteAllPenduduk();
+  //     if (response.success) {
+  //       toast.success(response.message);
+  //     } else {
+  //       toast.error(response.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error as string);
+  //   } finally {
+  //     setIsLoadingDelete(false);
+  //   }
+  // }
 
-  async function handleDeleteAllKartuKeluarga() {
-    setIsLoadingDelete(true);
-    try {
-      const response = await deleteAllKartuKeluarga();
-      if (response.success) {
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (error) {
-      toast.error(error as string);
-    } finally {
-      setIsLoadingDelete(false);
-    }
-  }
+  // async function handleDeleteAllKartuKeluarga() {
+  //   setIsLoadingDelete(true);
+  //   try {
+  //     const response = await deleteAllKartuKeluarga();
+  //     if (response.success) {
+  //       toast.success(response.message);
+  //     } else {
+  //       toast.error(response.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error as string);
+  //   } finally {
+  //     setIsLoadingDelete(false);
+  //   }
+  // }
 
   // async function handleAddData() {
   //   setIsLoading(true);
@@ -115,7 +115,7 @@ export default function Page() {
           <RefreshCw />
           <span>Import Data Penduduk</span>
         </div>
-      </Button> */}
+      </Button>
 
       <Button onClick={handleDeleteAllPenduduk}>
         {isLoadingDelete ? "Menghapus..." : "Hapus Semua Data Penduduk"}
@@ -123,7 +123,7 @@ export default function Page() {
       <Button onClick={handleDeleteAllKartuKeluarga}>
         {isLoadingDelete ? "Menghapus..." : "Hapus Semua Data Kartu Keluarga"}
       </Button>
-      {isLoadingDelete && <LoadingView />}
+      {isLoadingDelete && <LoadingView />} */}
 
       {isLoading && <LoadingView />}
 

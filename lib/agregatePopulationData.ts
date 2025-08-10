@@ -153,6 +153,8 @@ export async function aggregateReportData(): Promise<FirestoreResponse<void>> {
       createdAt: serverTimestamp(),
     });
 
+    console.log("REPORT KK BERHASIL DIBUAT");
+
     // REPORT PENDUDUK
     const pendudukSnapshot = await getDocs(collection(db, "penduduk"));
     const pendudukList: IDataPenduduk[] = pendudukSnapshot.docs.map((doc) => {
