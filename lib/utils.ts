@@ -3,9 +3,25 @@ import { twMerge } from "tailwind-merge";
 import { SessionPayload } from "./definitions";
 import { jwtVerify, SignJWT } from "jose";
 import { toast } from "sonner";
-import { Timestamp } from "firebase/firestore";
+import {
+  collection,
+  documentId,
+  getDocs,
+  query,
+  Timestamp,
+  where,
+} from "firebase/firestore";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { db } from "@/config/firebase-init";
+import {
+  FirestoreResponse,
+  IAnggotaKeluarga,
+  IKartuKeluarga,
+  TBanjar,
+} from "@/types/types";
+import * as XLSX from "xlsx";
+import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,24 +68,19 @@ export function calculateAge(birthDate: string): {
   months: number;
   days: number;
 } {
-  // Fungsi untuk mem-parsing tanggal dari berbagai format
   const parseDate = (dateStr: string): Date => {
-    // Coba format YYYY-MM-DD
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (dateRegex.test(dateStr)) {
       return new Date(dateStr);
     }
 
-    // Coba format DD/MM/YYYY atau DD-MM-YYYY
     const altRegex = /^(\d{2})[/-](\d{2})[/-](\d{4})$/;
     const match = dateStr.match(altRegex);
     if (match) {
-      // Ubah ke format YYYY-MM-DD
       const reformatted = `${match[3]}-${match[2]}-${match[1]}`;
       return new Date(reformatted);
     }
 
-    // Coba parsing langsung dengan Date (untuk format lain yang didukung browser)
     return new Date(dateStr);
   };
 
@@ -84,10 +95,6 @@ export function calculateAge(birthDate: string): {
   }
 
   const today = new Date();
-
-  // if (birth > today) {
-  //   throw new Error("Tanggal lahir tidak boleh di masa depan");
-  // }
 
   let years = today.getFullYear() - birth.getFullYear();
   let months = today.getMonth() - birth.getMonth();
@@ -122,3 +129,179 @@ export function capitalizeWords(sentence: string): string {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
+
+export const downloadExcelData = async (
+  banjar: TBanjar | "Semua" = "Semua"
+): Promise<FirestoreResponse<void>> => {
+  try {
+    const kkCollection = collection(db, "kartu-keluarga");
+    const kkQuery =
+      banjar === "Semua"
+        ? kkCollection
+        : query(kkCollection, where("banjar", "==", banjar));
+    const kkSnapshot = await getDocs(kkQuery);
+    const kkDocs = kkSnapshot.docs;
+
+    // Ambil semua subcollection anggota
+    const anggotaSnapshotsPromises = kkDocs.map((kkDoc) =>
+      getDocs(collection(db, "kartu-keluarga", kkDoc.id, "anggota"))
+    );
+    const anggotaSnapshots = await Promise.all(anggotaSnapshotsPromises);
+
+    // Kumpulkan semua pendudukId unik
+    const pendudukIdSet = new Set<string>();
+    anggotaSnapshots.forEach((snap) =>
+      snap.forEach((angDoc) => {
+        const ang = angDoc.data() as IAnggotaKeluarga;
+        if (ang?.pendudukId) pendudukIdSet.add(ang.pendudukId);
+      })
+    );
+    const pendudukIds = Array.from(pendudukIdSet);
+
+    // Helper chunk array untuk query in
+    const chunkArray = <T>(arr: T[], size: number) => {
+      const res: T[][] = [];
+      for (let i = 0; i < arr.length; i += size)
+        res.push(arr.slice(i, i + size));
+      return res;
+    };
+
+    // Ambil semua data penduduk & simpan di Map
+    const pendudukMap = new Map<string, any>();
+    if (pendudukIds.length > 0) {
+      const chunks = chunkArray(pendudukIds, 10);
+      for (const chunk of chunks) {
+        const q = query(
+          collection(db, "penduduk"),
+          where(documentId(), "in", chunk)
+        );
+        const snap = await getDocs(q);
+        snap.forEach((d) => pendudukMap.set(d.id, d.data()));
+      }
+    }
+
+    const data: any[] = [];
+    let no = 1;
+    const currentDate = new Date();
+
+    const getDateFromField = (field: any): Date | null => {
+      if (!field) return null;
+      if (typeof field === "object" && typeof field.toDate === "function")
+        return field.toDate(); // Timestamp Firestore
+      const d = new Date(field);
+      return isNaN(d.getTime()) ? null : d;
+    };
+
+    // Loop setiap KK
+    kkDocs.forEach((kkDoc, index) => {
+      const kk = kkDoc.data() as IKartuKeluarga;
+      const namaKepalaKeluarga = kk.namaKepalaKeluarga || "";
+      const alamat = kk.alamat || "";
+      const banjarKK = kk.banjar || "";
+      const anggotaSnap = anggotaSnapshots[index];
+
+      // Kumpulkan anggota untuk KK ini
+      const anggotaWithPenduduk = anggotaSnap.docs.map((angDoc) => {
+        const ang = angDoc.data() as IAnggotaKeluarga;
+        const penduduk = pendudukMap.get(ang.pendudukId);
+        return { ang, penduduk };
+      });
+
+      // Urutkan berdasarkan prioritas StatusHubunganDalamKeluarga
+      anggotaWithPenduduk.sort((a, b) => {
+        const idxA = StatusHubunganDalamKeluarga.indexOf(
+          a.ang.statusHubunganDalamKeluarga
+        );
+        const idxB = StatusHubunganDalamKeluarga.indexOf(
+          b.ang.statusHubunganDalamKeluarga
+        );
+        return idxA - idxB;
+      });
+
+      // Push ke data[] sesuai urutan
+      anggotaWithPenduduk.forEach(({ ang, penduduk }) => {
+        if (!penduduk) {
+          console.warn(`Penduduk ${ang.pendudukId} tidak ditemukan`);
+          return;
+        }
+
+        const tanggalLahirDate = getDateFromField(penduduk.tanggalLahir);
+        let usia = "0";
+        if (tanggalLahirDate) {
+          const ageDiff =
+            currentDate.getFullYear() - tanggalLahirDate.getFullYear();
+          const monthDiff =
+            currentDate.getMonth() - tanggalLahirDate.getMonth();
+          const dayDiff = currentDate.getDate() - tanggalLahirDate.getDate();
+          usia = (
+            monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)
+              ? ageDiff - 1
+              : ageDiff
+          ).toString();
+        }
+
+        data.push({
+          NO: no,
+          NAMA_LENGKAP: penduduk.nama || "",
+          JENIS_KELAMIN: penduduk.jenisKelamin || "",
+          TEMPAT_LAHIR: penduduk.tempatLahir || "",
+          TANGGAL_LAHIR:
+            tanggalLahirDate?.toISOString().split("T")[0] ||
+            penduduk.tanggalLahir ||
+            "",
+          USIA: usia,
+          AGAMA: penduduk.agama || "",
+          PENDIDIKAN: penduduk.pendidikan || "",
+          PEKERJAAN: penduduk.jenisPekerjaan || penduduk.pekerjaan || "",
+          STATUS_KAWIN: penduduk.statusPerkawinan || "",
+          GOL_DARAH: penduduk.golonganDarah || "",
+          NAMA_LGKP_AYAH: penduduk.namaAyah || "",
+          NAMA_LGKP_IBU: penduduk.namaIbu || "",
+          ALAMAT: alamat,
+          STATUS_HUBUNGAN_KELUARGA: ang.statusHubunganDalamKeluarga || "",
+          NAMA_KEPALA_KELUARGA: namaKepalaKeluarga,
+          BANJAR: banjarKK,
+        });
+        no++;
+      });
+    });
+
+    if (data.length === 0) {
+      return {
+        success: false,
+        message:
+          "Tidak ada data penduduk yang ditemukan untuk banjar yang dipilih",
+      };
+    }
+
+    // Export Excel
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Penduduk");
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: "xlsx",
+      type: "array",
+    });
+    const blob = new Blob([excelBuffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `data-penduduk-${
+      banjar === "Semua" ? "semua" : banjar
+    }.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    return { success: true, message: "Data berhasil diunduh" };
+  } catch (error) {
+    console.error("Error downloading data:", error);
+    return {
+      success: false,
+      message: "Gagal mendownload data. Silakan coba lagi.",
+    };
+  }
+};

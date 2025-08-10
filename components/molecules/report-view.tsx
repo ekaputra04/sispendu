@@ -19,6 +19,7 @@ import { fetchLatestReport, fetchLatestReportKK } from "@/lib/firestore/report";
 import LoadingView from "@/components/atoms/loading-view";
 import { PieChartAll } from "@/components/charts/pie-chart";
 import { formatWitaDate } from "@/lib/utils";
+import DialogDeleteData from "./dialog-download-data";
 
 const conditions = [
   { key: "all", label: "Semua" },
@@ -85,7 +86,8 @@ export default function ReportView() {
       {report && reportKK && (
         <>
           {/* Kartu Statistik */}
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-between mb-4">
+            <DialogDeleteData />
             <Badge variant="outline">
               Terakhir diperbarui {formatWitaDate(report?.createdAt)}
             </Badge>
