@@ -3,7 +3,6 @@ import Navbar from "@/components/molecules/navbar";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -13,9 +12,8 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from "@/components/ui/card";
-import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -26,7 +24,9 @@ export default function Page() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
+                <Link href="/">
+                  <BreadcrumbPage>Beranda</BreadcrumbPage>
+                </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

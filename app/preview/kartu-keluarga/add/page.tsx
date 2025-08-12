@@ -4,11 +4,11 @@ import Navbar from "@/components/molecules/navbar";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -18,11 +18,15 @@ export default function Page() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
+              <Link href="/">
+                <BreadcrumbPage>Beranda</BreadcrumbPage>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/preview">Preview</BreadcrumbLink>
+              <Link href="/preview">
+                <BreadcrumbPage>Preview</BreadcrumbPage>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>

@@ -49,7 +49,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
       {isLoading && <LoadingView />}
       {data?.data ? (
         <div>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-wrap justify-between items-center gap-4">
             <Heading1 text="Detail Data Penduduk" />
             <div className="flex gap-2">
               {data.data.kkRef && (

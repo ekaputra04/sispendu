@@ -13,7 +13,6 @@ import Navbar from "@/components/molecules/navbar";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -50,11 +49,15 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
+              <Link href="/">
+                <BreadcrumbPage>Beranda</BreadcrumbPage>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/preview">Preview</BreadcrumbLink>
+              <Link href="/preview">
+                <BreadcrumbPage>Preview</BreadcrumbPage>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -66,9 +69,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
       {isLoading && <LoadingView />}
       {!isLoading && data?.data ? (
         <div className="my-8 px-8 md:px-16 lg:px-32">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-wrap justify-between items-center gap-4">
             <Heading1 text="Detail Data Penduduk" />
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-2">
               <Link href={"/preview/kartu-keluarga/detail/" + data.data?.kkRef}>
                 <Button variant={"outline"}>
                   <Eye />

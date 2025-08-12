@@ -169,17 +169,8 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                           </div>
                         ) : (
                           <div className="flex items-center gap-2">
-                            {isLoading ? (
-                              <div className="flex items-center gap-2">
-                                <LoadingIcon />
-                                <span>Logging out...</span>
-                              </div>
-                            ) : (
-                              <div className="flex items-center gap-2">
-                                <LogOut className="w-4 h-4" />
-                                Logout
-                              </div>
-                            )}
+                            <LogOut className="w-4 h-4" />
+                            Logout
                           </div>
                         )}
                       </Button>
@@ -189,17 +180,8 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                       <Button
                         variant="outline"
                         className="flex justify-center items-center bg-transparent hover:bg-white/10 w-full dark:hover:text-white dark:text-white">
-                        {isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <LoadingIcon />
-                            <span>Logging out...</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <LogOut className="w-4 h-4" />
-                            Logout
-                          </div>
-                        )}
+                        <LogIn className="w-4 h-4" />
+                        Masuk
                       </Button>
                     </Link>
                   )}
@@ -228,9 +210,19 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
                       ? "text-white hover:text-white"
                       : "text-gray-900 hover:text-gray-900 dark:text-white"
                   }`}
-                  onClick={handleLogout}>
-                  <LogOut className="w-4 h-4" />
-                  Logout
+                  onClick={handleLogout}
+                  disabled={isLoading}>
+                  {isLoading ? (
+                    <div className="flex items-center gap-2">
+                      <LoadingIcon />
+                      <span>Logging out...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </div>
+                  )}
                 </Button>
                 <ModeToggle />
               </>

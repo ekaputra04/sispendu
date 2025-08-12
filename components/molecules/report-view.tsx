@@ -89,7 +89,7 @@ export default function ReportView({ isInDashboard = true }: ReportViewProps) {
         <>
           {/* Kartu Statistik */}
           <div
-            className={`flex mb-4 ${
+            className={`flex flex-wrap gap-4 mb-4 ${
               isInDashboard ? "justify-between" : "justify-end"
             }`}>
             {isInDashboard && <DialogDownloadData />}

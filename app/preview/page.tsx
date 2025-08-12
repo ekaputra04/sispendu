@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -68,7 +67,9 @@ export default function PreviewPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
+                <Link href="/">
+                  <BreadcrumbPage>Beranda</BreadcrumbPage>
+                </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

@@ -16,7 +16,6 @@ import Navbar from "@/components/molecules/navbar";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
@@ -36,6 +35,7 @@ import { createContact } from "@/lib/firestore/contact";
 import { toast } from "sonner";
 import { useState } from "react";
 import LoadingIcon from "@/components/atoms/loading-icon";
+import Link from "next/link";
 
 const formSchema = z.object({
   nama: z.string().min(2, { message: "Nama harus diisi minimal 2 karakter" }),
@@ -85,7 +85,9 @@ export default function ContactPage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Beranda</BreadcrumbLink>
+                <Link href="/">
+                  <BreadcrumbPage>Beranda</BreadcrumbPage>
+                </Link>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
