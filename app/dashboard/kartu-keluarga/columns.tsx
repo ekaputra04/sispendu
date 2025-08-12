@@ -105,7 +105,7 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
       const updatedAt = row.getValue(id);
       if (!(updatedAt instanceof Timestamp)) return false;
       const updatedAtDate = updatedAt.toDate();
-      return updatedAtDate < filterValue;
+      return updatedAtDate <= filterValue;
     },
   },
   {
