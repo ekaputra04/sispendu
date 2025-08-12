@@ -16,7 +16,7 @@ import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Eye, Pencil } from "lucide-react";
 import DialogDeleteUserFromKK from "../../../../../components/molecules/dialog-delete-user-from-kk";
-import { capitalizeWords, handleCopy } from "@/lib/utils";
+import { calculateAge, capitalizeWords, handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
@@ -64,8 +64,8 @@ export default function DetailKartuKeluargaPage({
                 <TableCell className="font-medium">
                   Nama Kepala Keluarga
                 </TableCell>
-                <TableCell>
-                  {capitalizeWords(data?.data?.namaKepalaKeluarga) || "-"}
+                <TableCell className="uppercase">
+                  {data?.data?.namaKepalaKeluarga || "-"}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -73,9 +73,8 @@ export default function DetailKartuKeluargaPage({
                     variant={"ghost"}
                     onClick={() =>
                       handleCopy(
-                        capitalizeWords(
-                          data?.data?.namaKepalaKeluarga as string
-                        ) || "-"
+                        (data?.data?.namaKepalaKeluarga.toUpperCase() as string) ||
+                          "-"
                       )
                     }>
                     <Copy />
@@ -84,8 +83,8 @@ export default function DetailKartuKeluargaPage({
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Alamat</TableCell>
-                <TableCell>
-                  {capitalizeWords(data?.data?.alamat) || "-"}
+                <TableCell className="uppercase">
+                  {data?.data?.alamat || "-"}
                 </TableCell>
                 <TableCell>
                   <Button
@@ -93,7 +92,7 @@ export default function DetailKartuKeluargaPage({
                     variant={"ghost"}
                     onClick={() =>
                       handleCopy(
-                        capitalizeWords(data?.data?.alamat as string) || "-"
+                        (data?.data?.alamat.toUpperCase() as string) || "-"
                       )
                     }>
                     <Copy />
@@ -102,12 +101,16 @@ export default function DetailKartuKeluargaPage({
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Banjar</TableCell>
-                <TableCell>{data?.data?.banjar}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.banjar}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
                     variant={"ghost"}
-                    onClick={() => handleCopy(data?.data?.banjar as string)}>
+                    onClick={() =>
+                      handleCopy(data?.data?.banjar.toUpperCase() as string)
+                    }>
                     <Copy />
                   </Button>
                 </TableCell>
@@ -145,6 +148,8 @@ export default function DetailKartuKeluargaPage({
                   <TableHead>Status Hubungan Keluarga</TableHead>
                   <TableHead>Nama</TableHead>
                   <TableHead>Jenis Kelamin</TableHead>
+                  <TableHead>Tanggal Lahir</TableHead>
+                  <TableHead>Usia</TableHead>
                   <TableHead>Nama Ayah</TableHead>
                   <TableHead>Nama Ibu</TableHead>
                   <TableHead>Aksi</TableHead>
@@ -170,18 +175,26 @@ export default function DetailKartuKeluargaPage({
                         <TableCell className="font-medium">
                           {index + 1}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="uppercase">
                           {penduduk.statusHubunganDalamKeluarga}
                         </TableCell>
-                        <TableCell>
-                          {capitalizeWords(pendudukDetail.nama)}
+                        <TableCell className="uppercase">
+                          {pendudukDetail.nama}
                         </TableCell>
-                        <TableCell>{pendudukDetail.jenisKelamin}</TableCell>
-                        <TableCell>
-                          {capitalizeWords(pendudukDetail.namaAyah)}
+                        <TableCell className="uppercase">
+                          {pendudukDetail.jenisKelamin}
                         </TableCell>
-                        <TableCell>
-                          {capitalizeWords(pendudukDetail.namaIbu)}
+                        <TableCell className="uppercase">
+                          {pendudukDetail.tanggalLahir}
+                        </TableCell>
+                        <TableCell className="uppercase">
+                          {calculateAge(pendudukDetail.tanggalLahir).years || 0}
+                        </TableCell>
+                        <TableCell className="uppercase">
+                          {pendudukDetail.namaAyah}
+                        </TableCell>
+                        <TableCell className="uppercase">
+                          {pendudukDetail.namaIbu}
                         </TableCell>
                         <TableCell className="flex gap-2">
                           <Link

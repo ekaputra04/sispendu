@@ -16,7 +16,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Banjar, JenisPekerjaan } from "@/consts/dataDefinitions";
-import { calculateAge, capitalizeWords } from "@/lib/utils";
+import { calculateAge, capitalizeWords, formatWitaDate } from "@/lib/utils";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Timestamp } from "firebase/firestore";
 
 export const columns: ColumnDef<IDataPenduduk>[] = [
   {
@@ -26,17 +29,20 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
       return <p>{row.index + 1}</p>;
     },
   },
-
   {
     accessorKey: "nama",
     header: "Nama Lengkap",
     cell: ({ row }) => {
       const penduduk: IDataPenduduk = row.original;
-      return (
-        <div className="">
-          <p>{capitalizeWords(penduduk.nama)}</p>
-        </div>
-      );
+      return <p className="uppercase">{penduduk.nama}</p>;
+    },
+  },
+  {
+    accessorKey: "jenisKelamin",
+    header: "Jenis Kelamin",
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+      return <p className="uppercase">{penduduk.jenisKelamin}</p>;
     },
   },
   {
@@ -49,11 +55,7 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
     cell: ({ row }) => {
       const penduduk: IDataPenduduk = row.original;
       const { years } = calculateAge(penduduk.tanggalLahir);
-      return (
-        <div className="">
-          <p>{penduduk.tanggalLahir && years}</p>
-        </div>
-      );
+      return <p>{penduduk.tanggalLahir && years}</p>;
     },
   },
   {
@@ -79,6 +81,10 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
         </Select>
       </div>
     ),
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+      return <p className="uppercase">{penduduk.banjar}</p>;
+    },
     filterFn: (row, id, filterValue) => {
       if (!filterValue) return true;
       return (
@@ -109,6 +115,10 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
         </Select>
       </div>
     ),
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+      return <p className="uppercase">{penduduk.jenisPekerjaan}</p>;
+    },
     filterFn: (row, id, filterValue) => {
       if (!filterValue) return true;
       return (
@@ -161,7 +171,40 @@ export const columns: ColumnDef<IDataPenduduk>[] = [
       return hasKK === (filterValue === "true");
     },
   },
-
+  {
+    accessorKey: "updatedAt",
+    header: ({ column }) => {
+      const [date, setDate] = useState<string>("");
+      return (
+        <div className="flex flex-col justify-start items-start gap-2 p-2">
+          <span className="text-start">Terakhir Diperbarui</span>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => {
+              setDate(e.target.value);
+              column.setFilterValue(
+                e.target.value ? new Date(e.target.value) : undefined
+              );
+            }}
+            placeholder="Pilih tanggal"
+            className="w-[150px] h-7 text-sm"
+          />
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const penduduk: IDataPenduduk = row.original;
+      return <p className="uppercase">{formatWitaDate(penduduk.updatedAt)}</p>;
+    },
+    filterFn: (row, id, filterValue: Date | undefined) => {
+      if (!filterValue) return true;
+      const updatedAt = row.getValue(id);
+      if (!(updatedAt instanceof Timestamp)) return false;
+      const updatedAtDate = updatedAt.toDate();
+      return updatedAtDate < filterValue;
+    },
+  },
   {
     id: "Aksi",
     header: "Aksi",

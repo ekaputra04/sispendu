@@ -15,7 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Banjar } from "@/consts/dataDefinitions";
-import { capitalizeWords } from "@/lib/utils";
+import { capitalizeWords, formatWitaDate } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Timestamp } from "firebase/firestore";
 
 export const columns: ColumnDef<IKartuKeluarga>[] = [
   {
@@ -25,16 +28,13 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
       return <p>{row.index + 1}</p>;
     },
   },
-
   {
     accessorKey: "namaKepalaKeluarga",
     header: "Nama Kepala Keluarga",
     cell: ({ row }) => {
       const kartuKeluarga: IKartuKeluarga = row.original;
       return (
-        <div className="">
-          <p>{capitalizeWords(kartuKeluarga.namaKepalaKeluarga) || "-"}</p>
-        </div>
+        <p className="uppercase">{kartuKeluarga.namaKepalaKeluarga || "-"}</p>
       );
     },
   },
@@ -61,6 +61,10 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
         </Select>
       </div>
     ),
+    cell: ({ row }) => {
+      const kartuKeluarga: IKartuKeluarga = row.original;
+      return <p className="uppercase">{kartuKeluarga.banjar || "-"}</p>;
+    },
     filterFn: (row, id, filterValue) => {
       if (!filterValue) return true;
       return (
@@ -69,16 +73,41 @@ export const columns: ColumnDef<IKartuKeluarga>[] = [
     },
   },
   {
-    accessorKey: "tanggalPenerbitan",
-    header: "Tanggal Penerbitan",
+    accessorKey: "updatedAt",
+    header: ({ column }) => {
+      const [date, setDate] = useState<string>("");
+      return (
+        <div className="flex flex-col justify-start items-start gap-2 p-2">
+          <span className="text-start">Terakhir Diperbarui</span>
+          <Input
+            type="date"
+            value={date}
+            onChange={(e) => {
+              setDate(e.target.value);
+              column.setFilterValue(
+                e.target.value ? new Date(e.target.value) : undefined
+              );
+            }}
+            placeholder="Pilih tanggal"
+            className="w-[150px] h-7 text-sm"
+          />
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      const kartuKeluarga: IKartuKeluarga = row.original;
+      return (
+        <p className="uppercase">{formatWitaDate(kartuKeluarga.updatedAt)}</p>
+      );
+    },
+    filterFn: (row, id, filterValue: Date | undefined) => {
+      if (!filterValue) return true;
+      const updatedAt = row.getValue(id);
+      if (!(updatedAt instanceof Timestamp)) return false;
+      const updatedAtDate = updatedAt.toDate();
+      return updatedAtDate < filterValue;
+    },
   },
-  // {
-  //   accessorKey: "anggota",
-  //   header: "Jumlah Anggota",
-  //   cell: ({ row }) => {
-  //     return <p>{row.original.jumlahAnggota || 0}</p>;
-  //   },
-  // },
   {
     id: "actions",
     header: "Aksi",

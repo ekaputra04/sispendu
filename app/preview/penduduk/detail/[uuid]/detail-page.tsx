@@ -6,7 +6,7 @@ import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
-import { Copy, Pencil } from "lucide-react";
+import { Copy, Eye, Pencil } from "lucide-react";
 import { calculateAge, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import Navbar from "@/components/molecules/navbar";
@@ -68,19 +68,27 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
         <div className="my-8 px-8 md:px-16 lg:px-32">
           <div className="flex justify-between items-center">
             <Heading1 text="Detail Data Penduduk" />
-            <Link href={"/preview/penduduk/edit/" + uuid}>
-              <Button variant={"outline"} className={ButtonOutlineGreen}>
-                <Pencil />
-                Edit Data Penduduk
-              </Button>
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link href={"/preview/kartu-keluarga/detail/" + data.data?.kkRef}>
+                <Button variant={"outline"}>
+                  <Eye />
+                  Data Kartu Keluarga
+                </Button>
+              </Link>
+              <Link href={"/preview/penduduk/edit/" + uuid}>
+                <Button variant={"outline"} className={ButtonOutlineGreen}>
+                  <Pencil />
+                  Edit Data Penduduk
+                </Button>
+              </Link>
+            </div>
           </div>
           <hr className="my-4" />
           <Table>
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">Nama Lengkap</TableCell>
-                <TableCell>{data?.data?.nama}</TableCell>
+                <TableCell className="uppercase">{data?.data?.nama}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -92,7 +100,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Jenis Kelamin</TableCell>
-                <TableCell>{data?.data?.jenisKelamin}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.jenisKelamin}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -106,7 +116,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Tempat Lahir</TableCell>
-                <TableCell>{data?.data?.tempatLahir}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.tempatLahir}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -120,7 +132,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Tanggal Lahir</TableCell>
-                <TableCell>{data?.data?.tanggalLahir}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.tanggalLahir}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -134,7 +148,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Usia</TableCell>
-                <TableCell>{age}</TableCell>
+                <TableCell className="uppercase">{age}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -146,7 +160,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Agama</TableCell>
-                <TableCell>{data?.data?.agama}</TableCell>
+                <TableCell className="uppercase">{data?.data?.agama}</TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -158,7 +172,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Pendidikan</TableCell>
-                <TableCell>{data?.data?.pendidikan}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.pendidikan}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -172,7 +188,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Jenis Pekerjaan</TableCell>
-                <TableCell>{data?.data?.jenisPekerjaan}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.jenisPekerjaan}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -186,7 +204,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Status Perkawinan</TableCell>
-                <TableCell>{data?.data?.statusPerkawinan}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.statusPerkawinan}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -200,7 +220,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Kewarganegaraan</TableCell>
-                <TableCell>{data?.data?.kewarganegaraan}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.kewarganegaraan}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -214,7 +236,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Golongan Darah</TableCell>
-                <TableCell>{data?.data?.golonganDarah}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.golonganDarah}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -228,7 +252,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Penyandang Cacat</TableCell>
-                <TableCell>{data?.data?.penyandangCacat}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.penyandangCacat}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -242,7 +268,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Nama Ayah</TableCell>
-                <TableCell>{data?.data?.namaAyah}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.namaAyah}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -254,7 +282,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Nama Ibu</TableCell>
-                <TableCell>{data?.data?.namaIbu}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.namaIbu}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -266,7 +296,9 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
               </TableRow>
               <TableRow>
                 <TableCell className="font-medium">Banjar</TableCell>
-                <TableCell>{data?.data?.banjar}</TableCell>
+                <TableCell className="uppercase">
+                  {data?.data?.banjar}
+                </TableCell>
                 <TableCell>
                   <Button
                     size={"sm"}
@@ -281,7 +313,7 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
         </div>
       ) : (
         <div className="my-8 px-8 md:px-16 lg:px-32">
-          <Heading1 text="Data Detail Kartu Keluarga Tidak Ditemukan" />
+          <Heading1 text="Data Detail Penduduk Tidak Ditemukan" />
         </div>
       )}
     </div>

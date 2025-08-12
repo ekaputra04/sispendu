@@ -1,11 +1,8 @@
 "use client";
 
 import Footer from "@/components/atoms/footer";
-import LoadingView from "@/components/atoms/loading-view";
 import HeroView from "@/components/molecules/hero-view";
 import ReportView from "@/components/molecules/report-view";
-import { getCurrentUser } from "@/lib/firestore/users";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
   return (
@@ -19,7 +16,7 @@ export default function Home() {
         <p className="mb-8 font-semibold text-center">
           Jumlah dan Persentase Penduduk di Kelurahan Bebalang
         </p>
-        <ReportView />
+        <ReportView isInDashboard={false} />
       </div>
       <Footer />
     </div>

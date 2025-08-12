@@ -153,23 +153,19 @@ export default function PreviewPage() {
                     <CardContent className="space-y-2 -mt-4">
                       <p className="text-muted-foreground text-sm">
                         <span className="font-medium">Kepala Keluarga:</span>{" "}
-                        {kk.namaKepalaKeluarga}
+                        {kk.namaKepalaKeluarga.toUpperCase()}
                       </p>
                       <p className="text-muted-foreground text-sm">
-                        <span className="font-medium">Alamat:</span> {kk.alamat}
+                        <span className="font-medium">Alamat:</span>{" "}
+                        {kk.alamat.toUpperCase()}
                       </p>
                       <p className="text-muted-foreground text-sm">
-                        <span className="font-medium">Banjar:</span> {kk.banjar}
+                        <span className="font-medium">Banjar:</span>{" "}
+                        {kk.banjar.toUpperCase()}
                       </p>
                       <p className="text-muted-foreground text-sm">
                         <span className="font-medium">Tanggal Penerbitan:</span>{" "}
                         {kk.tanggalPenerbitan}
-                      </p>
-                      <p className="text-muted-foreground text-sm">
-                        <span className="font-medium">
-                          Jumlah Anggota Keluarga:
-                        </span>{" "}
-                        {kk.anggota?.length || 0}
                       </p>
                     </CardContent>
                   </Card>
@@ -198,6 +194,12 @@ export default function PreviewPage() {
                 />
               )}
             </div>
+            {!isPendudukLoading && (
+              <p className="text-muted-foreground text-sm">
+                {pendudukData && pendudukData.data?.length} Data Penduduk
+                Ditemukan
+              </p>
+            )}
           </section>
         </div>
 

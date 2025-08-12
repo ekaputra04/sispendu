@@ -25,7 +25,7 @@ import { Banjar } from "@/consts/dataDefinitions";
 import { Button } from "../ui/button";
 import LoadingIcon from "../atoms/loading-icon";
 
-export default function DialogDeleteData() {
+export default function DialogDownloadData() {
   const [isLoading, setIsLoading] = useState(false);
   const [banjar, setBanjar] = useState<TBanjar | "Semua">("Semua");
 

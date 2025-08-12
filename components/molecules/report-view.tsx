@@ -19,7 +19,7 @@ import { fetchLatestReport, fetchLatestReportKK } from "@/lib/firestore/report";
 import LoadingView from "@/components/atoms/loading-view";
 import { PieChartAll } from "@/components/charts/pie-chart";
 import { formatWitaDate } from "@/lib/utils";
-import DialogDeleteData from "./dialog-download-data";
+import DialogDownloadData from "./dialog-download-data";
 
 const conditions = [
   { key: "all", label: "Semua" },
@@ -35,7 +35,10 @@ const conditions = [
   { key: "wilayah", label: "Wilayah" },
 ];
 
-export default function ReportView() {
+interface ReportViewProps {
+  isInDashboard?: boolean;
+}
+export default function ReportView({ isInDashboard = true }: ReportViewProps) {
   const [condition, setCondition] = useState<string>("all");
 
   const {
@@ -64,7 +67,6 @@ export default function ReportView() {
     .filter((group) => group.name !== "Total")
     .sort((a, b) => b.total.count - a.total.count);
 
-  // Hitung penduduk yang belum terdaftar dalam KK
   const totalAnggotaKK =
     reportKK?.data?.groups.find((group) => group.name === "Total")?.totalAnggota
       .count || 0;
@@ -86,8 +88,11 @@ export default function ReportView() {
       {report && reportKK && (
         <>
           {/* Kartu Statistik */}
-          <div className="flex justify-between mb-4">
-            <DialogDeleteData />
+          <div
+            className={`flex mb-4 ${
+              isInDashboard ? "justify-between" : "justify-end"
+            }`}>
+            {isInDashboard && <DialogDownloadData />}
             <Badge variant="outline">
               Terakhir diperbarui {formatWitaDate(report?.createdAt)}
             </Badge>
