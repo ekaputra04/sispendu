@@ -15,6 +15,7 @@ import {
   getDocs,
   query,
   setDoc,
+  Timestamp,
   updateDoc,
   where,
   writeBatch,
@@ -213,7 +214,7 @@ export async function updateKK(
     }
     await checkAuth();
     const docRef = doc(db, "kartu-keluarga", kkId);
-    await updateDoc(docRef, { ...kk });
+    await updateDoc(docRef, { ...kk, updatedAt: Timestamp.now() });
     return {
       success: true,
       message: "Kartu keluarga berhasil diperbarui",

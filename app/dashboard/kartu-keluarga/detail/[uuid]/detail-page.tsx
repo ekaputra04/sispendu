@@ -16,7 +16,12 @@ import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Eye, Pencil } from "lucide-react";
 import DialogDeleteUserFromKK from "../../../../../components/molecules/dialog-delete-user-from-kk";
-import { calculateAge, capitalizeWords, handleCopy } from "@/lib/utils";
+import {
+  calculateAge,
+  capitalizeWords,
+  formatWitaDate,
+  handleCopy,
+} from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
@@ -129,6 +134,14 @@ export default function DetailKartuKeluargaPage({
                     }>
                     <Copy />
                   </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">
+                  Terakhir Diperbarui
+                </TableCell>
+                <TableCell className="uppercase">
+                  {formatWitaDate(data?.data?.updatedAt) || "-"}
                 </TableCell>
               </TableRow>
             </TableBody>
