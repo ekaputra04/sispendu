@@ -60,12 +60,6 @@ export default function Page() {
         )}
       </div>
 
-      {!isLoading && (
-        <p className="text-muted-foreground text-sm">
-          {data && data.data?.length} Data Penduduk Ditemukan
-        </p>
-      )}
-
       <DialogDeletePenduduk />
     </div>
   );

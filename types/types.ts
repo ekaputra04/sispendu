@@ -218,3 +218,11 @@ export interface IContact {
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }
+
+export interface ISensus {
+  tanggalSensus: string;
+  lokasi: string;
+  keterangan: string;
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
+}

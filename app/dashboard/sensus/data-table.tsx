@@ -68,19 +68,15 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="">
+    <div className="w-full overflow-x-auto">
       <div className="flex items-center pb-4">
         <Input
-          placeholder="Filter kartu keluarga..."
+          placeholder="Filter keterangan..."
           value={
-            (table
-              .getColumn("namaKepalaKeluarga")
-              ?.getFilterValue() as string) ?? ""
+            (table.getColumn("keterangan")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
-            table
-              .getColumn("namaKepalaKeluarga")
-              ?.setFilterValue(event.target.value)
+            table.getColumn("keterangan")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

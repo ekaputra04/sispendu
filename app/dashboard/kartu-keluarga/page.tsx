@@ -55,12 +55,6 @@ export default function Page() {
         {!isLoading && <DataTable columns={columns} data={data?.data || []} />}
       </div>
 
-      {!isLoading && (
-        <p className="text-muted-foreground text-sm">
-          {data && data.data?.length} Data Kartu Keluarga Ditemukan
-        </p>
-      )}
-
       <DialogDeleteKK />
     </div>
   );

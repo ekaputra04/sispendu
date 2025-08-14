@@ -8,7 +8,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
-import { IContact } from "@/types/types";
+import { IContact, ISensus } from "@/types/types";
+import { getAllSensus } from "@/lib/firestore/sensus";
 
 export default function Page() {
   const router = useRouter();
@@ -19,8 +20,8 @@ export default function Page() {
   });
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["contact"],
-    queryFn: getAllContacts,
+    queryKey: ["sensus"],
+    queryFn: getAllSensus,
   });
 
   if (
@@ -34,7 +35,7 @@ export default function Page() {
   return (
     <div className="">
       {isLoading && <LoadingView />}
-      <Heading1 text="Data Kontak" />
+      <Heading1 text="Data Sensus" />
       <hr className="my-4" />
 
       <div className="">
@@ -42,7 +43,7 @@ export default function Page() {
           {!isLoading && (
             <DataTable
               columns={columns}
-              data={(data?.data as IContact[]) || []}
+              data={(data?.data as ISensus[]) || []}
             />
           )}
         </div>

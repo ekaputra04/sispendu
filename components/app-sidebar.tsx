@@ -19,6 +19,7 @@ import { decrypt } from "@/lib/utils";
 import {
   IconChartBar,
   IconDashboard,
+  IconDeviceLaptop,
   IconPhone,
   IconUserCircle,
   IconUsers,
@@ -44,6 +45,11 @@ const navMain = [
     title: "Kontak",
     url: "/dashboard/contact",
     icon: IconPhone,
+  },
+  {
+    title: "Sensus",
+    url: "/dashboard/sensus",
+    icon: IconDeviceLaptop,
   },
 ];
 
