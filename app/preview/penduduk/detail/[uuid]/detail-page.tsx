@@ -42,6 +42,26 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
     }
   }, [data]);
 
+  async function handleCopyData() {
+    const pendudukData = `NAMA LENGKAP: ${data?.data?.nama.toUpperCase() || "-"}
+Banjar: ${data?.data?.banjar.toUpperCase() || "-"}
+JENIS KELAMIN: ${data?.data?.jenisKelamin.toUpperCase() || "-"}
+TEMPAT LAHIR: ${data?.data?.tempatLahir.toUpperCase() || "-"}
+TANGGAL LAHIR: ${data?.data?.tanggalLahir.toUpperCase() || "-"}
+USIA: ${calculateAge(data?.data?.tanggalLahir as string).years} TAHUN
+AGAMA: ${data?.data?.agama.toUpperCase() || "-"}
+Pendidikan: ${data?.data?.pendidikan.toUpperCase() || "-"}
+JENIS PEKERJAAN: ${data?.data?.jenisPekerjaan.toUpperCase() || "-"}
+STATUS PERKAWINAN: ${data?.data?.statusPerkawinan.toUpperCase() || "-"}
+KEWARGANEGARAAN: ${data?.data?.kewarganegaraan.toUpperCase() || "-"}
+GOLONGAN DARAH: ${data?.data?.golonganDarah.toUpperCase() || "-"}
+PENYANDANG CACAT: ${data?.data?.penyandangCacat.toUpperCase() || "-"}
+NAMA AYAH: ${data?.data?.namaAyah.toUpperCase() || "-"}
+NAMA IBU: ${data?.data?.namaIbu.toUpperCase() || "-"}`;
+
+    await handleCopy(pendudukData);
+  }
+
   return (
     <div className="">
       <Navbar />
@@ -70,7 +90,12 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
       {!isLoading && data?.data ? (
         <div className="my-8 px-8 md:px-16 lg:px-32">
           <div className="flex flex-wrap justify-between items-center gap-4">
-            <Heading1 text="Detail Data Penduduk" />
+            <div className="flex items-center gap-2">
+              <Heading1 text="Detail Data Penduduk" />
+              <Button variant={"ghost"} onClick={handleCopyData}>
+                <Copy />
+              </Button>
+            </div>
             <div className="flex items-center gap-2">
               <Link href={"/preview/kartu-keluarga/detail/" + data.data?.kkRef}>
                 <Button variant={"outline"}>

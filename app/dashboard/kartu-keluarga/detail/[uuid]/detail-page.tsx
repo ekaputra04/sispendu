@@ -37,13 +37,76 @@ export default function DetailKartuKeluargaPage({
     retry: false,
   });
 
+  async function handleCopyData() {
+    const kkData = `NAMA KEPALA KELUARGA: ${
+      data?.data?.namaKepalaKeluarga?.toUpperCase() || "-"
+    }
+ALAMAT: ${data?.data?.alamat?.toUpperCase() || "-"}
+BANJAR: ${data?.data?.banjar?.toUpperCase() || "-"}
+TERAKHIR DIPERBARUI: ${
+      formatWitaDate(data?.data?.updatedAt)?.toUpperCase() || "-"
+    }
+=============\n\n`;
+
+    let anggotaData = "";
+
+    data?.data?.anggota
+      ?.slice()
+      .sort((a: IAnggotaKeluarga, b: IAnggotaKeluarga) => {
+        const indexA = StatusHubunganDalamKeluarga.indexOf(
+          a.statusHubunganDalamKeluarga
+        );
+        const indexB = StatusHubunganDalamKeluarga.indexOf(
+          b.statusHubunganDalamKeluarga
+        );
+
+        if (indexA !== indexB) {
+          return indexA - indexB; // urutkan berdasarkan status hubungan
+        }
+
+        // Kalau status sama, urutkan berdasarkan tanggal lahir tertua
+        const dateA = new Date(a.detail?.tanggalLahir || "");
+        const dateB = new Date(b.detail?.tanggalLahir || "");
+        return dateA.getTime() - dateB.getTime();
+      })
+      .forEach((anggota: IAnggotaKeluarga) => {
+        anggotaData += `STATUS HUBUNGAN DALAM KELUARGA: ${
+          anggota.statusHubunganDalamKeluarga?.toUpperCase() || "-"
+        }
+NAMA LENGKAP: ${anggota?.detail?.nama?.toUpperCase() || "-"}
+BANJAR: ${anggota?.detail?.banjar?.toUpperCase() || "-"}
+TEMPAT LAHIR: ${anggota?.detail?.tempatLahir?.toUpperCase() || "-"}
+TANGGAL LAHIR: ${anggota?.detail?.tanggalLahir?.toUpperCase() || "-"}
+USIA: ${calculateAge(anggota?.detail?.tanggalLahir as string).years} TAHUN
+AGAMA: ${anggota?.detail?.agama?.toUpperCase() || "-"}
+PENDIDIKAN: ${anggota?.detail?.pendidikan?.toUpperCase() || "-"}
+JENIS PEKERJAAN: ${anggota?.detail?.jenisPekerjaan?.toUpperCase() || "-"}
+STATUS PERKAWINAN: ${anggota?.detail?.statusPerkawinan?.toUpperCase() || "-"}
+KEWARGANEGARAAN: ${anggota?.detail?.kewarganegaraan?.toUpperCase() || "-"}
+GOLONGAN DARAH: ${anggota?.detail?.golonganDarah?.toUpperCase() || "-"}
+PENYANDANG CACAT: ${anggota?.detail?.penyandangCacat?.toUpperCase() || "-"}
+NAMA AYAH: ${anggota?.detail?.namaAyah?.toUpperCase() || "-"}
+NAMA IBU: ${anggota?.detail?.namaIbu?.toUpperCase() || "-"}\n
+-------------\n`;
+      });
+
+    const finalKKData = kkData + anggotaData;
+
+    await handleCopy(finalKKData);
+  }
+
   return (
     <div className="">
       {isLoading && <LoadingView />}
       {!isLoading && data?.data ? (
         <div className="">
           <div className="flex justify-between items-center">
-            <Heading1 text="Detail Data Kartu Keluarga" />
+            <div className="flex items-center gap-2">
+              <Heading1 text="Detail Data Kartu Keluarga" />
+              <Button variant={"ghost"} onClick={handleCopyData}>
+                <Copy />
+              </Button>
+            </div>
             <Link href={"/dashboard/kartu-keluarga/edit/" + uuid}>
               <Button variant={"outline"} className={ButtonOutlineGreen}>
                 <Pencil />
@@ -174,7 +237,15 @@ export default function DetailKartuKeluargaPage({
                     const indexB = StatusHubunganDalamKeluarga.indexOf(
                       b.statusHubunganDalamKeluarga
                     );
-                    return indexA - indexB;
+
+                    if (indexA !== indexB) {
+                      return indexA - indexB; // urutkan berdasarkan status hubungan
+                    }
+
+                    // Kalau status sama, urutkan berdasarkan tanggal lahir tertua
+                    const dateA = new Date(a.detail?.tanggalLahir || "");
+                    const dateB = new Date(b.detail?.tanggalLahir || "");
+                    return dateA.getTime() - dateB.getTime();
                   })
                   .map((penduduk: IAnggotaKeluarga, index: number) => {
                     const pendudukDetail: IDataPenduduk = penduduk.detail!;

@@ -1,26 +1,18 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import LoadingView from "@/components/atoms/loading-view";
 import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
-import { Copy, Edit, Eye, Pencil } from "lucide-react";
-import { calculateAge, capitalizeWords, handleCopy } from "@/lib/utils";
+import { Copy, Eye, Pencil } from "lucide-react";
+import { calculateAge, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { getPendudukById } from "@/lib/firestore/penduduk";
 import { useEffect, useState } from "react";
-import SheetAddEmailToEditedBy from "../../../../../components/molecules/sheet-add-email-to-penduduk";
 import { Badge } from "@/components/ui/badge";
+import SheetAddEmailToEditedBy from "@/components/molecules/sheet-add-email-to-penduduk";
 
 interface DetailPendudukPageProps {
   uuid: string;
@@ -44,13 +36,38 @@ export default function DetailPendudukPage({ uuid }: DetailPendudukPageProps) {
     }
   }, [data]);
 
+  async function handleCopyData() {
+    const pendudukData = `NAMA LENGKAP: ${data?.data?.nama.toUpperCase() || "-"}
+BANJAR: ${data?.data?.banjar.toUpperCase() || "-"}
+JENIS KELAMIN: ${data?.data?.jenisKelamin.toUpperCase() || "-"}
+TEMPAT LAHIR: ${data?.data?.tempatLahir.toUpperCase() || "-"}
+TANGGAL LAHIR: ${data?.data?.tanggalLahir.toUpperCase() || "-"}
+USIA: ${calculateAge(data?.data?.tanggalLahir as string).years} TAHUN
+AGAMA: ${data?.data?.agama.toUpperCase() || "-"}
+PENDIDIKAN: ${data?.data?.pendidikan.toUpperCase() || "-"}
+JENIS PEKERJAAN: ${data?.data?.jenisPekerjaan.toUpperCase() || "-"}
+STATUS PERKAWINAN: ${data?.data?.statusPerkawinan.toUpperCase() || "-"}
+KEWARGANEGARAAN: ${data?.data?.kewarganegaraan.toUpperCase() || "-"}
+GOLONGAN DARAH: ${data?.data?.golonganDarah.toUpperCase() || "-"}
+PENYANDANG CACAT: ${data?.data?.penyandangCacat.toUpperCase() || "-"}
+NAMA AYAH: ${data?.data?.namaAyah.toUpperCase() || "-"}
+NAMA IBU: ${data?.data?.namaIbu.toUpperCase() || "-"}`;
+
+    await handleCopy(pendudukData);
+  }
+
   return (
     <div>
       {isLoading && <LoadingView />}
       {data?.data ? (
         <div>
           <div className="flex flex-wrap justify-between items-center gap-4">
-            <Heading1 text="Detail Data Penduduk" />
+            <div className="flex items-center gap-2">
+              <Heading1 text="Detail Data Penduduk" />
+              <Button variant={"ghost"} onClick={handleCopyData}>
+                <Copy />
+              </Button>
+            </div>
             <div className="flex gap-2">
               {data.data.kkRef && (
                 <Link
