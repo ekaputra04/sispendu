@@ -10,7 +10,11 @@ import {
   deleteDoc,
   serverTimestamp,
   Timestamp,
+  query,
+  orderBy,
+  setDoc,
 } from "firebase/firestore";
+import { checkAuth } from "../auth";
 
 const SENSUS_COLLECTION = "sensus";
 
@@ -20,18 +24,20 @@ export async function createSensus({
   sensus: ISensus;
 }): Promise<FirestoreResponse> {
   try {
-    const docRef = await addDoc(collection(db, SENSUS_COLLECTION), {
-      sensus: sensus.tanggalSensus,
-      lokasi: sensus.lokasi,
-      keterangan: sensus.keterangan,
+    await checkAuth();
+
+    const sensusData = {
+      ...sensus,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
-    });
+    };
+
+    await setDoc(doc(db, SENSUS_COLLECTION, sensus.id), sensusData);
 
     return {
       success: true,
       message: "Data sensus berhasil ditambahkan",
-      data: { id: docRef.id },
+      data: sensusData,
     };
   } catch (error: any) {
     return {
@@ -44,7 +50,12 @@ export async function createSensus({
 
 export async function getAllSensus(): Promise<FirestoreResponse> {
   try {
-    const querySnapshot = await getDocs(collection(db, SENSUS_COLLECTION));
+    const q = query(
+      collection(db, SENSUS_COLLECTION),
+      orderBy("updatedAt", "desc")
+    );
+
+    const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),

@@ -34,6 +34,10 @@ export function SiteHeader() {
     navItem = {
       title: "Detail Data Kartu Keluarga",
     };
+  } else if (pathname.startsWith("/dashboard/sensus/add")) {
+    navItem = {
+      title: "Tambah Data Sensus",
+    };
   } else {
     navItem = dataNavbar.navMain.find((item) => item.url === pathname);
   }

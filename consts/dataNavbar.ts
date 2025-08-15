@@ -48,6 +48,11 @@ export const dataNavbar = {
       url: "/dashboard/contact",
       icon: IconPhone,
     },
+    {
+      title: "Sensus",
+      url: "/dashboard/sensus",
+      icon: IconPhone,
+    },
   ],
   navClouds: [
     {

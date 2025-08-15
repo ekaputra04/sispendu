@@ -220,9 +220,11 @@ export interface IContact {
 }
 
 export interface ISensus {
+  id: string;
   tanggalSensus: string;
   lokasi: string;
   keterangan: string;
-  createdAt: Timestamp;
+  petugas: string;
+  createdAt?: Timestamp;
   updatedAt?: Timestamp;
 }
