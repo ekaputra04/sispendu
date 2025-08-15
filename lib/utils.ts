@@ -142,13 +142,11 @@ export const downloadExcelData = async (
     const kkSnapshot = await getDocs(kkQuery);
     const kkDocs = kkSnapshot.docs;
 
-    // Ambil semua subcollection anggota
     const anggotaSnapshotsPromises = kkDocs.map((kkDoc) =>
       getDocs(collection(db, "kartu-keluarga", kkDoc.id, "anggota"))
     );
     const anggotaSnapshots = await Promise.all(anggotaSnapshotsPromises);
 
-    // Kumpulkan semua pendudukId unik
     const pendudukIdSet = new Set<string>();
     anggotaSnapshots.forEach((snap) =>
       snap.forEach((angDoc) => {
@@ -158,7 +156,6 @@ export const downloadExcelData = async (
     );
     const pendudukIds = Array.from(pendudukIdSet);
 
-    // Helper chunk array untuk query in
     const chunkArray = <T>(arr: T[], size: number) => {
       const res: T[][] = [];
       for (let i = 0; i < arr.length; i += size)
@@ -166,7 +163,6 @@ export const downloadExcelData = async (
       return res;
     };
 
-    // Ambil semua data penduduk & simpan di Map
     const pendudukMap = new Map<string, any>();
     if (pendudukIds.length > 0) {
       const chunks = chunkArray(pendudukIds, 10);
@@ -187,12 +183,11 @@ export const downloadExcelData = async (
     const getDateFromField = (field: any): Date | null => {
       if (!field) return null;
       if (typeof field === "object" && typeof field.toDate === "function")
-        return field.toDate(); // Timestamp Firestore
+        return field.toDate();
       const d = new Date(field);
       return isNaN(d.getTime()) ? null : d;
     };
 
-    // Loop setiap KK
     kkDocs.forEach((kkDoc, index) => {
       const kk = kkDoc.data() as IKartuKeluarga;
       const namaKepalaKeluarga = kk.namaKepalaKeluarga || "";
@@ -200,14 +195,12 @@ export const downloadExcelData = async (
       const banjarKK = kk.banjar || "";
       const anggotaSnap = anggotaSnapshots[index];
 
-      // Kumpulkan anggota untuk KK ini
       const anggotaWithPenduduk = anggotaSnap.docs.map((angDoc) => {
         const ang = angDoc.data() as IAnggotaKeluarga;
         const penduduk = pendudukMap.get(ang.pendudukId);
         return { ang, penduduk };
       });
 
-      // Urutkan berdasarkan prioritas StatusHubunganDalamKeluarga
       anggotaWithPenduduk.sort((a, b) => {
         const idxA = StatusHubunganDalamKeluarga.indexOf(
           a.ang.statusHubunganDalamKeluarga
@@ -215,10 +208,18 @@ export const downloadExcelData = async (
         const idxB = StatusHubunganDalamKeluarga.indexOf(
           b.ang.statusHubunganDalamKeluarga
         );
-        return idxA - idxB;
+
+        if (idxA !== idxB) return idxA - idxB;
+
+        // Kalau status sama → urutkan berdasarkan tanggal lahir tertua
+        const dateA = getDateFromField(a.penduduk?.tanggalLahir);
+        const dateB = getDateFromField(b.penduduk?.tanggalLahir);
+        if (dateA && dateB) {
+          return dateA.getTime() - dateB.getTime();
+        }
+        return 0;
       });
 
-      // Push ke data[] sesuai urutan
       anggotaWithPenduduk.forEach(({ ang, penduduk }) => {
         if (!penduduk) {
           console.warn(`Penduduk ${ang.pendudukId} tidak ditemukan`);
@@ -240,27 +241,33 @@ export const downloadExcelData = async (
           ).toString();
         }
 
+        // Semua data diubah ke uppercase sebelum push
         data.push({
           NO: no,
-          NAMA_LENGKAP: penduduk.nama || "",
-          JENIS_KELAMIN: penduduk.jenisKelamin || "",
-          TEMPAT_LAHIR: penduduk.tempatLahir || "",
+          NAMA_LENGKAP: (penduduk.nama || "").toUpperCase(),
+          JENIS_KELAMIN: (penduduk.jenisKelamin || "").toUpperCase(),
+          TEMPAT_LAHIR: (penduduk.tempatLahir || "").toUpperCase(),
           TANGGAL_LAHIR:
             tanggalLahirDate?.toISOString().split("T")[0] ||
-            penduduk.tanggalLahir ||
-            "",
-          USIA: usia,
-          AGAMA: penduduk.agama || "",
-          PENDIDIKAN: penduduk.pendidikan || "",
-          PEKERJAAN: penduduk.jenisPekerjaan || penduduk.pekerjaan || "",
-          STATUS_KAWIN: penduduk.statusPerkawinan || "",
-          GOL_DARAH: penduduk.golonganDarah || "",
-          NAMA_LGKP_AYAH: penduduk.namaAyah || "",
-          NAMA_LGKP_IBU: penduduk.namaIbu || "",
-          ALAMAT: alamat,
-          STATUS_HUBUNGAN_KELUARGA: ang.statusHubunganDalamKeluarga || "",
-          NAMA_KEPALA_KELUARGA: namaKepalaKeluarga,
-          BANJAR: banjarKK,
+            (penduduk.tanggalLahir || "").toString().toUpperCase(),
+          USIA: usia.toUpperCase(),
+          AGAMA: (penduduk.agama || "").toUpperCase(),
+          PENDIDIKAN: (penduduk.pendidikan || "").toUpperCase(),
+          PEKERJAAN: (
+            penduduk.jenisPekerjaan ||
+            penduduk.pekerjaan ||
+            ""
+          ).toUpperCase(),
+          STATUS_KAWIN: (penduduk.statusPerkawinan || "").toUpperCase(),
+          GOL_DARAH: (penduduk.golonganDarah || "").toUpperCase(),
+          NAMA_LGKP_AYAH: (penduduk.namaAyah || "").toUpperCase(),
+          NAMA_LGKP_IBU: (penduduk.namaIbu || "").toUpperCase(),
+          ALAMAT: alamat.toUpperCase(),
+          STATUS_HUBUNGAN_KELUARGA: (
+            ang.statusHubunganDalamKeluarga || ""
+          ).toUpperCase(),
+          NAMA_KEPALA_KELUARGA: namaKepalaKeluarga.toUpperCase(),
+          BANJAR: banjarKK.toUpperCase(),
         });
         no++;
       });
@@ -274,7 +281,6 @@ export const downloadExcelData = async (
       };
     }
 
-    // Export Excel
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Penduduk");
