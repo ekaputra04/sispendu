@@ -102,32 +102,58 @@ export async function getSensusById(id: string): Promise<FirestoreResponse> {
 }
 
 export async function updateSensus(
-  id: string,
-  dataUpdate: Partial<{
-    tanggalSensus: string;
-    lokasi: string;
-    keterangan: string;
-  }>
-): Promise<FirestoreResponse> {
+  sensusId: string,
+  sensus: ISensus
+): Promise<FirestoreResponse<void>> {
   try {
-    const docRef = doc(db, SENSUS_COLLECTION, id);
-    await updateDoc(docRef, {
-      ...dataUpdate,
-      updatedAt: serverTimestamp(),
-    });
-
+    if (!sensusId) {
+      throw new Error("ID sensus diperlukan");
+    }
+    await checkAuth();
+    const docRef = doc(db, "sensus", sensusId);
+    await updateDoc(docRef, { ...sensus, updatedAt: Timestamp.now() });
     return {
       success: true,
-      message: "Data sensus berhasil diperbarui",
+      message: "Sensus berhasil diperbarui",
     };
   } catch (error: any) {
+    console.error("Gagal memperbarui sensus:", error);
     return {
       success: false,
-      message: "Gagal memperbarui data sensus",
-      errorCode: error.code,
+      message: error.message || "Gagal memperbarui sensus",
+      errorCode: error.code || "unknown",
     };
   }
 }
+
+// export async function updateSensus(
+//   id: string,
+//   sensus: ISensus
+// ): Promise<FirestoreResponse<void>> {
+//   try {
+//     if (!id) {
+//       throw new Error("ID sensus diperlukan");
+//     }
+//     await checkAuth();
+
+//     const docRef = doc(db, SENSUS_COLLECTION, id);
+//     await updateDoc(docRef, {
+//       ...sensus,
+//       updatedAt: Timestamp.now(),
+//     });
+
+//     return {
+//       success: true,
+//       message: "Data sensus berhasil diperbarui",
+//     };
+//   } catch (error: any) {
+//     return {
+//       success: false,
+//       message: "Gagal memperbarui data sensus",
+//       errorCode: error.code,
+//     };
+//   }
+// }
 
 export async function deleteSensus(id: string): Promise<FirestoreResponse> {
   try {
