@@ -82,7 +82,10 @@ export default function DialogDownloadData() {
               ))}
             </SelectContent>
           </Select>
-          <Button onClick={handleDownloadExcel} disabled={isLoading}>
+          <Button
+            onClick={handleDownloadExcel}
+            disabled={isLoading}
+            className="text-white">
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <LoadingIcon />

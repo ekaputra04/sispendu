@@ -16,6 +16,7 @@ import { deleteAnggotaFromKK } from "@/lib/firestore/kartu-keluarga";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Trash } from "lucide-react";
 import { toast } from "sonner";
+import LoadingIcon from "../atoms/loading-icon";
 
 interface DialogDeleteUserFromKKProps {
   kkId: string;
@@ -58,8 +59,18 @@ export default function DialogDeleteUserFromKK({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Batal</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={isPending}>
-            Hapus
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={isPending}
+            className="text-white">
+            {isPending ? (
+              <div className="flex items-center gap-2">
+                <LoadingIcon />
+                Menghapus...
+              </div>
+            ) : (
+              <div className="">Hapus</div>
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

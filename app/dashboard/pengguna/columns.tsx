@@ -57,11 +57,11 @@ export const columns: ColumnDef<IDataPengguna>[] = [
       return (
         <>
           {pengguna.role == "admin" ? (
-            <Badge>
+            <Badge className="text-white">
               {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
             </Badge>
           ) : pengguna.role == "petugas" ? (
-            <Badge className="bg-blue-600">
+            <Badge className="bg-blue-600 text-white">
               {pengguna.role.charAt(0).toUpperCase() + pengguna.role.slice(1)}
             </Badge>
           ) : (

@@ -29,6 +29,7 @@ import {
 import { Banjar } from "@/consts/dataDefinitions";
 import { Save } from "lucide-react";
 import { useUserStore } from "@/store/useUserStore";
+import { Timestamp } from "firebase/firestore";
 
 const formSchema = z.object({
   namaKepalaKeluarga: z
@@ -90,6 +91,8 @@ export default function AddKKForm({
       banjar: values.banjar,
       tanggalPenerbitan: values.tanggalPenerbitan,
       createdBy: user.email,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     };
     mutate(data);
   }

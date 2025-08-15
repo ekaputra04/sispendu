@@ -486,3 +486,32 @@ export async function deleteAllKartuKeluarga(): Promise<
     };
   }
 }
+
+export async function updateStatusHubunganDalamKeluarga(
+  kkId: string,
+  pendudukId: string,
+  statusBaru: TStatusHubunganDalamKeluarga
+): Promise<FirestoreResponse<void>> {
+  try {
+    if (!kkId || !pendudukId) {
+      throw new Error("kkId dan pendudukId wajib diisi");
+    }
+
+    const docRef = doc(db, "kartu-keluarga", kkId, "anggota", pendudukId);
+
+    await updateDoc(docRef, {
+      statusHubunganDalamKeluarga: statusBaru,
+    });
+
+    return {
+      success: true,
+      message: "Status hubungan dalam keluarga berhasil diperbarui",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: "Gagal memperbarui status hubungan dalam keluarga",
+      errorCode: error.code,
+    };
+  }
+}

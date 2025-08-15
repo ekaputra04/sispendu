@@ -16,17 +16,13 @@ import { Heading1, Heading2 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Eye, Pencil } from "lucide-react";
 import DialogDeleteUserFromKK from "../../../../../components/molecules/dialog-delete-user-from-kk";
-import {
-  calculateAge,
-  capitalizeWords,
-  formatWitaDate,
-  handleCopy,
-} from "@/lib/utils";
+import { calculateAge, formatWitaDate, handleCopy } from "@/lib/utils";
 import { getKKById } from "@/lib/firestore/kartu-keluarga";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import SheetAddPendudukToKK from "@/components/molecules/sheet-add-penduduk-to-kk";
 import { IAnggotaKeluarga, IDataPenduduk } from "@/types/types";
 import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
+import DialogEditStatusHubungan from "@/components/molecules/dialog-edit-status-hubungan";
 
 interface DetailKartuKeluargaPageProps {
   uuid: string;
@@ -188,8 +184,15 @@ export default function DetailKartuKeluargaPage({
                         <TableCell className="font-medium">
                           {index + 1}
                         </TableCell>
-                        <TableCell className="uppercase">
-                          {penduduk.statusHubunganDalamKeluarga}
+                        <TableCell className="flex justify-between items-center uppercase">
+                          <span>{penduduk.statusHubunganDalamKeluarga}</span>
+
+                          <DialogEditStatusHubungan
+                            penduduk={pendudukDetail}
+                            statusHubunganDalamKeluarga={
+                              penduduk.statusHubunganDalamKeluarga
+                            }
+                          />
                         </TableCell>
                         <TableCell className="uppercase">
                           {pendudukDetail.nama}
