@@ -316,13 +316,13 @@ export default function DetailKartuKeluargaPage({
                         </TableCell>
                         <TableCell className="flex gap-2">
                           <Link
-                            href={`/dashboard/penduduk/detail/${pendudukDetail.id}`}>
+                            href={`/preview/penduduk/detail/${pendudukDetail.id}`}>
                             <Button variant={"outline"}>
                               <Eye />
                             </Button>
                           </Link>
                           <Link
-                            href={`/dashboard/penduduk/edit/${pendudukDetail.id}`}>
+                            href={`/preview/penduduk/edit/${pendudukDetail.id}`}>
                             <Button variant={"outline"}>
                               <Pencil />
                             </Button>
