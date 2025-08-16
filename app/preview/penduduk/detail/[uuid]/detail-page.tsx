@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Eye, Pencil } from "lucide-react";
-import { calculateAge, handleCopy } from "@/lib/utils";
+import { calculateAge, formatWitaDate, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import Navbar from "@/components/molecules/navbar";
 import {
@@ -334,6 +334,14 @@ NAMA IBU: ${data?.data?.namaIbu.toUpperCase() || "-"}`;
                     onClick={() => handleCopy(data?.data?.banjar as string)}>
                     <Copy />
                   </Button>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">
+                  Terakhir Diperbarui
+                </TableCell>
+                <TableCell className="uppercase">
+                  {formatWitaDate(data?.data?.updatedAt) || "-"}
                 </TableCell>
               </TableRow>
             </TableBody>

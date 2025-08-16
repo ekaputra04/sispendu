@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Heading1 } from "@/components/atoms/heading";
 import Link from "next/link";
 import { Copy, Eye, Pencil } from "lucide-react";
-import { calculateAge, handleCopy } from "@/lib/utils";
+import { calculateAge, formatWitaDate, handleCopy } from "@/lib/utils";
 import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { getPendudukById } from "@/lib/firestore/penduduk";
 import { useEffect, useState } from "react";
@@ -375,6 +375,14 @@ NAMA IBU: ${data?.data?.namaIbu.toUpperCase() || "-"}`;
                     pendudukId={data.data?.id}
                     emails={data?.data?.editedBy}
                   />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell className="font-medium">
+                  Terakhir Diperbarui
+                </TableCell>
+                <TableCell className="flex flex-col gap-2">
+                  {formatWitaDate(data?.data?.updatedAt).toUpperCase() || "-"}
                 </TableCell>
               </TableRow>
             </TableBody>

@@ -195,12 +195,6 @@ export default function PreviewPage() {
                 />
               )}
             </div>
-            {!isPendudukLoading && (
-              <p className="text-muted-foreground text-sm">
-                {pendudukData && pendudukData.data?.length} Data Penduduk
-                Ditemukan
-              </p>
-            )}
           </section>
         </div>
 

@@ -61,10 +61,9 @@ TERAKHIR DIPERBARUI: ${
         );
 
         if (indexA !== indexB) {
-          return indexA - indexB; // urutkan berdasarkan status hubungan
+          return indexA - indexB;
         }
 
-        // Kalau status sama, urutkan berdasarkan tanggal lahir tertua
         const dateA = new Date(a.detail?.tanggalLahir || "");
         const dateB = new Date(b.detail?.tanggalLahir || "");
         return dateA.getTime() - dateB.getTime();
@@ -213,7 +212,11 @@ NAMA IBU: ${anggota?.detail?.namaIbu?.toUpperCase() || "-"}\n
               <SheetAddPendudukToKK kkId={uuid} />
             </div>
             <Table>
-              <TableCaption>Daftar Anggota Keluarga</TableCaption>
+              <TableCaption>
+                {data.data?.anggota?.length == 0
+                  ? "Belum ada anggota keluarga"
+                  : "Daftar Anggota Keluarga"}
+              </TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead>No</TableHead>
@@ -239,10 +242,9 @@ NAMA IBU: ${anggota?.detail?.namaIbu?.toUpperCase() || "-"}\n
                     );
 
                     if (indexA !== indexB) {
-                      return indexA - indexB; // urutkan berdasarkan status hubungan
+                      return indexA - indexB;
                     }
 
-                    // Kalau status sama, urutkan berdasarkan tanggal lahir tertua
                     const dateA = new Date(a.detail?.tanggalLahir || "");
                     const dateB = new Date(b.detail?.tanggalLahir || "");
                     return dateA.getTime() - dateB.getTime();
