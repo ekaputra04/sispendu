@@ -93,9 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     alt=""
                     className="w-8 h-8 object-fill"
                   />
-                  <span className="font-semibold text-base">
-                    SISPENDU BEBALANG
-                  </span>
+                  <span className="font-semibold text-base">SIPULANG</span>
                 </div>
               </Link>
             </SidebarMenuButton>

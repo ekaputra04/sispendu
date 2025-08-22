@@ -114,9 +114,19 @@ export function calculateAge(birthDate: string): {
   return { years, months, days };
 }
 
-export const formatWitaDate = (timestamp?: Timestamp): string => {
+export const formatWitaDate = (timestamp?: Timestamp | Date | null): string => {
   if (!timestamp) return "Tidak tersedia";
-  const date = timestamp.toDate();
+
+  let date: Date;
+  if (timestamp instanceof Timestamp) {
+    date = timestamp.toDate();
+  } else if (timestamp instanceof Date) {
+    date = timestamp;
+  } else {
+    return "Tidak tersedia"; // Tangani tipe data tidak valid
+  }
+
+  if (isNaN(date.getTime())) return "Tidak tersedia"; // Tangani tanggal tidak valid
   return format(date, "d MMMM yyyy, HH:mm", { locale: id }) + " WITA";
 };
 

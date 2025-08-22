@@ -102,7 +102,7 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
               </SheetTrigger>
               <SheetContent side="left">
                 <SheetHeader>
-                  <SheetTitle>Sispendu Bebalang</SheetTitle>
+                  <SheetTitle>Sipulang</SheetTitle>
                   <SheetDescription></SheetDescription>
                 </SheetHeader>
                 <div className="px-8">

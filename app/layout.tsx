@@ -22,7 +22,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Sispendu",
+  title: "Sipulang",
   description: "Sistem Informasi Pendataan Penduduk Kelurahan Bebalang",
 };
 

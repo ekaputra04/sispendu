@@ -10,7 +10,7 @@ export default function Page() {
             <div className="flex justify-center items-center bg-primary rounded-md size-6 text-primary-foreground">
               <img src="/images/logo.png" alt="logo" />
             </div>
-            <p>SISPENDU BEBALANG</p>
+            <p>SIPULANG</p>
           </Link>
         </div>
         <div className="flex flex-1 justify-center items-center">
