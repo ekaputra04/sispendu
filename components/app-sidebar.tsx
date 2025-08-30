@@ -12,7 +12,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { dataNavbar } from "@/consts/dataNavbar";
 import { useSessionStore } from "@/store/useSession";
 import { useEffect, useState } from "react";
 import { decrypt } from "@/lib/utils";
@@ -109,6 +108,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
+        <div className="pt-4 border-gray-700 border-t text-start">
+          <p className="text-xs">
+            Dikembangkan oleh{" "}
+            <a
+              href="https://instagram.com/kknbebalang2025"
+              className="hover:underline"
+              target="_blank">
+              KKN PPM Universitas Udayana Kelurahan Bebalang 2025
+            </a>
+          </p>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

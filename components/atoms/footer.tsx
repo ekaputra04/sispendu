@@ -79,8 +79,16 @@ export default function Footer() {
         {/* Hak Cipta */}
         <div className="mt-8 pt-4 border-gray-700 border-t text-center">
           <p className="text-sm">
-            &copy; {new Date().getFullYear()} Sistem Informasi Penduduk. Hak
-            cipta dilindungi.
+            &copy; 2025 Sistem Informasi Pendataan Penduduk Kelurahan Bebalang.
+          </p>
+          <p className="text-sm">
+            Dikembangkan oleh{" "}
+            <a
+              href="https://instagram.com/kknbebalang2025"
+              className="hover:underline"
+              target="_blank">
+              KKN PPM Universitas Udayana 2025 Kelurahan Bebalang
+            </a>
           </p>
         </div>
       </div>

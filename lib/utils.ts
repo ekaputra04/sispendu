@@ -278,6 +278,7 @@ export const downloadExcelData = async (
           ).toUpperCase(),
           NAMA_KEPALA_KELUARGA: namaKepalaKeluarga.toUpperCase(),
           BANJAR: banjarKK.toUpperCase(),
+          TERAKHIR_DIPERBARUI: formatWitaDate(kk.updatedAt) || "",
         });
         no++;
       });
@@ -304,8 +305,9 @@ export const downloadExcelData = async (
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `data-penduduk-${
-      banjar === "Semua" ? "semua" : banjar
+    const dateNow = new Date();
+    link.download = `data-penduduk-${banjar === "Semua" ? "semua" : banjar}-${
+      dateNow.toISOString().split("T")[0]
     }.xlsx`;
     document.body.appendChild(link);
     link.click();
