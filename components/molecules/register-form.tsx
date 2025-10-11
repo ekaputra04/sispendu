@@ -1,32 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import axios from 'axios';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { LogIn } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { toast } from "sonner";
-import { useState } from "react";
-import LoadingIcon from "../atoms/loading-icon";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { useUserStore } from "@/store/useUserStore";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "@/config/firebase-init";
-import { doc, setDoc } from "firebase/firestore";
-import { SessionPayload } from "@/lib/definitions";
-import { encrypt } from "@/lib/utils";
-import { useSessionStore } from "@/store/useSession";
-import { LogIn } from "lucide-react";
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { auth, db } from '@/config/firebase-init';
+import { SessionPayload } from '@/lib/definitions';
+import { encrypt } from '@/lib/utils';
+import { useSessionStore } from '@/store/useSession';
+import { useUserStore } from '@/store/useUserStore';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import LoadingIcon from '../atoms/loading-icon';
 
 const formSchema = z
   .object({
@@ -62,6 +59,8 @@ export function RegisterForm() {
   const { setUser } = useUserStore();
   const { setSession } = useSessionStore();
 
+  const defaultRole = "petugas";
+
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -92,7 +91,7 @@ export function RegisterForm() {
         userId: user.uid,
         nama: values.name,
         email: values.email,
-        role: "user",
+        role: defaultRole,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -101,7 +100,7 @@ export function RegisterForm() {
         userId: user.uid,
         nama: values.name,
         email: values.email,
-        role: "user",
+        role: defaultRole,
         expiresAt: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
       };
 

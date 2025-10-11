@@ -1,44 +1,28 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { IDataPenduduk } from "@/types/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import LoadingIcon from "../atoms/loading-icon";
-import { updatePenduduk } from "@/lib/firestore/penduduk";
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import {
-  Agama,
-  Banjar,
-  GolonganDarah,
-  JenisKelamin,
-  JenisPekerjaan,
-  Kewarganegaraan,
-  Pendidikan,
-  PenyandangCacat,
-  StatusPerkawinan,
-} from "@/consts/dataDefinitions";
-import { useUserStore } from "@/store/useUserStore";
-import { Save } from "lucide-react";
+    Agama, Banjar, GolonganDarah, JenisKelamin, JenisPekerjaan, Kewarganegaraan, Pendidikan,
+    PenyandangCacat, StatusPerkawinan
+} from '@/consts/dataDefinitions';
+import { updatePenduduk } from '@/lib/firestore/penduduk';
+import { useUserStore } from '@/store/useUserStore';
+import { IDataPenduduk } from '@/types/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import LoadingIcon from '../atoms/loading-icon';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const formSchema = z.object({
   nama: z.string().min(2, { message: "Nama harus diisi minimal 2 karakter" }),

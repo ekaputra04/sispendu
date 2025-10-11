@@ -1,32 +1,29 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import axios from 'axios';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { LogIn } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
+import { Button } from '@/components/ui/button';
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { toast } from "sonner";
-import { useState } from "react";
-import LoadingIcon from "../atoms/loading-icon";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/config/firebase-init";
-import { getUserById } from "@/lib/firestore/users";
-import { useSessionStore } from "@/store/useSession";
-import { SessionPayload } from "@/lib/definitions";
-import { encrypt } from "@/lib/utils";
-import { useUserStore } from "@/store/useUserStore";
-import { LogIn } from "lucide-react";
+    Form, FormControl, FormField, FormItem, FormLabel, FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { auth } from '@/config/firebase-init';
+import { SessionPayload } from '@/lib/definitions';
+import { getUserById } from '@/lib/firestore/users';
+import { encrypt } from '@/lib/utils';
+import { useSessionStore } from '@/store/useSession';
+import { useUserStore } from '@/store/useUserStore';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import LoadingIcon from '../atoms/loading-icon';
 
 const formSchema = z.object({
   email: z
