@@ -1,33 +1,25 @@
-import { db } from "@/config/firebase-init";
 import {
-  FirestoreResponse,
-  IAnggotaKeluarga,
-  IDataPenduduk,
-  IKartuKeluarga,
-  TStatusHubunganDalamKeluarga,
-} from "@/types/types";
+    collection, deleteDoc, deleteField, doc, getDoc, getDocs, orderBy, query, setDoc, Timestamp,
+    updateDoc, where, writeBatch
+} from 'firebase/firestore';
+
+import { db } from '@/config/firebase-init';
+import { StatusHubunganDalamKeluarga } from '@/consts/dataDefinitions';
 import {
-  collection,
-  deleteDoc,
-  deleteField,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-  Timestamp,
-  updateDoc,
-  where,
-  writeBatch,
-} from "firebase/firestore";
-import { checkAuth } from "../auth";
-import { StatusHubunganDalamKeluarga } from "@/consts/dataDefinitions";
+    FirestoreResponse, IAnggotaKeluarga, IDataPenduduk, IKartuKeluarga, TStatusHubunganDalamKeluarga
+} from '@/types/types';
+
+import { checkAuth } from '../auth';
 
 export async function getAllKK(): Promise<FirestoreResponse<IKartuKeluarga[]>> {
   try {
     await checkAuth();
 
-    const querySnapshot = await getDocs(collection(db, "kartu-keluarga"));
+    const q = query(
+      collection(db, "kartu-keluarga"),
+      orderBy("updatedAt", "desc")
+    );
+    const querySnapshot = await getDocs(q);
     const data: IKartuKeluarga[] = [];
 
     for (const docSnap of querySnapshot.docs) {

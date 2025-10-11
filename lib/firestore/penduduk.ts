@@ -1,21 +1,12 @@
-import { db } from "@/config/firebase-init";
-import { FirestoreResponse, IDataPenduduk } from "@/types/types";
 import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  deleteDoc,
-  query,
-  where,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  Timestamp,
-  writeBatch,
-} from "firebase/firestore";
-import { checkAuth } from "../auth";
+    arrayRemove, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc,
+    Timestamp, updateDoc, where, writeBatch
+} from 'firebase/firestore';
+
+import { db } from '@/config/firebase-init';
+import { FirestoreResponse, IDataPenduduk } from '@/types/types';
+
+import { checkAuth } from '../auth';
 
 export async function getAllPenduduk(): Promise<
   FirestoreResponse<IDataPenduduk[] | null>
@@ -23,7 +14,9 @@ export async function getAllPenduduk(): Promise<
   try {
     await checkAuth();
 
-    const querySnapshot = await getDocs(collection(db, "penduduk"));
+    const q = query(collection(db, "penduduk"), orderBy("updatedAt", "desc"));
+    const querySnapshot = await getDocs(q);
+
     const data: IDataPenduduk[] = [];
     querySnapshot.forEach((doc) => {
       data.push({ id: doc.id, ...doc.data() } as IDataPenduduk);
