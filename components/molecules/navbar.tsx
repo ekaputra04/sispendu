@@ -1,10 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { auth } from "@/config/firebase-init";
-import { decrypt } from "@/lib/utils";
-import { useSessionStore } from "@/store/useSession";
-import { useUserStore } from "@/store/useUserStore";
 import axios from "axios";
 import { signOut } from "firebase/auth";
 import { LayoutDashboard, LogIn, LogOut, Menu } from "lucide-react";
@@ -12,6 +7,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { auth } from "@/config/firebase-init";
+import { decrypt } from "@/lib/utils";
+import { useSessionStore } from "@/store/useSession";
+import { useUserStore } from "@/store/useUserStore";
+
+import LoadingIcon from "../atoms/loading-icon";
 import {
   Sheet,
   SheetContent,
@@ -20,7 +23,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import LoadingIcon from "../atoms/loading-icon";
 import { ModeToggle } from "./mode-toggle";
 
 interface NavbarProps {
@@ -102,8 +104,10 @@ export default function Navbar({ isInHeroView = false }: NavbarProps) {
               </SheetTrigger>
               <SheetContent side="left">
                 <SheetHeader>
-                  <SheetTitle>Sipulang</SheetTitle>
-                  <SheetDescription></SheetDescription>
+                  <SheetTitle>SIDULANG</SheetTitle>
+                  <SheetDescription>
+                    Sistem Pendataan Penduduk Kelurahan Bebalang
+                  </SheetDescription>
                 </SheetHeader>
                 <div className="px-8">
                   <div>

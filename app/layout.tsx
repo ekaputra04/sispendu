@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/theme-provider";
+
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
+
 import QueryProvider from "@/components/providers/query-provider";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +24,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "SIPULANG",
+  title: "SIDULANG",
   description: "Sistem Informasi Pendataan Penduduk Kelurahan Bebalang",
 };
 

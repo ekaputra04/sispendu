@@ -1,17 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { getAllKK } from "@/lib/firestore/kartu-keluarga";
-import { columns } from "./columns";
-import { DataTable } from "./data-table";
-import LoadingView from "@/components/atoms/loading-view";
-import DialogDeleteKK from "./dialog-delete-kk";
-import { Heading1 } from "@/components/atoms/heading";
 import { useRouter } from "next/navigation";
+
+import { Heading1 } from "@/components/atoms/heading";
+import LoadingView from "@/components/atoms/loading-view";
+import { Button } from "@/components/ui/button";
+import { getAllKK } from "@/lib/firestore/kartu-keluarga";
 import { getCurrentUser } from "@/lib/firestore/users";
+import { useQuery } from "@tanstack/react-query";
+
+import { columnsAdmin } from "./columns-admin";
+import { columnsPetugas } from "./columns-petugas";
+import { DataTable } from "./data-table";
+import DialogDeleteKK from "./dialog-delete-kk";
 
 export default function Page() {
   const router = useRouter();
@@ -52,7 +55,15 @@ export default function Page() {
       {error && <p>{error.message}</p>}
 
       <div className="mx-auto container">
-        {!isLoading && <DataTable columns={columns} data={data?.data || []} />}
+        {!isLoading && (
+          <>
+            {userLogin && userLogin.data?.role === "admin" ? (
+              <DataTable columns={columnsAdmin} data={data?.data || []} />
+            ) : (
+              <DataTable columns={columnsPetugas} data={data?.data || []} />
+            )}
+          </>
+        )}
       </div>
 
       <DialogDeleteKK />

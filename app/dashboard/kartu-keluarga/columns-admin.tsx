@@ -1,12 +1,12 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Eye, Pencil, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { IKartuKeluarga } from "@/types/types";
+import { Timestamp } from "firebase/firestore";
+import { Eye, Pencil, Trash } from "lucide-react";
 import Link from "next/link";
-import { ButtonOutlineGreen } from "@/consts/buttonCss";
-import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -14,13 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { Banjar } from "@/consts/dataDefinitions";
-import { capitalizeWords, formatWitaDate } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Timestamp } from "firebase/firestore";
+import { formatWitaDate } from "@/lib/utils";
+import { useKKSelectedForDelete } from "@/store/useKKSelectedForDelete";
+import { IKartuKeluarga } from "@/types/types";
+import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<IKartuKeluarga>[] = [
+export const columnsAdmin: ColumnDef<IKartuKeluarga>[] = [
   {
     accessorKey: "no",
     header: "No",

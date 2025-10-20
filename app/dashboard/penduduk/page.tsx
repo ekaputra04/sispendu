@@ -1,20 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
-import { deleteAllPenduduk, getAllPenduduk } from "@/lib/firestore/penduduk";
-import LoadingView from "@/components/atoms/loading-view";
-import { IDataPenduduk } from "@/types/types";
-import DialogDeletePenduduk from "./dialog-delete-penduduk";
-import { Heading1 } from "@/components/atoms/heading";
 import { useRouter } from "next/navigation";
+
+import { Heading1 } from "@/components/atoms/heading";
+import LoadingView from "@/components/atoms/loading-view";
+import { Button } from "@/components/ui/button";
+import { getAllPenduduk } from "@/lib/firestore/penduduk";
 import { getCurrentUser } from "@/lib/firestore/users";
-import { toast } from "sonner";
-import { useState } from "react";
+import { IDataPenduduk } from "@/types/types";
+import { useQuery } from "@tanstack/react-query";
+
+import { columnsAdmin } from "./columns-admin";
+import { columnsPetugas } from "./columns-petugas";
+import { DataTable } from "./data-table";
+import DialogDeletePenduduk from "./dialog-delete-penduduk";
 
 export default function Page() {
   const router = useRouter();
@@ -53,10 +54,19 @@ export default function Page() {
 
       <div className="relative w-full">
         {!isLoading && (
-          <DataTable
-            columns={columns}
-            data={(data?.data as IDataPenduduk[]) || []}
-          />
+          <>
+            {userLogin && userLogin.data?.role == "admin" ? (
+              <DataTable
+                columns={columnsAdmin}
+                data={(data?.data as IDataPenduduk[]) || []}
+              />
+            ) : (
+              <DataTable
+                columns={columnsPetugas}
+                data={(data?.data as IDataPenduduk[]) || []}
+              />
+            )}
+          </>
         )}
       </div>
 

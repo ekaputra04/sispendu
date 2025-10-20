@@ -1,5 +1,6 @@
-import { LoginForm } from "@/components/molecules/login-form";
 import Link from "next/link";
+
+import { LoginForm } from "@/components/molecules/login-form";
 
 export default function Page() {
   return (
@@ -10,7 +11,7 @@ export default function Page() {
             <div className="flex justify-center items-center bg-primary rounded-md size-6 text-primary-foreground">
               <img src="/images/logo.png" alt="logo" />
             </div>
-            <p>SIPULANG</p>
+            <p>SIDULANG</p>
           </Link>
         </div>
         <div className="flex flex-1 justify-center items-center">

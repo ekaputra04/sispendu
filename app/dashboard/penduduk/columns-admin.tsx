@@ -1,13 +1,13 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { Timestamp } from "firebase/firestore";
 import { Eye, Filter, Pencil, Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { IDataPenduduk } from "@/types/types";
 import Link from "next/link";
-import { ButtonOutlineGreen } from "@/consts/buttonCss";
-import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
+import { useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -15,13 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ButtonOutlineGreen } from "@/consts/buttonCss";
 import { Banjar, JenisPekerjaan } from "@/consts/dataDefinitions";
-import { calculateAge, capitalizeWords, formatWitaDate } from "@/lib/utils";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Timestamp } from "firebase/firestore";
+import { calculateAge, formatWitaDate } from "@/lib/utils";
+import { usePendudukSelectedForDelete } from "@/store/usePendudukSelectedForDelete";
+import { IDataPenduduk } from "@/types/types";
+import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<IDataPenduduk>[] = [
+export const columnsAdmin: ColumnDef<IDataPenduduk>[] = [
   {
     accessorKey: "no",
     header: "No",

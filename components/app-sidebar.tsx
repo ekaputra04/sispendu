@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -11,10 +14,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-import { useSessionStore } from "@/store/useSession";
-import { useEffect, useState } from "react";
 import { decrypt } from "@/lib/utils";
+import { useSessionStore } from "@/store/useSession";
 import {
   IconChartBar,
   IconDashboard,
@@ -92,7 +93,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     alt=""
                     className="w-8 h-8 object-fill"
                   />
-                  <span className="font-semibold text-base">SIPULANG</span>
+                  <span className="font-semibold text-base">SIDULANG</span>
                 </div>
               </Link>
             </SidebarMenuButton>
